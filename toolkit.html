@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>operando-eis-toolkit — analysis primitives · Hao Zheng</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:16px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  .src .pending{background:rgba(183,121,31,.22);border-color:rgba(183,121,31,.5)}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:82ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .synth{display:inline-block;background:var(--amber-lt);border:1px solid #ecd9b0;color:#6b5312;font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:14px;margin:8px 0 4px}
+  th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
+  td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f2f7f9}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.gal{grid-template-columns:1fr}}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .fig img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .fig .cap{margin-top:8px}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:14px 0}
+  .step{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px;position:relative}
+  .step .n{display:inline-block;width:26px;height:26px;line-height:26px;text-align:center;border-radius:99px;background:var(--teal);color:#fff;font-weight:700;font-size:13px;margin-bottom:8px}
+  .step h4{font-size:15px;color:var(--navy);margin-bottom:4px}
+  .step p{font-size:13.5px;color:var(--mut)}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  .note b{color:var(--amber)}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  pre{background:#0f2740;color:#e7f0f6;border-radius:8px;padding:14px 16px;overflow:auto;font-size:13px;line-height:1.6;margin:8px 0}
+  pre code{background:none;border:none;color:#e7f0f6;padding:0}
+  .contract{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin:8px 0}
+  .c{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:8px;padding:14px 16px}
+  .c h4{font-size:14.5px;color:var(--navy);margin-bottom:4px}
+  .c p{font-size:13.5px;color:var(--mut)}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
+  #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a class="here" href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>operando-eis-toolkit — the analysis, packaged</h1>
+    <p>A small, dependency-light Python package of analysis primitives for operando electrochemical
+    impedance spectroscopy and censored reliability of battery cells: read raw instrument exports, fit
+    equivalent circuits and the distribution of relaxation times, run right-censored lifetime statistics,
+    and monitor process stability. It ships <b>no dataset-specific defaults</b> — electrode area, rated
+    capacity, and frequency windows are always explicit parameters — and <b>no laboratory data</b>: every
+    example and test runs on seeded synthetic generators.</p>
+    <div class="src">
+      <span class="chip"><b>License:</b> MIT © 2026 Hao Zheng</span>
+      <span class="chip"><b>Python:</b> ≥ 3.10 · numpy / scipy / pandas</span>
+      <span class="chip"><b>Tests:</b> 76, synthetic data only, no network</span>
+      <span class="chip pending"><b>Status:</b> pending public release</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <p class="sub" style="margin-top:2px"><span class="synth">SYNTHETIC</span> The two figures on this page are
+    produced by the package's own seeded synthetic generators, not from any measured cell. They exist to show
+    the analysis running end-to-end — the package contains methods and synthetic data only.</p>
+  </div>
+</section>
+
+<section style="padding-top:8px">
+  <div class="wrap">
+    <h2 class="sec">1 · What it does — four stages, one synthetic run</h2>
+    <p class="sub">A single example script (<code>end_to_end_synthetic.py</code>) exercises the whole pipeline
+    on generated data — no real data, no network — so the toolkit can be evaluated in one command.</p>
+    <div class="steps">
+      <div class="step"><span class="n">1</span><h4>EIS</h4><p>An AICc criterion picks a 2-arc R-CPE fit and reads the model-free valley resistance for IR correction.</p></div>
+      <div class="step"><span class="n">2</span><h4>DRT</h4><p>Tikhonov-regularized deconvolution recovers both relaxation-time peaks from the same sweep.</p></div>
+      <div class="step"><span class="n">3</span><h4>Reliability</h4><p>Right-censored Weibull B10/B50 with a profile-likelihood interval.</p></div>
+      <div class="step"><span class="n">4</span><h4>SPC + fade</h4><p>A Nelson-rule scan on a control chart, and a fade-model fit with a cycles-to-80% projection.</p></div>
+    </div>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/toolkit/demo_nyquist.png" alt="Synthetic 2-arc R-CPE Nyquist spectrum" loading="lazy">
+        <div class="cap"><span class="synth">SYNTHETIC</span> <b>Nyquist (2-arc R-CPE).</b> A seeded synthetic
+        spectrum with two overlapping arcs — the input the circuit-fit and DRT stages are demonstrated on.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/toolkit/demo_fade.png" alt="Synthetic capacity fade curve, axis anchored at zero" loading="lazy">
+        <div class="cap"><span class="synth">SYNTHETIC</span> <b>Capacity fade.</b> A seeded synthetic fade
+        curve on a zero-anchored axis (a figure-spec rule), used to demonstrate the fade-model fit and the
+        cycles-to-80% projection.</div>
+      </div>
+    </div>
+    <p class="cap">The figure style itself is enforced in code — 12&nbsp;pt ticks, uniform line width,
+    zero-anchored quantity axes, and exact-pixel export — the same spec used across every project in this
+    portfolio.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">2 · What's inside — one entry point per concern</h2>
+    <p class="sub">Each module owns a single analysis concern, with the domain quirks handled explicitly
+    rather than hidden behind defaults.</p>
+    <table>
+      <tr><th style="width:230px">Module</th><th>Purpose</th></tr>
+      <tr><td><code>io.biologic</code></td><td>Read BioLogic-style tab-separated exports; pin the correct potential column, coulomb-count capacity when the instrument's charge column is unreliable, and parse the filename metadata tail.</td></tr>
+      <tr><td><code>eis.segmentation</code></td><td>Split a point stream into frequency sweeps by detecting frequency resets — no hard-coded instrument frequencies; flags truncated sweeps.</td></tr>
+      <tr><td><code>eis.circuit</code></td><td>Complex non-linear least-squares fit of R<sub>s</sub> + (R‖CPE)[+(R‖CPE)], AICc 1-vs-2-arc selection, per-parameter uncertainties, and a model-free valley-resistance proxy.</td></tr>
+      <tr><td><code>eis.drt</code></td><td>Tikhonov-regularized DRT (NNLS, L-curve λ), with peak and region resistances.</td></tr>
+      <tr><td><code>reliability.censored</code></td><td>Right-censored MLE for Weibull / lognormal / loglogistic / normal / exponential; B-lives with profile-likelihood CIs; Kaplan–Meier; Johnson median ranks; an AICc table; optional cross-check against <code>lifelines</code> / <code>reliability</code>.</td></tr>
+      <tr><td><code>spc.charts</code></td><td>Phase-I I-MR and EWMA control charts with Nelson rules 1–4, returned as tidy violation records.</td></tr>
+      <tr><td><code>fade</code></td><td>Per-cycle capacity / coulombic-efficiency rollup; linear / exponential / √n fade fit by AICc; cycles-to-fraction projection.</td></tr>
+      <tr><td><code>figstyle</code></td><td>One importable figure spec: 12&nbsp;pt ticks, uniform line width, zero-anchored quantity axes, exact-pixel export.</td></tr>
+      <tr><td><code>synthetic</code></td><td>Deterministic, seeded generators behind every example and test.</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">3 · Design contracts</h2>
+    <p class="sub">The package is built to run unattended and fail loudly rather than quietly wrong.</p>
+    <div class="contract">
+      <div class="c"><h4>No silent fallbacks</h4><p>Ambiguous input raises a typed, actionable error (<code>CircuitFitError</code>, <code>InsufficientCyclesError</code>, …) rather than returning NaN.</p></div>
+      <div class="c"><h4>Explicit physics</h4><p>No default electrode area or rated capacity anywhere; frequency windows are parameters, not constants.</p></div>
+      <div class="c"><h4>Reproducible</h4><p>Every stochastic path takes a required seed or generator — the same run always yields the same numbers.</p></div>
+      <div class="c"><h4>Cross-checked statistics</h4><p>The custom censored MLE is independently validated against <code>lifelines</code> and <code>reliability</code> when those packages are present.</p></div>
+    </div>
+    <h3 class="m">Tests</h3>
+    <pre><code>pytest tests/ -q     # 76 tests, synthetic data only, no network, no real data</code></pre>
+    <p class="cap">The suite covers filename / column parsing, coulomb counting, sweep segmentation, circuit
+    and DRT parameter recovery, censored-MLE recovery and CIs against hand-computed values, Nelson rules and
+    EWMA recursion, and fade-model selection.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">4 · Provenance &amp; status</h2>
+    <div class="note"><b>Provenance.</b> This toolkit packages the analysis methods I designed and directed
+    for my operando-EIS reliability program on anode-free solid-state cells (2025–2026): censored life-data
+    fitting, EIS sweep segmentation and equivalent-circuit fitting, DRT deconvolution, SPC charts, and
+    spec-enforced figure export. Implementation was AI-accelerated under my direction; the methodological
+    decisions — failure criteria, censoring policy, distribution selection, and validation gates — are mine.
+    <b>The package contains methods and synthetic data only: no laboratory data and no study results.</b> The
+    underlying research program is unpublished (<b>manuscript in preparation</b>); the published anchor for
+    the operando method is my co-first-author paper in <i>ACS Electrochemistry</i> (2026).</div>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740"><b>Release status.</b>
+    The package is <b>pending public release</b>. This page describes its scope and shows it running on
+    synthetic data; the source repository is not yet published. Licensed MIT.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>operando-eis-toolkit · MIT © 2026 Hao Zheng · methods + synthetic data only.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+<div id="lb"><img src="" alt=""></div>
+<script>
+"use strict";
+(function(){
+  var lb=document.getElementById("lb"), lbi=lb.querySelector("img");
+  document.querySelectorAll(".fig img").forEach(function(im){
+    im.addEventListener("click",function(){ lbi.src=im.src; lbi.alt=im.alt; lb.style.display="flex"; });
+  });
+  lb.addEventListener("click",function(){ lb.style.display="none"; lbi.src=""; });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ lb.style.display="none"; lbi.src=""; } });
+})();
+</script>
+</body>
+</html>

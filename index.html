@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hao Zheng — Battery Reliability &amp; Failure Analysis Portfolio</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:15px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .hero{background:linear-gradient(160deg,var(--navy) 0%,var(--navy2) 70%,#1d4257 100%);color:#fff;padding:52px 0 44px}
+  .hero .wrap{display:grid;grid-template-columns:1.25fr 1fr;gap:36px;align-items:center}
+  @media(max-width:840px){.hero .wrap{grid-template-columns:1fr}}
+  .hero h1{font-size:33px;line-height:1.2;margin-bottom:10px}
+  .hero p.lead{font-size:16.5px;color:#d6e2ec;margin-bottom:12px}
+  .contact{display:flex;flex-wrap:wrap;gap:8px 18px;margin-bottom:16px;font-size:14.5px}
+  .contact a,.contact span{color:#cfe3e3}
+  .contact b{color:#fff;font-weight:600}
+  .hero .tags{display:flex;flex-wrap:wrap;gap:8px}
+  .tag{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:13px;padding:4px 11px;border-radius:99px}
+  .hero img{width:100%;border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.35);background:#fff}
+  .hero .cap{font-size:12.5px;color:#9fb4c4;margin-top:8px;text-align:center}
+  section{padding:44px 0}
+  h2.sec{font-size:24px;margin-bottom:6px;color:var(--navy)}
+  p.sub{color:var(--mut);margin-bottom:24px;max-width:78ch}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 20px 18px;display:flex;flex-direction:column;gap:8px;transition:box-shadow .15s, transform .15s}
+  .card:hover{box-shadow:0 6px 22px rgba(15,39,64,.12);transform:translateY(-2px)}
+  .card .k{font-size:12px;letter-spacing:1.2px;text-transform:uppercase;color:var(--teal);font-weight:700}
+  .card h3{font-size:18px;color:var(--navy)}
+  .card p{font-size:14.5px;color:var(--mut);flex:1}
+  .card .src{font-size:12.5px;color:var(--mut);margin-top:2px}
+  .card .go{font-size:14px;font-weight:600}
+  .pub{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:8px;padding:16px 18px;margin-bottom:12px}
+  .pub b{color:var(--navy)}
+  .pub .role{display:inline-block;background:var(--teal-lt);color:var(--teal);font-size:12.5px;font-weight:700;padding:2px 9px;border-radius:99px;margin-left:6px;vertical-align:1px}
+  .pub .prep{background:var(--amber-lt);color:#6b5312}
+  .pub p{font-size:14.5px;color:var(--mut);margin-top:4px}
+  .skills{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+  .sk{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px 20px}
+  .sk h3{font-size:15.5px;color:var(--navy);margin-bottom:8px}
+  .sk ul{list-style:none}
+  .sk li{font-size:14px;color:var(--mut);padding:3px 0 3px 18px;position:relative}
+  .sk li::before{content:"";position:absolute;left:2px;top:11px;width:7px;height:7px;border-radius:2px;background:var(--teal);opacity:.7}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin-top:26px}
+  .note b{color:var(--amber)}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:20px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a class="here" href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <h1>Battery reliability &amp; failure analysis — from operando signal to root cause</h1>
+      <p class="lead">MS Mechanical Engineering @ UCSB (June 2026) · BS Materials Science @ Cornell.
+      I turn operando electrochemical signals into root-cause and life statistics. My graduate research is
+      an anode-free solid-state Li-metal reliability program in the Sakamoto group
+      (<i>manuscript in preparation</i>); because that work is unpublished, this public portfolio
+      demonstrates the <b>same methods</b> — DRT deconvolution, censored Weibull, SPC, and ML prognosis —
+      on openly licensed battery datasets, alongside the mechanical design behind trustworthy measurements.</p>
+      <div class="contact">
+        <a href="mailto:edwinz7368@gmail.com"><b>✉</b> edwinz7368@gmail.com</a>
+        <a href="https://www.linkedin.com/in/hao-zheng-0268ba1bb/" target="_blank" rel="noopener"><b>in</b> LinkedIn</a>
+        <!-- GITHUB-PLACEHOLDER: 建好账号后取消下行注释并替换 YOUR-GITHUB-USERNAME(见 DEPLOY.md 第 5 步)
+        <a href="https://github.com/YOUR-GITHUB-USERNAME" target="_blank" rel="noopener"><b>⌥</b> GitHub</a>
+        -->
+        <span><b>📍</b> Southern California — open to onsite roles</span>
+      </div>
+      <div class="tags">
+        <span class="tag">Censored Weibull · B10 · SPC · AFT</span>
+        <span class="tag">Operando EIS · DRT · equivalent circuits</span>
+        <span class="tag">ML prognosis · leakage-free protocols</span>
+        <span class="tag">Fusion 360 parametric + GD&amp;T + FEA · transferable to CATIA</span>
+        <span class="tag">Python · NumPy/Pandas/Plotly</span>
+      </div>
+    </div>
+    <div>
+      <img src="assets/cad/fixture_iso.png" alt="Spring-loaded stack-pressure fixture, isometric render (Fusion 360)">
+      <div class="cap">Stack-pressure fixture for a Ø12.7&nbsp;mm solid-state cell — designed, drawn and
+      FEA-verified in Fusion&nbsp;360 at a 5&nbsp;MPa operating point
+      (<a style="color:#cfe3e3" href="mechanical.html">CAD · FEA page</a>).</div>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">The work</h2>
+    <p class="sub">Four self-contained projects. Two are reliability-and-ML studies on <b>public, openly
+    licensed</b> battery datasets — every number on those pages is reproducible from the cited source. One is
+    a mechanical-design campaign (CAD, GD&amp;T, FEA). One is the analysis code, packaged. Data provenance is
+    stated on every figure.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="k">Reliability + ML · public data</div>
+        <h3>EIS × ML — physics-informed RUL</h3>
+        <p>DRT deconvolution turns impedance into named physical features; gradient-boosted SOH/RUL under
+        leakage-free cell-held-out splits; then a censored-Weibull + AFT reliability wrapper no published
+        work on this dataset provides. Reproduction gaps stated plainly.</p>
+        <div class="src">Zhang et al., <i>Nat. Commun.</i> 2020 · Zenodo · CC BY 4.0</div>
+        <a class="go" href="zhang-eis-ml.html">Open →</a>
+      </div>
+      <div class="card">
+        <div class="k">Reliability + ML · public data</div>
+        <h3>Capacity × ML — 124-cell cycle life</h3>
+        <p>The paper's early-cycle prediction reproduced (variance model matches its table exactly), cleaned
+        of label leakage — then B-lives, observation-horizon censoring, and SPC/EWMA drift that re-explains
+        the "hard secondary test" as ordinary build drift.</p>
+        <div class="src">Severson et al., <i>Nat. Energy</i> 2019 · data.matr.io · CC BY 4.0</div>
+        <a class="go" href="severson-capacity-ml.html">Open →</a>
+      </div>
+      <div class="card">
+        <div class="k">Mechanical · own work</div>
+        <h3>Fixture CAD · GD&amp;T · FEA</h3>
+        <p>A parametric Fusion 360 stack-pressure fixture at a 5&nbsp;MPa operating point, a GD&amp;T
+        base-plate drawing, and a load-documented, mesh-converged FEA study of rigid vs compliant loading on
+        brittle LLZO — with an interactive 3D build stepper.</p>
+        <div class="src">Own design · Fusion 360 · transferable to CATIA</div>
+        <a class="go" href="mechanical.html">Open →</a>
+      </div>
+      <!-- PYBAMM-PLACEHOLDER: 新增"电池物理建模(PyBaMM)"公开页时取消本卡注释,
+           并在所有页面的 nav.top 中加 <a href="pybamm-modeling.html">Physics Modeling</a>。
+           规则不变:仅公开参数集内容,INTERNAL 产物不入站。
+      <div class="card">
+        <div class="k">Physics modeling · public parameter sets</div>
+        <h3>Battery physics modeling — PyBaMM</h3>
+        <p>Physics-based cell modeling with PyBaMM on openly published parameter sets.</p>
+        <div class="src">PyBaMM · public parameter sets · BSD-3</div>
+        <a class="go" href="pybamm-modeling.html">Open →</a>
+      </div>
+      -->
+      <div class="card">
+        <div class="k">Software · methods package</div>
+        <h3>operando-eis-toolkit</h3>
+        <p>The analysis primitives behind these studies, packaged: EIS segmentation and circuit/DRT fitting,
+        right-censored reliability MLE, SPC charts, and spec-enforced figures — with cross-checked
+        statistics and synthetic-only examples.</p>
+        <div class="src">MIT · methods + synthetic data only · pending release</div>
+        <a class="go" href="toolkit.html">Open →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2 class="sec">Research outputs</h2>
+    <p class="sub">Peer-reviewed and in-preparation work behind the methods demonstrated here. Unpublished
+    laboratory results are not reproduced on this public site.</p>
+    <div class="pub">
+      <b>Anode-free LLZO solid-state cells under operando GEIS-AA</b>
+      <span class="role prep">lead author — manuscript in preparation</span>
+      <p>UCSB, Sakamoto group. An operando-diagnostics and censored-reliability program on an anode-free
+      solid-state Li-metal platform. Unpublished; described qualitatively here. The public pages on this
+      site demonstrate the same analysis methods on openly licensed datasets.</p>
+    </div>
+    <div class="pub">
+      <b>Operando detection of Li void formation by single-frequency impedance</b>
+      <span class="role">co-first author</span>
+      <p><i>ACS Electrochemistry</i>, 2026. A single-frequency impedance signal reaches its detection
+      threshold at lower stripped capacity than cell polarization, on both oxyhalide and garnet cells;
+      mechanism supported by a 3D equivalent-circuit void model (simulation run by collaborators — I prepared
+      the cells and validated predictions against the operando measurements).</p>
+    </div>
+    <div class="pub">
+      <b>Conformal hetero-electrolyte interface between soft oxyhalides and garnet for low-pressure,
+      Li-reservoir-free solid-state batteries</b>
+      <span class="role">full-cell validation · NMC full-cell assembly</span>
+      <p><i>RSC Energy &amp; Environmental Science</i>, 2026. A low-impedance conformal oxyhalide|garnet
+      interface; DRT separation of bulk / grain-boundary / interface contributions; anode-free full cell with
+      high coulombic efficiency at low stack pressure.</p>
+    </div>
+    <div class="pub">
+      <b>Laminar Assembly Polymerization of ionic COF thin films for ion-gated FET integration</b>
+      <span class="role">sole author (BS senior thesis)</span>
+      <p>Cornell, Zhong group. A synthesis DOE converging on optimal precursor concentrations; ~25&nbsp;nm
+      film thickness by AFM and purity by Raman; analysis of collaborator-collected GIWAXS (CHESS synchrotron)
+      and FTIR — pore size and imine-bond confirmation (data collection not mine); 6-inch wafer-scale MoS₂ transfer.</p>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <h2 class="sec">Skills, as evidenced</h2>
+    <p class="sub">Grouped the way a reliability team uses them. Every line traces to a figure or artifact on
+    this site — the reliability and diagnostics methods are demonstrated on the public-dataset pages;
+    the mechanical work on the CAD · FEA page.</p>
+    <div class="skills">
+      <div class="sk"><h3>Reliability statistics &amp; quality</h3><ul>
+        <li>Censored Weibull MLE — B10/B50 with profile-likelihood CIs; Kaplan–Meier cross-check</li>
+        <li>Three independent MLE engines agreeing to &lt;1% (custom / lifelines / reliability-pkg)</li>
+        <li>SPC (I-MR, EWMA, Nelson rules) and observation-horizon censoring experiments</li>
+        <li>Weibull AFT survival modeling on physics covariates; AICc model selection</li>
+      </ul></div>
+      <div class="sk"><h3>Electrochemical diagnostics</h3><ul>
+        <li>DRT deconvolution (Tikhonov–NNLS, L-curve λ); R-CPE equivalent-circuit fitting</li>
+        <li>Operando EIS/GEIS protocol design; single-frequency void monitoring — published</li>
+        <li>Sweep segmentation, IR correction, linear-time-invariance residual screening</li>
+        <li>CCCV cycling, coulombic-efficiency tracking, variable-temperature EIS</li>
+      </ul></div>
+      <div class="sk"><h3>ML for prognosis &amp; data</h3><ul>
+        <li>Gradient-boosted &amp; Gaussian-process SOH/RUL and cycle-life models</li>
+        <li>Leakage-free cell-held-out protocols; label-leakage auditing; conformal intervals</li>
+        <li>Physics-feature engineering over black-box spectra; permutation importance</li>
+        <li>Python (NumPy/Pandas/Plotly) analysis pipelines; MATLAB; Mathematica</li>
+      </ul></div>
+      <div class="sk"><h3>Mechanical &amp; characterization</h3><ul>
+        <li>Fusion 360 parametric CAD + GD&amp;T drawings + static FEA — <b>transferable to CATIA</b></li>
+        <li>Load/BC-documented, mesh-converged studies; artifact-vs-result discipline</li>
+        <li>Cryo-stage plasma FIB-SEM cross-sections (co-built the cryo-stage workflow); EDX; XPS</li>
+        <li>XRD (Rietveld), AFM, Raman, confocal laser scanning</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>© 2026 Hao Zheng · <a style="color:#9fb4c4" href="mailto:edwinz7368@gmail.com">edwinz7368@gmail.com</a> · <a style="color:#9fb4c4" href="https://www.linkedin.com/in/hao-zheng-0268ba1bb/" target="_blank" rel="noopener">LinkedIn</a><!-- GITHUB-PLACEHOLDER: · <a style="color:#9fb4c4" href="https://github.com/YOUR-GITHUB-USERNAME" target="_blank" rel="noopener">GitHub</a> --></span>
+    <span>Public-dataset numbers are reproducible from the cited source; synthetic illustrations are labeled on every figure.</span>
+  </div>
+</footer>
+
+</body>
+</html>

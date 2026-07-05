@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reliability-lens cycle-life prediction (Severson 2019) · Hao Zheng</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:16px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:82ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .data{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  .honest{display:inline-block;background:var(--amber-lt);border:1px solid #ecd9b0;color:#6b5312;font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:14px;margin:8px 0 4px}
+  th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
+  td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f2f7f9}
+  td.n{font-variant-numeric:tabular-nums}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.gal{grid-template-columns:1fr}}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .fig img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .fig .cap{margin-top:8px}
+  .full{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
+  .full img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  .note b{color:var(--amber)}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  .big{font-size:30px;font-weight:800;color:var(--navy);line-height:1.15}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:14px 0}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .kpi .l{font-size:12.5px;color:var(--mut);letter-spacing:.4px;margin-top:4px}
+  .frame{width:100%;height:560px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .btn{display:inline-block;background:var(--teal);color:#fff;font-size:14px;font-weight:600;padding:9px 16px;border-radius:8px;margin-top:4px}
+  .btn:hover{background:#0a6463;text-decoration:none}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
+  #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a class="here" href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>Reliability-lens cycle-life prediction on 124 LFP cells</h1>
+    <p>Early-cycle (≤100) life prediction on the public Severson et&nbsp;al. 2019 fleet — 124 commercial
+    LFP/graphite cells across three build batches — read through a reliability engineer's lens: the paper's
+    exact held-out split reproduced, then right-censored Weibull B-lives, observation-horizon censoring
+    experiments, Weibull AFT, and SPC/EWMA drift monitoring the original paper never ran. The famous
+    "secondary-test is harder" result turns out to be ordinary build drift visible on a control chart.</p>
+    <div class="src">
+      <span class="chip"><b>Data:</b> Severson et al., <i>Nat. Energy</i> 4, 383–391 (2019)</span>
+      <span class="chip"><b>Repository:</b> data.matr.io</span>
+      <span class="chip"><b>License:</b> CC BY 4.0</span>
+      <span class="chip"><b>Fleet:</b> 124 LFP cells · 3 batches · life 148–2237 cycles</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <p class="sub" style="margin-top:2px"><span class="data">PUBLIC DATA</span> Every figure and number on this
+    page is computed on the openly licensed Severson&nbsp;2019 dataset — none of it is my own laboratory data.
+    The prediction reproductions were validated by matching the paper's published table exactly before any
+    extension was built on top.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="big">161 cyc</div><div class="l">discharge-model secondary-test RMSE (MAPE 8.5%); reproduces the paper's pipeline</div></div>
+      <div class="kpi"><div class="big">B10 = 331 cyc</div><div class="l">fleet 10%-failure life, censored Weibull [275, 389]; true wear-out (exponential rejected, ΔAICc +126)</div></div>
+      <div class="kpi"><div class="big">459 cyc</div><div class="l">median lead time of the within-cell EWMA drift alarm before end-of-life</div></div>
+      <div class="kpi"><div class="big">+3.1σ / −2.5σ</div><div class="l">batch-2 / batch-3 build drift vs batch-1 SPC limits — what the ML models trip over</div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:8px">
+  <div class="wrap">
+    <h2 class="sec">1 · The fleet</h2>
+    <p class="sub">124 cells built in three batches (2017-05, 2017-06, 2018-04), each cycled to end-of-life
+    under fast-charge protocols. Extraction was reimplemented from scratch against the raw MATLAB structs
+    (the reference repo has no license; only its published cell-correction lists were used, cross-checked
+    against the dataset's own notes), and the fleet life range gates at exactly [148, 2237] cycles.</p>
+    <div class="full">
+      <img src="assets/severson/fig1_fleet_fade_w2200px.png" alt="124-cell fleet capacity fade colored by cycle life" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet capacity fade.</b> Discharge capacity
+      vs cycle for all 124 cells, colored by eventual cycle life — the wide spread of lives (a ~15× range) is
+      exactly what makes early-cycle prediction both hard and valuable.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">2 · Early-cycle prediction — reproduced, then hardened</h2>
+    <p class="sub">Inputs are the first 100 cycles only, on the paper's exact held-out split (41 train / 43
+    primary / 40 secondary test). Charge-time and policy features are excluded on purpose — they encode the
+    label — so the numbers are honest predictions, not leakage.</p>
+    <div class="full">
+      <img src="assets/severson/fig2_predicted_vs_actual_w3125px.png" alt="Predicted vs actual cycle life; reproduction and champion model" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Predicted vs actual cycle life.</b> Left:
+      the reproduced discharge model; right: the frozen champion (<code>blend_dqstats_discharge</code>) with
+      jackknife+ conformal intervals. Points colored by build batch.</div>
+    </div>
+    <table>
+      <tr><th>Model</th><th class="n">Train RMSE</th><th class="n">Primary test</th><th class="n">Secondary test</th><th>Note</th></tr>
+      <tr><td>Variance model (reproduction)</td><td class="n">104</td><td class="n">138</td><td class="n">196</td><td>matches Severson Table 1 <b>exactly</b> — validates data, split, features</td></tr>
+      <tr><td>Discharge model (reproduction)</td><td class="n">—</td><td class="n">149 (130 excl)</td><td class="n"><b>161</b></td><td>MAPE avg 8.7% vs the paper's 9.1% headline</td></tr>
+      <tr><td><b>Champion (blend, LOBO-selected)</b></td><td class="n">—</td><td class="n">133 (107 excl)</td><td class="n">174</td><td>90% conformal coverage 90.7% / 87.5% — the batch-3 shortfall is the drift story below</td></tr>
+    </table>
+    <p class="cap">"excl" = excluding the published rapid-fail outlier b2c1. Champion selected by
+    leave-one-batch-out CV strictly inside the 41 training cells, then frozen. RMSE in cycles.</p>
+    <div class="note"><b>Why charge-time and policy features are excluded.</b> They are near-deterministic
+    functions of the label (Geslin et&nbsp;al. 2023, <i>Joule</i>) — including them inflates accuracy
+    without predictive validity. They are kept in the pipeline but hard-prefixed <code>FORBIDDEN_</code> so
+    they can never enter a model by accident. This is a data-integrity choice, and it is the difference
+    between an honest number and a leaky one.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">3 · Fleet reliability — first-of-kind on this dataset</h2>
+    <p class="sub">The same 124 lives, read as reliability data: a right-censored Weibull fit (here with 0
+    censored — every cell reached end-of-life) with B-lives and profile-likelihood intervals. The shape
+    parameter settles a real question — is this random failure or genuine wear-out?</p>
+    <div class="full">
+      <img src="assets/severson/fig3_weibull_fleet_w3125px.png" alt="Weibull probability plot and fleet CDF for 124 cells" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet Weibull &amp; CDF.</b> Median-rank
+      points with the MLE line (left) and the Weibull fit against the Kaplan–Meier empirical CDF (right).</div>
+    </div>
+    <table>
+      <tr><th>Quantity</th><th class="n">Value</th><th>Reading</th></tr>
+      <tr><td>β (shape)</td><td class="n">2.23 [1.97, 2.51]</td><td>β &gt; 1 with a tight CI → genuine wear-out, not random failure</td></tr>
+      <tr><td>η (scale)</td><td class="n">908 [834, 986] cycles</td><td>characteristic life (63.2% failed)</td></tr>
+      <tr><td>B10</td><td class="n">331 [275, 389] cycles</td><td>10% of the fleet has failed by here</td></tr>
+      <tr><td>B50</td><td class="n">770 [700, 842] cycles</td><td>median life</td></tr>
+    </table>
+    <p class="cap">Exponential rejected at ΔAICc +126 — a decisive verdict for wear-out. Lognormal /
+    loglogistic fit marginally better by AICc (a heavy right tail), but the B10 across all two-parameter
+    models stays inside the CI. 124 failures, 0 censored.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">4 · How early could the fleet's B10 be called?</h2>
+    <p class="sub">A reliability-planning question the source paper never asks: stop the test at horizon H,
+    right-censor every cell still alive, and see when the censored fit first locks onto the true B10. This is
+    what a program manager needs to know before committing to a warranty number.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/severson/fig4_b10_vs_horizon_w2200px.png" alt="Fleet B10 estimate vs observation horizon" loading="lazy">
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>B10 vs observation horizon.</b> The
+        censored estimate is usable from H≈500 cycles (B10 445 [327, 634], only ~33 failures observed) and
+        converges to the full-data answer of 331 by H≈2000. Point labels show failures observed at each horizon.</div>
+      </div>
+      <div class="fig">
+        <iframe class="frame" style="height:400px" src="assets/severson/fleet_reliability_animation.html" title="Fleet reliability fit tightening with observation horizon" loading="lazy"></iframe>
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>Interactive:</b> the Weibull fit tightening
+        as the fleet ages and more failures accrue — the confidence band narrows toward the full-data line.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">5 · SPC: the drift the ML models trip over</h2>
+    <p class="sub">The dataset's notorious "secondary test is harder" result has a mundane cause. Put the
+    early-cycle features on a control chart with batch-1 as the Phase-I baseline, and the batches have simply
+    drifted — the ML models were extrapolating across a process shift, not failing at prediction.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/severson/fig5_spc_build_stability_w3125px.png" alt="Build stability control chart across three batches" loading="lazy">
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>Build-stability I-chart.</b> Cycle-2
+        capacity and IR vs build order (struct order as a build-order proxy), against batch-1 Phase-I limits;
+        ✗ marks out-of-limit cells. The three batches sit at visibly different levels.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/severson/fig6_fleet_ewma_drift_w2200px.png" alt="Fleet EWMA drift versus batch-1 baseline" loading="lazy">
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet EWMA drift.</b> An EWMA (λ=0.2) of
+        cycle-2 IR walks well outside the batch-1 limits at both batch boundaries — the epoch shift is a
+        control-chart signal, not a modeling mystery.</div>
+      </div>
+    </div>
+    <table>
+      <tr><th>Feature</th><th class="n">Batch 2</th><th class="n">Batch 3</th><th>Reading</th></tr>
+      <tr><td>log variance of ΔQ (the key life predictor)</td><td class="n">+3.1σ</td><td class="n">−1.7σ</td><td>the predictor feature itself has shifted between builds</td></tr>
+      <tr><td>internal resistance at cycle 2</td><td class="n">—</td><td class="n">−2.5σ</td><td>batch-3 cells are physically different at the electrode level</td></tr>
+    </table>
+    <p class="cap">SPC diagnoses in one chart what the ML models express as a mysterious accuracy drop:
+    the secondary-test difficulty <i>is</i> build drift.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">6 · Within-cell early warning &amp; degradation onset</h2>
+    <p class="sub">Beyond fleet statistics, each cell carries its own early-warning signal. A within-cell
+    EWMA on capacity flags drift long before end-of-life, and a change-point detector locates the
+    degradation "knee" that precedes failure — both wrapped back into censored Weibull statistics.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/severson/fig7_ewma_alarms_w3125px.png" alt="Within-cell EWMA alarm and alarm-cycle vs eventual life" loading="lazy">
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>EWMA drift alarm.</b> Left: a single cell
+        with its alarm cycle marked well ahead of end-of-life. Right: alarm cycle predicts eventual life
+        across the fleet at Spearman ρ = 0.84.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/severson/fig8_onset_weibull_w3125px.png" alt="Degradation onset precedes EOL; censored Weibull on onset" loading="lazy">
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>Degradation onset.</b> Left: a Bacon–Watts
+        capacity-knee detector — onset sits below the failure line for every cell. Right: a censored Weibull
+        on onset (β 2.28, B10 263).</div>
+      </div>
+    </div>
+    <table>
+      <tr><th>Signal</th><th class="n">Fires at (median % of life)</th><th>Value</th></tr>
+      <tr><td>Within-cell EWMA capacity drift (λ=0.2, +1% threshold)</td><td class="n">36%</td><td class="n">median lead 459 cycles before end-of-life; ρ=0.84 to eventual life</td></tr>
+      <tr><td>IR-drift EWMA alarm (2% practical threshold)</td><td class="n">51%</td><td>IR warns earlier than capacity in 79 of 124 cells</td></tr>
+      <tr><td>Bacon–Watts capacity knee (onset)</td><td class="n">77%</td><td class="n">censored Weibull B10 263 cycles</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">7 · One-screen dashboard</h2>
+    <p class="sub">The full study condensed into a single self-contained page — prediction KPIs, the fleet
+    reliability panel, and the SPC drift story.</p>
+    <div class="panel" style="text-align:center">
+      <a class="btn" href="assets/severson/dashboard.html" target="_blank" rel="noopener">Open the fleet dashboard →</a>
+      <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> Self-contained HTML;
+      opens in a new tab. Produced by the same deterministic, seeded pipeline as every figure above.</div>
+    </div>
+    <div class="note"><b>Read before quoting.</b> This is a reproduction-and-extension study on a public
+    dataset. Its contribution over the source paper is threefold: the prediction pipeline is validated by
+    matching the published table exactly and cleaned of label leakage; the fleet is given the reliability
+    treatment (censored Weibull, horizon censoring, AFT) the original never provided; and the secondary-test
+    difficulty is re-explained as measurable build drift via SPC. Data are CC BY 4.0 — cite Severson
+    et&nbsp;al., <i>Nature Energy</i> 4, 383–391 (2019); repository data.matr.io.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Public-dataset reproduction &amp; reliability extension · data © the original authors, CC BY 4.0.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+<div id="lb"><img src="" alt=""></div>
+<script>
+"use strict";
+(function(){
+  var lb=document.getElementById("lb"), lbi=lb.querySelector("img");
+  document.querySelectorAll(".fig img, .full img").forEach(function(im){
+    im.addEventListener("click",function(){ lbi.src=im.src; lbi.alt=im.alt; lb.style.display="flex"; });
+  });
+  lb.addEventListener("click",function(){ lb.style.display="none"; lbi.src=""; });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ lb.style.display="none"; lbi.src=""; } });
+})();
+</script>
+</body>
+</html>

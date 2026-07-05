@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fixture CAD · GD&amp;T · FEA · Hao Zheng</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:16px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:80ch;font-size:15.5px}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:80ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .plot{width:100%;min-height:420px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .real{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  .proxy{display:inline-block;background:var(--amber-lt);border:1px solid #ecd9b0;color:#6b5312;font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:14px;margin:8px 0 4px}
+  th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
+  td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f2f7f9}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.gal{grid-template-columns:1fr}}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .fig img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff}
+  .fig .cap{margin-top:8px}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  .big{font-size:30px;font-weight:800;color:var(--navy);line-height:1.15}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:14px 0}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .kpi .l{font-size:12.5px;color:var(--mut);letter-spacing:.4px;margin-top:4px}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a class="here" href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>Stack-pressure fixture — parametric CAD, GD&amp;T, and a documented FEA campaign</h1>
+    <p>A spring-loaded fixture that applies 5&nbsp;MPa of uniform stack pressure to a Ø12.7&nbsp;mm
+    solid-state cell — the same production-relevant operating point as the anode-free
+    solid-state Li-metal platform I work on (manuscript in preparation).
+    Designed end-to-end in Fusion 360 (parametric, script-driven), detailed with a
+    GD&amp;T drawing, and analyzed with a load-documented, mesh-converged FEA study that answers a real
+    reliability question: <b>does a rigid platen put the brittle LLZO at risk, and does a compliant
+    interposer fix it?</b> Toolchain: <b>Fusion 360 parametric modeling + GD&amp;T + FEA — skills
+    transferable to CATIA</b>.</p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">1 · The fixture</h2>
+    <p class="sub">Every dimension is a named user parameter (plate size 50&nbsp;mm, corner inset 8&nbsp;mm,
+    hole Ø5.5&nbsp;mm…), so the fixture rescales with the cell. Parts were generated as Fusion&nbsp;360
+    Python API scripts — one component per part, assembled by parameter-driven transforms.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/cad/fixture_iso.png" alt="Fixture isometric render">
+        <div class="cap"><b>Assembly.</b> Endplate → 4× die springs (10&nbsp;OD × 25, k≈55&nbsp;N/mm) →
+        platen → 5-layer cell schematic (Cu/Ag/LLZO/Li/Ni) → base plate; 4× M5 threaded rods.
+        Load path: tighten to an endplate–platen gap of 22.1&nbsp;mm → each spring compresses
+        δ≈2.9&nbsp;mm → 4 × 158&nbsp;N = 633&nbsp;N → 5&nbsp;MPa on the Ø12.7&nbsp;mm cell.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/cad/BasePlate_GDT.png" alt="Base plate GD&T drawing">
+        <div class="cap"><b>GD&amp;T detail drawing — base plate</b> (A3, ISO, first angle, 2:1;
+        <a href="assets/cad/BasePlate_GDT.pdf">PDF</a>). Datum system A/B/C (seating face + two sides);
+        position tolerance ⌖&nbsp;Ø0.2&nbsp;|&nbsp;A|B|C on the 4× M5×0.8-6H tapped holes; section A-A
+        through the Ø12.9 cell pocket; full dimensioning (50/50, 34 pitch, 12 thick).</div>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><div class="big">633 N</div><div class="l">total clamp force for 5 MPa on Ø12.7 mm (126.7 mm²)</div></div>
+      <div class="kpi"><div class="big">4 × 158 N</div><div class="l">per-spring load; k≈55 N/mm die springs, δ≈2.9 mm</div></div>
+      <div class="kpi"><div class="big">22.1 mm</div><div class="l">endplate–platen gap that sets the pressure (25 − δ)</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">2 · The build process — script by script, interactive</h2>
+    <p class="sub">The fixture was built the way production tooling should be: one parametric script per
+    part, then a transform-based assembly script that computes every position live from the shared
+    parameter table. Click a build step to see that part (or the assembly) in 3D — <b>drag to rotate</b>,
+    scroll to zoom, use the slider to explode the assembly.</p>
+    <div class="panel">
+      <div id="steps" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:4px">
+        <label style="font-size:13.5px;color:var(--mut)">Explode
+          <input id="fxExplode" type="range" min="0" max="100" value="0" style="vertical-align:middle;width:180px;accent-color:var(--teal)">
+        </label>
+        <span id="stepNote" style="font-size:13px;color:var(--mut)"></span>
+      </div>
+      <div id="fixture3d" style="width:100%;height:520px"></div>
+      <div class="cap"><b>Parametric 3D schematic</b> built from the fixture's real parameter values
+      (plate 50×50 mm, hole pitch 34 mm, rods Ø5×63 mm, springs OD10×25 free length, cell Ø12.7 mm,
+      base pocket Ø12.9×12 mm plate) — simplified geometry, true dimensions and positions. The Fusion
+      scripts that generate the real parts follow the same order.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">3 · FEA setup — loads, BCs, materials (fully documented)</h2>
+    <p class="sub">Static stress studies in Fusion 360 Simulation, solved locally. Simulation model =
+    platen + LLZO + Li + base plate (sub-µm foils suppressed — they only add mesh pathology, not load
+    path). All geometry changes for the study live in simulation-model copies; the design was never modified.</p>
+
+    <h3 class="m">Boundary conditions &amp; loads</h3>
+    <table>
+      <tr><th style="width:200px">Item</th><th>Specification</th></tr>
+      <tr><td><b>Fixed constraint</b></td><td>Base-plate bottom face (2444.6 mm²) — fixture sits on a rigid bench.</td></tr>
+      <tr><td><b>Applied load</b></td><td>4 × 158.25 N on the platen spring-seat annular faces (72.97 mm² each), direction −Z (pressing down). Total 633 N = 5 MPa on the cell footprint. <i>Fusion's default face-normal pointed +Z — flipped explicitly; a classic setup trap worth documenting.</i></td></tr>
+      <tr><td><b>Contacts</b></td><td>Automatic contact detection, 0.10 mm tolerance (bonded).</td></tr>
+      <tr><td><b>Solver</b></td><td>Local solve (all studies), status Complete.</td></tr>
+    </table>
+
+    <h3 class="m">Materials — declared honestly</h3>
+    <table>
+      <tr><th>Body</th><th>Target properties</th><th>Assigned in study</th><th>Why</th></tr>
+      <tr><td>Plates (endplate/platen/base)</td><td>Al 6061</td><td><span class="real">AS-IS</span> Aluminum</td><td>Standard library material.</td></tr>
+      <tr><td>LLZO pellet</td><td>E≈150 GPa, ν≈0.25</td><td><span class="proxy">PROXY</span> Gray cast iron ASTM A48 (E=151.7 GPa, ν=0.341)</td><td rowspan="3">Fusion's Study-Materials dialog only accepts library entries; closest-modulus proxies were chosen and the mismatch is declared. Custom document materials (LLZO 150/0.25/5100, Li 5/0.38/534, Grafoil 1/0.20/1120) were created via API for reference.</td></tr>
+      <tr><td>Li layer</td><td>E≈5 GPa, ν≈0.38 (linear-elastic; RT creep out of scope)</td><td><span class="proxy">PROXY</span> Acrylic (E=2.74 GPa, ν=0.355)</td></tr>
+      <tr><td>Grafoil pad (Case B)</td><td>through-thickness E≈1 GPa (assumed), Ø12.7 × 0.75 mm</td><td><span class="proxy">PROXY</span> HDPE (E=0.911 GPa, ν=0.392, isotropic)</td></tr>
+    </table>
+
+    <div class="gal" style="margin-top:14px">
+      <div class="fig"><img src="assets/fea/caseA_loads.png" alt="Case A loads"><div class="cap"><b>Case A loads</b> — 4 × 158 N arrows on the spring-seat rings.</div></div>
+      <div class="fig"><img src="assets/fea/caseA_bc_setup.png" alt="Case A BCs"><div class="cap"><b>Case A constraint</b> — fixed base bottom face (bodies shown transparent).</div></div>
+      <div class="fig"><img src="assets/fea/caseB_loads.png" alt="Case B loads"><div class="cap"><b>Case B loads</b> — identical load set; Grafoil pad inserted between platen and cell.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_bc_setup.png" alt="Case B BCs"><div class="cap"><b>Case B constraint</b> — same fixed face; simulation-model copy carries the pad.</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">4 · The reliability question: rigid platen vs compliant interposer</h2>
+    <p class="sub">A rigid flat platen delivers stack pressure to the cell <b>edge-first</b> — a classic
+    edge-of-contact concentration, and a crack-initiation risk for brittle LLZO. The study quantifies the
+    concentration and tests the mitigation every battery-test lab actually uses: a thin compliant pad.</p>
+
+    <div class="panel">
+      <div id="cmp" class="plot"></div>
+      <div class="cap"><span class="real">STUDY RESULT</span> Contact-pressure values probed on the
+      LLZO top face (statics check: 633&nbsp;N / 126.7&nbsp;mm² = 5.0&nbsp;MPa mean, recovered by the
+      model). First-pass bar uses the initial all-steel-proxy cell of the screening study; Case A/B use
+      the refined proxies above — materials differ, so compare trends, not decimals. Peak-to-mean:
+      <b>2.24 → ≈1.20</b> with the pad.</div>
+    </div>
+
+    <div class="kpis">
+      <div class="kpi"><div class="big">2.24×</div><div class="l">Case A (rigid platen): 11.20 MPa rim peak over 5.0 MPa mean on the LLZO face</div></div>
+      <div class="kpi"><div class="big">≈1.20×</div><div class="l">Case B (+0.75 mm Grafoil): face ring max 5.99 MPa, center 4.99 MPa</div></div>
+      <div class="kpi"><div class="big">12.5</div><div class="l">min safety factor, Case A structure (Al plates barely notice 633 N)</div></div>
+    </div>
+
+    <div class="gal">
+      <div class="fig"><img src="assets/fea/caseA_vonmises.png" alt="Case A von Mises"><div class="cap"><b>Case A von Mises</b> (max 8.255 MPa) — note the stress ring at the LLZO rim under the rigid platen.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_vonmises.png" alt="Case B von Mises"><div class="cap"><b>Case B von Mises</b> (max 8.402 MPa) — the Grafoil pad spreads the contact; the LLZO face goes uniform.</div></div>
+      <div class="fig"><img src="assets/fea/caseA_safetyfactor.png" alt="Case A safety factor"><div class="cap"><b>Case A safety factor</b> — min 12.507; the fixture is structurally overbuilt by design (stiffness, not strength, drives it).</div></div>
+      <div class="fig"><img src="assets/fea/caseB_principal3.png" alt="Case B third principal stress"><div class="cap"><b>Case B 3rd principal stress</b> (+1.342 / −13.527 MPa) — compression-dominated as intended; tensile excursions stay small, which is what matters for a brittle ceramic.</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">5 · Mesh convergence — trust, but verify</h2>
+    <p class="sub">Case B re-solved at two absolute mesh sizes (5&nbsp;mm, 2.5&nbsp;mm) on cloned studies.
+    The quantity the conclusion rests on — the LLZO-face peak — is mesh-stable. The global maximum is not,
+    and saying so matters.</p>
+    <div class="panel">
+      <div id="mesh" class="plot"></div>
+      <div class="cap"><span class="real">STUDY RESULT</span> LLZO-face peak holds at 5.4–6.1&nbsp;MPa
+      (peak/mean 1.08–1.22) across a 3× element-count refinement → the pad conclusion is mesh-robust.
+      The global max (at the bonded Li/base bi-material edge, z=11.5&nbsp;mm) keeps falling
+      (9.29 → 8.20 → 6.92&nbsp;MPa) — a known singular-edge artifact of bonded dissimilar materials, not a
+      physical failure prediction; it is reported, not used.</div>
+    </div>
+    <table>
+      <tr><th>Study</th><th>Mesh</th><th>Elements</th><th>LLZO-face peak (MPa)</th><th>Global max (MPa)</th><th>Notes</th></tr>
+      <tr><td>Case B</td><td>default (model-based)</td><td>7,032</td><td>5.99</td><td>9.294</td><td>von Mises max 8.402</td></tr>
+      <tr><td>Case B fine</td><td>5 mm absolute</td><td>6,488</td><td>6.085</td><td>8.201</td><td>absolute sizing redistributes elements (plates finer, cell coarser)</td></tr>
+      <tr><td>Case B finer</td><td>2.5 mm absolute</td><td>21,683</td><td>5.372</td><td>6.917</td><td>von Mises max 8.962; max displacement 8.986×10⁻⁴ mm</td></tr>
+    </table>
+
+    <div class="gal" style="margin-top:14px">
+      <div class="fig"><img src="assets/fea/caseB_mesh25_vonmises.png" alt="Finest mesh von Mises"><div class="cap"><b>Finest mesh (21,683 tets) von Mises</b> — the contact ring resolves smoothly; no new hot spots appear with refinement.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_mesh25_displacement.png" alt="Finest mesh displacement"><div class="cap"><b>Finest mesh displacement</b> — max 8.986×10⁻⁴ mm; the stack barely moves at 633 N, consistent with the stiffness-driven design.</div></div>
+    </div>
+
+    <div class="note"><b>Scope statement.</b> This is a portfolio-grade linear-static study with declared
+    material proxies: good for load-path understanding, contact-pressure distribution trends, and the
+    rigid-vs-compliant comparison; <b>not</b> a fracture prediction for LLZO (no strength statistics, no
+    Weibull, no creep). The published battery work on this site is where measured conclusions live —
+    this page demonstrates mechanical-analysis discipline: parametrize, document loads/BCs, declare
+    materials, converge the mesh, and separate physical results from numerical artifacts.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Fusion 360 parametric + GD&amp;T + FEA — transferable to CATIA. · <a style="color:#cfe3e3" href="index.html">Back to overview</a></div>
+</footer>
+
+<script>
+"use strict";
+const TICK={size:12};
+const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#1c2733"};
+
+/* Contact pressure comparison */
+(function(){
+  const cats=["First pass<br>(rigid, steel-proxy cell)","Case A<br>(rigid platen)","Case B<br>(+0.75 mm Grafoil)"];
+  Plotly.newPlot("cmp",[
+    {x:cats, y:[14.973, 11.202, 5.99], type:"bar", name:"LLZO-face peak",
+     marker:{color:["#8fa8bd","#c0392b","#0e7c7b"]},
+     text:["14.97","11.20","5.99"], textposition:"outside", textfont:{size:13},
+     hovertemplate:"%{x}: peak %{y:.2f} MPa<extra></extra>"},
+    {x:cats, y:[5.0,5.0,5.0], type:"scatter", mode:"lines", name:"design mean 5.0 MPa (633 N / 126.7 mm²)",
+     line:{color:"#1c2733", width:2, dash:"dash"}}
+  ],{
+    font:FONT, margin:{l:70,r:20,t:56,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
+    title:{text:"Contact pressure on the LLZO face: peak vs design mean", font:{size:15}},
+    yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", rangemode:"tozero"},
+    xaxis:{tickfont:TICK},
+    legend:{font:{size:12}, orientation:"h", y:-0.22},
+    annotations:[
+      {x:1, y:11.202, ax:0, ay:-34, text:"peak/mean 2.24", font:{size:12}, arrowcolor:"#c0392b"},
+      {x:2, y:5.99,  ax:0, ay:-34, text:"peak/mean ≈1.20", font:{size:12}, arrowcolor:"#0e7c7b"}
+    ]
+  },{responsive:true, displaylogo:false});
+})();
+
+/* Mesh convergence */
+(function(){
+  const x=["default (7,032 tets)","5 mm abs (6,488 tets)","2.5 mm abs (21,683 tets)"];
+  Plotly.newPlot("mesh",[
+    {x, y:[5.99,6.085,5.372], mode:"lines+markers+text", name:"LLZO-face peak (converged)",
+     line:{color:"#0e7c7b",width:3}, marker:{size:9},
+     text:["5.99","6.09","5.37"], textposition:"top center", textfont:{size:12}},
+    {x, y:[9.294,8.201,6.917], mode:"lines+markers+text", name:"global max @ Li/base bonded edge (NOT converged — singular edge)",
+     line:{color:"#b7791f",width:2,dash:"dash"}, marker:{size:9,symbol:"square"},
+     text:["9.29","8.20","6.92"], textposition:"top center", textfont:{size:12}},
+    {x, y:[5.0,5.0,5.0], mode:"lines", name:"design mean 5.0 MPa",
+     line:{color:"#1c2733",width:1.5,dash:"dot"}}
+  ],{
+    font:FONT, margin:{l:70,r:20,t:56,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
+    title:{text:"Case B mesh convergence — the number the conclusion uses is the stable one", font:{size:15}},
+    yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", rangemode:"tozero"},
+    xaxis:{tickfont:TICK},
+    legend:{font:{size:12}, orientation:"h", y:-0.24}
+  },{responsive:true, displaylogo:false});
+})();
+
+/* ---------- Build-process stepper + parametric 3D fixture ---------- */
+(function(){
+  // true parameter values (mm)
+  const PLATE=50, PITCH2=17, BASE_H=12, CELL_D=12.7, CELL_H=1.4, PLATEN_H=8,
+        END_H=8, SPR_FREE=25, SPR_R=5, ROD_R=2.5, ROD_LEN=63, ROD_Z0=4;
+  const COLS={end:"#9db5c8", platen:"#7f9db5", base:"#5b7c99", cell:"#0e7c7b",
+              rod:"#6b7784", rodThread:"#4a545e", spring:"#8a9aa8"};
+  function boxPts(cx,cy,z0,z1,w,d){
+    const x=[],y=[],z=[];
+    [[-1,-1],[1,-1],[1,1],[-1,1]].forEach(([sx,sy])=>{
+      x.push(cx+sx*w/2, cx+sx*w/2); y.push(cy+sy*d/2, cy+sy*d/2); z.push(z0,z1); });
+    return {x,y,z};
+  }
+  function cylPts(cx,cy,z0,z1,r,n=36){
+    const x=[],y=[],z=[];
+    for(let k=0;k<n;k++){ const a=2*Math.PI*k/n;
+      x.push(cx+r*Math.cos(a),cx+r*Math.cos(a)); y.push(cy+r*Math.sin(a),cy+r*Math.sin(a)); z.push(z0,z1); }
+    x.push(cx,cx); y.push(cy,cy); z.push(z0,z1);
+    return {x,y,z};
+  }
+  function mesh(p,color,name,opts={}){
+    return {type:"mesh3d",x:p.x,y:p.y,z:p.z,alphahull:0,color,name,flatshading:false,
+      showlegend:opts.legend!==false, legendgroup:opts.group||name,
+      hovertemplate:name+"<extra></extra>",
+      lighting:{ambient:.55,diffuse:.7,specular:.25,roughness:.6}};
+  }
+  function helix(cx,cy,z0,h,r,coils,name,legend){
+    const x=[],y=[],z=[]; const N=110;
+    for(let i=0;i<=N;i++){ const t=i/N, a=2*Math.PI*coils*t;
+      x.push(cx+r*Math.cos(a)); y.push(cy+r*Math.sin(a)); z.push(z0+h*t); }
+    return {type:"scatter3d",mode:"lines",x,y,z,name,legendgroup:"springs",showlegend:legend,
+      line:{width:7,color:COLS.spring}, hovertemplate:name+"<extra></extra>"};
+  }
+  const CORNERS=[[-PITCH2,-PITCH2],[PITCH2,-PITCH2],[PITCH2,PITCH2],[-PITCH2,PITCH2]];
+  const STEPS=[
+    {n:"1 · Endplate", s:"Endplate.py", note:"square endplate, 4× M5 clearance holes at ±17 mm — tightening the nuts loads the springs", parts:["end"]},
+    {n:"2 · Platen + cell", s:"Platen.py", note:"floating platen with spring seats; 5-layer cell schematic hangs below the contact face", parts:["platen","cell"]},
+    {n:"3 · Base plate", s:"BasePlate.py", note:"fixed base: 4× M5 tapped holes, Ø12.9 cell pocket — the GD&T sheet details this part", parts:["base"]},
+    {n:"4 · Rods & springs", s:"RodAndSpring.py", note:"M5 rod Ø5×63; die spring OD10 × 25 free (k≈55 N/mm) — FEA replaces coils with forces", parts:["rods","springs"]},
+    {n:"5 · Assembly", s:"Assemble.py", note:"transform-based assembly, every position computed live from the parameter table (free-length / 0 MPa state)", parts:["base","cell","platen","springs","end","rods"]},
+    {n:"6 · Threads", s:"AddThreads.py", note:"cosmetic M5×0.8 threads (6H holes / 6g rod, darker tint here) — visible in drawings, FEA stays meshable", parts:["base","cell","platen","springs","end","rods"], threads:true}
+  ];
+  let cur=4, gd=document.getElementById("fixture3d");
+  function build(){
+    const st=STEPS[cur], solo = st.parts.length<=2;
+    const ex = document.getElementById("fxExplode").value/100 * 14;
+    const zCell=BASE_H+ex, zPlat=zCell+CELL_H+ex, zSpr=zPlat+PLATEN_H+ex,
+          zEnd=zSpr+SPR_FREE+ex, zRod=ROD_Z0+5*ex;
+    const T=[];
+    const has=p=>st.parts.includes(p);
+    if(has("base")) T.push(mesh(boxPts(0,0,0,BASE_H,PLATE,PLATE),COLS.base,"Base plate 50×50×12"));
+    if(has("cell")){
+      const z0 = solo? 0 : zCell;
+      T.push(mesh(cylPts(0,0,z0,z0+CELL_H,CELL_D/2),COLS.cell,"Cell stack Ø12.7 (5-layer schematic)"));
+    }
+    if(has("platen")){
+      const z0 = solo? CELL_H+1 : zPlat;
+      T.push(mesh(boxPts(0,0,z0,z0+PLATEN_H,PLATE,PLATE),COLS.platen,"Platen 50×50×8 (slides on rods)"));
+    }
+    if(has("springs")){
+      const z0 = solo? 0 : zSpr;
+      CORNERS.forEach(([cx,cy],k)=>T.push(helix(cx,cy,z0,SPR_FREE,SPR_R,5,"Die spring OD10×25 (4×)",k===0)));
+    }
+    if(has("end")){
+      const z0 = solo? 0 : zEnd;
+      T.push(mesh(boxPts(0,0,z0,z0+END_H,PLATE,PLATE),COLS.end,"Endplate 50×50×8"));
+    }
+    if(has("rods")){
+      const z0 = solo? 0 : zRod;
+      const col = st.threads? COLS.rodThread : COLS.rod;
+      const nm = st.threads? "M5 rod Ø5×63 — threaded M5×0.8-6g (4×)" : "Tie rod Ø5×63 (4×)";
+      CORNERS.forEach(([cx,cy],k)=>T.push(mesh(cylPts(cx,cy,z0,z0+ROD_LEN,ROD_R,24),col,nm,{group:"rods",legend:k===0})));
+    }
+    return T;
+  }
+  const SCENE={xaxis:{visible:false},yaxis:{visible:false},zaxis:{visible:false},
+               aspectmode:"data",bgcolor:"rgba(0,0,0,0)",camera:{eye:{x:1.7,y:1.25,z:0.65}}};
+  function render(){
+    const cam=(gd._fullLayout&&gd._fullLayout.scene)? gd._fullLayout.scene.camera : SCENE.camera;
+    Plotly.react(gd, build(), {
+      font:{family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#1c2733"},
+      margin:{l:0,r:0,t:6,b:0}, scene:Object.assign({},SCENE,{camera:cam}),
+      showlegend:true, legend:{font:{size:12},orientation:"h",y:0.02,x:0.5,xanchor:"center"},
+      paper_bgcolor:"rgba(0,0,0,0)"
+    },{responsive:true,displaylogo:false});
+    document.getElementById("stepNote").innerHTML =
+      "<code style='background:#eef2f6;border:1px solid #dde5ec;border-radius:4px;padding:1px 6px;font-size:12px'>"+STEPS[cur].s+"</code> — "+STEPS[cur].note;
+  }
+  const stepsBox=document.getElementById("steps");
+  STEPS.forEach((st,k)=>{
+    const b=document.createElement("button");
+    b.textContent=st.n; b.type="button";
+    b.style.cssText="border:1px solid #dde5ec;background:#fff;color:#0f2740;font-size:13.5px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer";
+    b.addEventListener("click",()=>{ cur=k; [...stepsBox.children].forEach((x,i)=>{
+        x.style.background=i===k? "#0e7c7b":"#fff"; x.style.color=i===k? "#fff":"#0f2740"; x.style.borderColor=i===k? "#0e7c7b":"#dde5ec"; });
+      render(); });
+    stepsBox.appendChild(b);
+  });
+  stepsBox.children[cur].style.background="#0e7c7b";
+  stepsBox.children[cur].style.color="#fff";
+  stepsBox.children[cur].style.borderColor="#0e7c7b";
+  document.getElementById("fxExplode").addEventListener("input", render);
+  render();
+})();
+</script>
+</body>
+</html>

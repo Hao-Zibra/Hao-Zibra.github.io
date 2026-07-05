@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physics-informed RUL on public EIS data (Zhang 2020) · Hao Zheng</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:16px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:82ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .data{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  .honest{display:inline-block;background:var(--amber-lt);border:1px solid #ecd9b0;color:#6b5312;font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:14px;margin:8px 0 4px}
+  th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
+  td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f2f7f9}
+  td.n{font-variant-numeric:tabular-nums}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.gal{grid-template-columns:1fr}}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .fig img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .fig .cap{margin-top:8px}
+  .full{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
+  .full img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  .note b{color:var(--amber)}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  .big{font-size:30px;font-weight:800;color:var(--navy);line-height:1.15}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:14px 0}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .kpi .l{font-size:12.5px;color:var(--mut);letter-spacing:.4px;margin-top:4px}
+  .frame{width:100%;height:560px;border:1px solid var(--line);border-radius:8px;background:#fff}
+  .btn{display:inline-block;background:var(--teal);color:#fff;font-size:14px;font-weight:600;padding:9px 16px;border-radius:8px;margin-top:4px}
+  .btn:hover{background:#0a6463;text-decoration:none}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  /* lightbox */
+  #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
+  #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a class="here" href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>Physics-informed remaining-useful-life on public EIS data</h1>
+    <p>A mechanism-resolved battery-prognosis pipeline on the Zhang et&nbsp;al. 2020 coin-cell fleet:
+    every impedance spectrum is deconvolved into physical relaxation processes (DRT), SOH and RUL models
+    run on those named physics features under leakage-free <b>cell-held-out</b> protocols, and the whole
+    fleet is wrapped in right-censored Weibull reliability statistics — the combination no published work
+    on this dataset provides. Reproduction gaps are stated plainly, not hidden.</p>
+    <div class="src">
+      <span class="chip"><b>Data:</b> Zhang et al., <i>Nat. Commun.</i> 11, 1706 (2020)</span>
+      <span class="chip"><b>Repository:</b> Zenodo 10.5281/zenodo.3633835</span>
+      <span class="chip"><b>License:</b> CC BY 4.0</span>
+      <span class="chip"><b>Fleet:</b> 12 commercial coin cells · 25/35/45&nbsp;°C</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <p class="sub" style="margin-top:2px"><span class="data">PUBLIC DATA</span> Every figure and number on this
+    page is computed on the openly licensed Zhang&nbsp;2020 dataset — nothing here is my own laboratory data.
+    <span class="honest">HONEST GAP</span> marks a place where my faithful re-implementation of the paper does
+    not reproduce its published headline; I report the same-protocol baseline instead of the published number.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="big">2.59%</div><div class="l">SOH RMSE, held-out cells (gradient-boosted DRT features, pre-EOL window)</div></div>
+      <div class="kpi"><div class="big">55.8 cyc</div><div class="l">RUL RMSE on held-out cells (R² 0.70) vs 62.8 for the paper's own model, same split</div></div>
+      <div class="kpi"><div class="big">B10 = 36.9 cyc</div><div class="l">fleet 10%-failure life, censored Weibull [8.6, 82.8] 95% CI</div></div>
+      <div class="kpi"><div class="big">&lt; 1%</div><div class="l">3-engine agreement (custom MLE / lifelines / reliability-pkg) on every Weibull fit</div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:8px">
+  <div class="wrap">
+    <h2 class="sec">1 · The fleet and how it fades</h2>
+    <p class="sub">Twelve commercial coin cells cycled to end-of-life at three temperatures, with an EIS
+    sweep logged in every cell state. Fully-charged rested spectra (the only state present and stationary
+    for all 12 cells) feed every model — under-current states fail a DRT residual screen at 12–147% and are
+    excluded, reproducing the dataset's own linear-time-invariance caveat.</p>
+    <div class="full">
+      <img src="assets/zhang/f1_fleet_fade_w2200px.png" alt="12-cell fleet capacity fade, colored by temperature" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet capacity fade.</b> All 12 cells to
+      end-of-life; the cycle axis follows the record-to-cycle convention that reproduces the paper's six
+      published EOLs to within ≤9 cycles (hard gate ±12). One cell (25C02) loses ~20% within ~12 cycles then
+      plateaus — an infant-mortality mode; every fleet statistic below is reported with and without it.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">2 · From impedance to physics: DRT features</h2>
+    <p class="sub">A raw Nyquist spectrum is a tangle of overlapping processes. The distribution of
+    relaxation times (Tikhonov-regularized, NNLS with an L-curve λ) separates it into peaks at physical
+    time constants, and the resistance in each time band becomes a named, mechanistically-interpretable
+    feature — the alternative to feeding a 120-dimensional raw spectrum to a black box.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/zhang/f2_nyquist_drt_evolution_w2200px.png" alt="Nyquist and DRT evolution over cell life" loading="lazy">
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>Nyquist → DRT evolution.</b> As a cell
+        ages, the impedance grows and the DRT peaks migrate; the deconvolution makes the change legible as
+        shifts in specific relaxation-time bands rather than an opaque spectral smear.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/zhang/f3_mechanism_trajectories_w2200px.png" alt="Mechanism band-resistance trajectories vs cycle" loading="lazy">
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>Mechanism trajectories.</b> Band
+        resistances vs cycle. The charge-transfer band (1–100&nbsp;ms) growth rate over the first 50 cycles
+        is the feature that later turns out to govern life in the survival model (§5).</div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3 class="m" style="margin-top:2px">Interactive — Nyquist + DRT, cell 25C01, cycle by cycle</h3>
+      <iframe class="frame" src="assets/zhang/f7_25C01_nyquist_drt_animation.html" title="Nyquist and DRT animation for cell 25C01" loading="lazy"></iframe>
+      <div class="cap"><span class="data">PUBLIC DATA</span> Press play, or scrub the slider: the left
+      panel is the measured Nyquist spectrum, the right its DRT, and the title updates the cycle per frame.
+      Watch the mid-frequency arc and its DRT peak grow together as the cell ages.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">3 · SOH &amp; RUL under a leakage-free protocol</h2>
+    <p class="sub">Every split holds out whole cells — never random rows — so a model can't memorize a cell
+    it will later be scored on. On SOH the gradient-boosted model on DRT features beats the paper's raw-spectrum
+    Gaussian-process baseline by a wide margin and sits at parity with the best published leakage-free bar,
+    using named physical features instead of a CNN.</p>
+    <div class="full">
+      <img src="assets/zhang/f4_parity_heldout_w2200px.png" alt="Predicted vs actual parity plots on held-out cells" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Predicted vs actual on held-out cells.</b>
+      Gradient-boosted DRT-feature model; points are held-out-cell predictions the model never trained on.</div>
+    </div>
+    <h3 class="m">SOH estimation — held-out cells (paper's own split)</h3>
+    <table>
+      <tr><th>Model</th><th>Window</th><th class="n">n</th><th class="n">RMSE (% SOH)</th><th class="n">R²</th></tr>
+      <tr><td>GPR, raw 120-dim spectrum (paper method)</td><td>pre-EOL</td><td class="n">490</td><td class="n">6.06</td><td class="n">−0.80</td></tr>
+      <tr><td>GPR, DRT features</td><td>pre-EOL</td><td class="n">490</td><td class="n">5.06</td><td class="n">−0.26</td></tr>
+      <tr><td><b>Gradient-boosted, DRT features (this work)</b></td><td>pre-EOL</td><td class="n">490</td><td class="n"><b>2.59</b></td><td class="n"><b>0.67</b></td></tr>
+      <tr><td><b>Gradient-boosted, DRT features (this work)</b></td><td>all</td><td class="n">1289</td><td class="n"><b>4.08</b></td><td class="n"><b>0.92</b></td></tr>
+    </table>
+    <p class="cap">Context: the published leakage-free bar on this dataset is ~2.88% RMSPE over the same six
+    held-out cells (Ning et&nbsp;al. 2025, full-EIS CNN). The 2.59% pre-EOL pooled RMSE here is at parity or
+    better, from named physical features — a metric caveat applies (RMSE on SOH vs RMSPE on capacity; same
+    scale, not identical).</p>
+
+    <h3 class="m">RUL prediction — held-out cells</h3>
+    <table>
+      <tr><th>Model</th><th class="n">n</th><th class="n">RMSE (cycles)</th><th class="n">MAE (cycles)</th><th class="n">R²</th></tr>
+      <tr><td>GPR linear, raw spectrum (paper method)</td><td class="n">490</td><td class="n">62.8</td><td class="n">44.9</td><td class="n">0.62</td></tr>
+      <tr><td><b>Gradient-boosted, DRT features (this work)</b></td><td class="n">490</td><td class="n"><b>55.8</b></td><td class="n"><b>44.4</b></td><td class="n"><b>0.70</b></td></tr>
+    </table>
+    <div class="note"><span class="honest">HONEST GAP</span> <b>Reproduction gap, stated plainly.</b> My
+    faithful re-implementation of the paper's <i>own</i> RUL model (linear-kernel GPR on the raw spectrum,
+    same split, standardized inputs) reaches 41–177 cycles RMSE per cell — nowhere near the paper's published
+    5–18. I could not reproduce their RUL accuracy from the documented setup, so every RUL comparison on this
+    page is made against the same-protocol baseline in the table above, never against the published number.
+    On leave-one-cell-out — the protocol nobody publishes on this dataset — per-cell RUL spread is wide
+    (median ~57, worst ~113 cycles at n=8); that spread is the honest picture of cell-to-cell generalization.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">4 · The reliability-engineer view: fleet Weibull</h2>
+    <p class="sub">The same lives, read as a reliability engineer would: a right-censored Weibull fit with
+    B-lives and profile-likelihood confidence intervals, cross-validated across three independent MLE
+    engines that agree to under 1%. This is the readout an OEM quality team actually asks for — not an R²,
+    but "what fraction has failed by cycle&nbsp;N, and how sure are we?"</p>
+    <div class="full">
+      <img src="assets/zhang/f5_weibull_fleet_w2200px.png" alt="Weibull probability plot and survival curve for the 12-cell fleet" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet Weibull &amp; survival.</b> Median-rank
+      points, MLE line, and B10 with its profile-likelihood band.</div>
+    </div>
+    <table>
+      <tr><th>Fleet subset</th><th class="n">n (events)</th><th class="n">β (shape)</th><th class="n">η (cycles)</th><th class="n">B10 (cycles)</th><th class="n">B50 (cycles)</th></tr>
+      <tr><td>All 12 cells</td><td class="n">12 (11)</td><td class="n">1.32</td><td class="n">202.4</td><td class="n">36.9 [8.6, 82.8]</td><td class="n">153.4</td></tr>
+      <tr><td>Excl. 25C02 (infant mode)</td><td class="n">11 (10)</td><td class="n">1.65</td><td class="n">226.9</td><td class="n">58.1 [17.0, 113.5]</td><td class="n">181.7</td></tr>
+      <tr><td>25 °C subfleet</td><td class="n">8 (7)</td><td class="n">1.35</td><td class="n">122.3</td><td class="n">23.0 [3.3, 58.2]</td><td class="n">93.2</td></tr>
+    </table>
+    <p class="cap">Every fit reported with and without the infant-mortality cell. Three-engine agreement
+    (custom MLE / lifelines / reliability-pkg) is exact to 4 decimals on the all-cell fit. Small-n caveat:
+    12 cells, one chemistry, one duty cycle — the statistics are honest but narrow, with 35/45&nbsp;°C at n=2 each.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">5 · What shortens life: Weibull AFT on physics covariates</h2>
+    <p class="sub">A censored accelerated-failure-time model asks which measurable covariates move the whole
+    life distribution. Putting DRT band-resistance rates inside a survival model is — to my knowledge — the
+    first use of DRT features in a censored life model for batteries, and it points at a mechanism, not just
+    a correlation.</p>
+    <div class="full">
+      <img src="assets/zhang/f6_aft_acceleration_w2200px.png" alt="Weibull AFT acceleration-factor forest plot" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>AFT acceleration factors</b> (per +1 SD,
+      with 95% CIs). Above 1 shortens life; below 1 extends it.</div>
+    </div>
+    <table>
+      <tr><th>Covariate</th><th class="n">Acceleration factor / +1 SD</th><th>Reading</th></tr>
+      <tr><td>Charge-transfer growth rate (DRT 1–100 ms)</td><td class="n">1.56 [1.11, 2.19]</td><td>the life-shortening covariate — early interfacial kinetics govern life</td></tr>
+      <tr><td>Temperature (Arrhenius, 1000/T)</td><td class="n">0.65 [0.47, 0.89]</td><td><b>inverse-Arrhenius</b>: at 2C this fleet lives longer hot — kinetics-dominated, not classic thermal aging</td></tr>
+      <tr><td>High-frequency resistance rate</td><td class="n">0.71 [0.47, 1.07]</td><td>not significant (CI spans 1)</td></tr>
+    </table>
+    <p class="cap">Mechanism-AFT concordance 0.776; the top permutation-importance SOH feature is the same
+    charge-transfer band (d_r_band_10_100ms). The story is internally consistent: the process that shows up
+    as the most important SOH predictor is also the one that shortens life in the survival model.</p>
+
+    <h3 class="m">Mechanistic findings</h3>
+    <table>
+      <tr><th>Finding</th><th>Evidence</th></tr>
+      <tr><td><b>Fade is not ohmic.</b></td><td>IR-corrected capacity moves EOL80 by &lt;1 cycle on every cell; ohmic share of fade at end-of-life is 0.1–0.3%.</td></tr>
+      <tr><td><b>No abrupt interfacial onset.</b></td><td>A 10σ knee criterion fires on 0/6 cells — IR-corrected fade is gradual; the criterion was kept faithful, not retuned to force a knee.</td></tr>
+      <tr><td><b>Stationarity screen for free.</b></td><td>The DRT fit residual flags every under-current state (12–147% median residual) while rested spectra fit at &lt;2% — reproducing the dataset's published finding that only rested spectra are trustworthy.</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">6 · One-screen dashboard</h2>
+    <p class="sub">Everything above condenses into a single self-contained engineer summary — KPIs, the key
+    figures, and a per-cell RUL table.</p>
+    <div class="panel" style="text-align:center">
+      <a class="btn" href="assets/zhang/dashboard.html" target="_blank" rel="noopener">Open the fleet dashboard →</a>
+      <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> Self-contained HTML;
+      opens in a new tab. Built by the same pipeline that produced every figure on this page.</div>
+    </div>
+    <div class="note"><b>Read before quoting.</b> This is a reproduction-and-extension study on a public
+    dataset, not new laboratory data. The value it adds over the original paper is the leakage-free protocol
+    discipline, the physics-feature interpretability, and the reliability-engineering wrapper (censored
+    Weibull + AFT) that the source work does not provide. Where I could not reproduce a published number, I
+    say so and fall back to a same-protocol baseline. Data are CC BY 4.0 — cite Zhang et&nbsp;al.,
+    <i>Nature Communications</i> 11, 1706 (2020); repository Zenodo 10.5281/zenodo.3633835.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Public-dataset reproduction &amp; reliability extension · data © the original authors, CC BY 4.0.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+<div id="lb"><img src="" alt=""></div>
+<script>
+"use strict";
+(function(){
+  var lb=document.getElementById("lb"), lbi=lb.querySelector("img");
+  document.querySelectorAll(".fig img, .full img").forEach(function(im){
+    im.addEventListener("click",function(){ lbi.src=im.src; lbi.alt=im.alt; lb.style.display="flex"; });
+  });
+  lb.addEventListener("click",function(){ lb.style.display="none"; lbi.src=""; });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ lb.style.display="none"; lbi.src=""; } });
+})();
+</script>
+</body>
+</html>

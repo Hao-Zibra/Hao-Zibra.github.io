@@ -38,11 +38,15 @@
   th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
   td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
   tr:hover td{background:#f2f7f9}
-  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
   @media(max-width:900px){.gal{grid-template-columns:1fr}}
-  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
-  .fig img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff}
-  .fig .cap{margin-top:8px}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;position:relative;display:flex;flex-direction:column}
+  /* uniform image box so rows stay aligned and nothing looks cut (contain = never crops) */
+  .fig img{width:100%;height:280px;object-fit:contain;border-radius:6px;border:1px solid var(--line);background:#f4f7fa}
+  .fig .cap{margin-top:10px}
+  /* §1 hero figure row — larger, equal-height images */
+  .figrow .fig img{height:360px}
+  .render-badge{position:absolute;top:20px;right:20px;background:rgba(15,39,64,.82);color:#e7f0f6;font-size:11px;font-weight:700;letter-spacing:.7px;padding:3px 9px;border-radius:6px;z-index:2}
   .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
   code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
   .big{font-size:30px;font-weight:800;color:var(--navy);line-height:1.15}
@@ -88,13 +92,15 @@
     <p class="sub">Every dimension is a named user parameter (plate size 50&nbsp;mm, corner inset 8&nbsp;mm,
     hole Ø5.5&nbsp;mm…), so the fixture rescales with the cell. Parts were generated as Fusion&nbsp;360
     Python API scripts — one component per part, assembled by parameter-driven transforms.</p>
-    <div class="gal">
+    <div class="gal figrow">
       <div class="fig">
+        <span class="render-badge">STATIC RENDER</span>
         <img src="assets/cad/fixture_iso.png" alt="Fixture isometric render">
         <div class="cap"><b>Assembly.</b> Endplate → 4× die springs (10&nbsp;OD × 25, k≈55&nbsp;N/mm) →
         platen → 5-layer cell schematic (Cu/Ag/LLZO/Li/Ni) → base plate; 4× M5 threaded rods.
         Load path: tighten to an endplate–platen gap of 22.1&nbsp;mm → each spring compresses
-        δ≈2.9&nbsp;mm → 4 × 158&nbsp;N = 633&nbsp;N → 5&nbsp;MPa on the Ø12.7&nbsp;mm cell.</div>
+        δ≈2.9&nbsp;mm → 4 × 158&nbsp;N = 633&nbsp;N → 5&nbsp;MPa on the Ø12.7&nbsp;mm cell.
+        <b><a href="#steps">▸ rotate the live 3D model in §2</a></b>.</div>
       </div>
       <div class="fig">
         <img src="assets/cad/BasePlate_GDT.png" alt="Base plate GD&T drawing">
@@ -256,15 +262,11 @@ const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#
     {x:cats, y:[5.0,5.0,5.0], type:"scatter", mode:"lines", name:"design mean 5.0 MPa (633 N / 126.7 mm²)",
      line:{color:"#1c2733", width:2, dash:"dash"}}
   ],{
-    font:FONT, margin:{l:70,r:20,t:56,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
+    font:FONT, margin:{l:70,r:20,t:60,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
     title:{text:"Contact pressure on the LLZO face: peak vs design mean", font:{size:15}},
-    yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", rangemode:"tozero"},
+    yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", range:[0,17.5]},
     xaxis:{tickfont:TICK},
-    legend:{font:{size:12}, orientation:"h", y:-0.22},
-    annotations:[
-      {x:1, y:11.202, ax:0, ay:-34, text:"peak/mean 2.24", font:{size:12}, arrowcolor:"#c0392b"},
-      {x:2, y:5.99,  ax:0, ay:-34, text:"peak/mean ≈1.20", font:{size:12}, arrowcolor:"#0e7c7b"}
-    ]
+    legend:{font:{size:12}, orientation:"h", y:-0.22}
   },{responsive:true, displaylogo:false});
 })();
 
@@ -283,7 +285,7 @@ const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#
   ],{
     font:FONT, margin:{l:70,r:20,t:56,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
     title:{text:"Case B mesh convergence — the number the conclusion uses is the stable one", font:{size:15}},
-    yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", rangemode:"tozero"},
+    yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", range:[0,10.6]},
     xaxis:{tickfont:TICK},
     legend:{font:{size:12}, orientation:"h", y:-0.24}
   },{responsive:true, displaylogo:false});

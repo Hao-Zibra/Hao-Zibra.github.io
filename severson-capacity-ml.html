@@ -262,20 +262,31 @@
 
 <section>
   <div class="wrap">
+    <h2 class="sec">Conclusion — why it matters</h2>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740">
+      <p style="margin:0 0 8px"><b>So what?</b> Using only signals a production line already logs — voltage,
+      capacity, internal resistance from the first 100 cycles — this reproduces the benchmark exactly, then
+      adds what the field had skipped: a censored-Weibull B10 with confidence intervals, and an SPC read that
+      re-explains the infamous "hard" test batch as ordinary manufacturing drift. The within-cell drift alarm
+      fires a median 459 cycles before end-of-life and its timing predicts eventual life, so a line could
+      derate and reschedule early. It answers the sharpest question a manufacturer asks: can these methods
+      work on <i>our</i> production data?</p>
+      <p style="margin:0"><b>Future work:</b> wire the same EWMA + conformal read to live BMS telemetry for
+      streaming, per-batch drift-aware recalibration.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <h2 class="sec">7 · One-screen dashboard</h2>
-    <p class="sub">The full study condensed into a single self-contained page — prediction KPIs, the fleet
-    reliability panel, and the SPC drift story.</p>
     <div class="panel" style="text-align:center">
       <a class="btn" href="assets/severson/dashboard.html" target="_blank" rel="noopener">Open the fleet dashboard →</a>
-      <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> Self-contained HTML;
-      opens in a new tab. Produced by the same deterministic, seeded pipeline as every figure above.</div>
+      <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> Prediction KPIs, the fleet
+      reliability panel, and the SPC drift story in one self-contained page (opens in a new tab).
+      Reproduction-and-extension on a public dataset. Data CC BY 4.0 — Severson et&nbsp;al.,
+      <i>Nat. Energy</i> 4, 383–391 (2019), data.matr.io.</div>
     </div>
-    <div class="note"><b>Read before quoting.</b> This is a reproduction-and-extension study on a public
-    dataset. Its contribution over the source paper is threefold: the prediction pipeline is validated by
-    matching the published table exactly and cleaned of label leakage; the fleet is given the reliability
-    treatment (censored Weibull, horizon censoring, AFT) the original never provided; and the secondary-test
-    difficulty is re-explained as measurable build drift via SPC. Data are CC BY 4.0 — cite Severson
-    et&nbsp;al., <i>Nature Energy</i> 4, 383–391 (2019); repository data.matr.io.</div>
   </div>
 </section>
 

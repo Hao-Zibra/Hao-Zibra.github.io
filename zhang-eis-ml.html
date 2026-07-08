@@ -259,20 +259,30 @@
 
 <section>
   <div class="wrap">
+    <h2 class="sec">Conclusion — why it matters</h2>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740">
+      <p style="margin:0 0 8px"><b>So what?</b> Physics-named DRT features match the best published accuracy
+      under leakage-free protocols — and then do what no prior work on this dataset did: enter a censored
+      survival model to give a fleet B10 with confidence intervals. That is the gap between a number and a
+      decision — every feature maps to a mechanism a failure-analysis team can act on, and the one place the
+      paper's result would not reproduce is stated openly, not buried. It shows the method survives the move
+      from lab-grown data to a third-party, downloadable benchmark.</p>
+      <p style="margin:0"><b>Future work:</b> run the DRT-feature survival model online, updating
+      remaining-life and its confidence band as each new impedance sweep streams in.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <h2 class="sec">6 · One-screen dashboard</h2>
-    <p class="sub">Everything above condenses into a single self-contained engineer summary — KPIs, the key
-    figures, and a per-cell RUL table.</p>
     <div class="panel" style="text-align:center">
       <a class="btn" href="assets/zhang/dashboard.html" target="_blank" rel="noopener">Open the fleet dashboard →</a>
-      <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> Self-contained HTML;
-      opens in a new tab. Built by the same pipeline that produced every figure on this page.</div>
+      <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> KPIs, key figures, and a
+      per-cell RUL table in one self-contained page (opens in a new tab). Reproduction-and-extension on a
+      public dataset — not lab data. Data CC BY 4.0 — Zhang et&nbsp;al., <i>Nat. Commun.</i> 11, 1706 (2020),
+      Zenodo 10.5281/zenodo.3633835.</div>
     </div>
-    <div class="note"><b>Read before quoting.</b> This is a reproduction-and-extension study on a public
-    dataset, not new laboratory data. The value it adds over the original paper is the leakage-free protocol
-    discipline, the physics-feature interpretability, and the reliability-engineering wrapper (censored
-    Weibull + AFT) that the source work does not provide. Where I could not reproduce a published number, I
-    say so and fall back to a same-protocol baseline. Data are CC BY 4.0 — cite Zhang et&nbsp;al.,
-    <i>Nature Communications</i> 11, 1706 (2020); repository Zenodo 10.5281/zenodo.3633835.</div>
   </div>
 </section>
 

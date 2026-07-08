@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Physics-based aging simulation (PyBaMM) · Hao Zheng</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:16px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:82ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .sim{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  /* H1 chemistry-honesty disclaimer — deliberately loud */
+  .h1banner{background:#fbf1dc;border:1.5px solid var(--amber);border-radius:10px;padding:16px 20px;margin:20px 0 0;color:#5c4410}
+  .h1banner .lab{display:inline-block;background:var(--amber);color:#fff;font-size:11.5px;font-weight:800;letter-spacing:.8px;padding:3px 10px;border-radius:6px;margin-right:8px;vertical-align:2px}
+  .h1banner b{color:#7a5510}
+  .h1box{background:#fbf1dc;border:1.5px solid var(--amber);border-radius:8px;padding:11px 14px;margin-top:10px;font-size:13px;color:#5c4410;line-height:1.55}
+  .h1box .lab{display:inline-block;background:var(--amber);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.7px;padding:2px 8px;border-radius:5px;margin-right:6px;vertical-align:1px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:14px;margin:8px 0 4px}
+  th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
+  td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f2f7f9}
+  td.n{font-variant-numeric:tabular-nums}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.gal{grid-template-columns:1fr}}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .fig img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .fig .cap{margin-top:8px}
+  .full{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
+  .full img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  .note b{color:var(--amber)}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  .big{font-size:30px;font-weight:800;color:var(--navy);line-height:1.15}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:14px 0}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .kpi .l{font-size:12.5px;color:var(--mut);letter-spacing:.4px;margin-top:4px}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
+  #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a class="here" href="pybamm-modeling.html">Physics Modeling</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>Physics-based battery aging simulation with PyBaMM</h1>
+    <p>An open-source PyBaMM Doyle–Fuller–Newman (DFN) pipeline that injects coupled aging — SEI growth,
+    lithium-inventory loss, active-material loss, and particle cracking — then simulates 1000-cycle capacity
+    fade and the evolution of impedance and DRT features. It reproduces a capacity <b>knee</b> and a matching
+    <b>polarization-resistance acceleration</b>, and shows — at the pattern level — that the DRT
+    polarization-resistance growth is a degradation signature shared with two measured public datasets.</p>
+    <div class="src">
+      <span class="chip"><b>Model:</b> PyBaMM DFN · BSD-3</span>
+      <span class="chip"><b>Parameters:</b> Chen 2020 / O'Kane 2022 (public)</span>
+      <span class="chip"><b>Comparison data:</b> Zhang 2020 &amp; Severson 2019 (public, CC BY 4.0)</span>
+      <span class="chip"><b>Determinism:</b> pinned versions · no RNG · 0.0 relative on re-solve</span>
+    </div>
+  </div>
+</div>
+
+<section style="padding-bottom:0">
+  <div class="wrap">
+    <div class="h1banner">
+      <span class="lab">CHEMISTRY HONESTY · H1</span>
+      This is a <b>liquid-electrolyte NMC811‖graphite</b> model built on public parameter sets. It is a
+      public <b>methods demonstration</b> — <b>not a model of any solid-state cell</b>, and not connected to
+      any unpublished work. Every cross-dataset comparison on this page is <b>pattern-level</b> (direction,
+      shape, magnitude-class) and never a quantitative cross-chemistry claim.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="sub" style="margin-top:2px"><span class="sim">NMC PUBLIC-PARAM SIM</span> Everything here is
+    computed from open inputs only — the public PyBaMM parameter sets and two already-public datasets. No
+    laboratory data is read. The pipeline source is not published (it imports a private shared analysis
+    engine); this page shows the figures and plain conclusions.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="big">1000 cyc</div><div class="l">coupled-degradation aging simulated per config (3 configs, all gates green)</div></div>
+      <div class="kpi"><div class="big">2.16×</div><div class="l">fade acceleration at the capacity knee (cycle 677, knee config)</div></div>
+      <div class="kpi"><div class="big">2.25×</div><div class="l">polarization-resistance R_pol growth over 1000 cycles (7.6 → 17.1 mΩ)</div></div>
+      <div class="kpi"><div class="big">≤ 0.6%</div><div class="l">EIS method cross-check (linearized pybammeis vs brute-force time-domain)</div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:8px">
+  <div class="wrap">
+    <h2 class="sec">1 · The model and its baseline</h2>
+    <p class="sub">The workhorse is the DFN electrochemical model — it resolves solid-phase diffusion and the
+    deep-DOD behavior where fade physics lives. A baseline check confirms the model choice before any aging is
+    layered on: the reduced-order SPMe model diverges from DFN by up to ~320&nbsp;mV over the 75–99% DOD
+    window, so the full DFN carries all the cycling here.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="big">4.938 Ah</div><div class="l">DFN 1C discharge on Chen 2020 — within 0.012 Ah of the ~5 Ah reference</div></div>
+      <div class="kpi"><div class="big">~320 mV</div><div class="l">peak SPMe–DFN divergence over 75–99% DOD → DFN required for fade fidelity</div></div>
+      <div class="kpi"><div class="big">0.0</div><div class="l">relative difference between two independent solves (deterministic, no RNG)</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">2 · A thousand cycles of coupled aging</h2>
+    <p class="sub">Three configurations run to 1000 cycles: the full O'Kane 2022 degradation recipe, a
+    knee-forcing config (particle cracking ×25, softened from the literature ×50/×30 so it produces a clear
+    knee and still survives all 1000 cycles), and a no-degradation control. A change-point detector locates
+    the capacity knee where fade accelerates 2.16×.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/pybamm/fig_pub_fleet_fade_w2200px.png" alt="Capacity retention vs cycle for three configurations" loading="lazy">
+        <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM</span> <b>Thousand-cycle capacity
+        retention.</b> Three configs vs cycle number; the dotted line marks the detected knee (cycle 677) in
+        the cracking config. End retention: 100.0% control, 96.8% base, 94.3% knee.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/pybamm/fig_pub_mechanism_decomposition_w2200px.png" alt="Degradation mechanism decomposition, LLI and LAM vs cycle" loading="lazy">
+        <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM</span> <b>Mechanism decomposition.</b>
+        Loss split into lithium-inventory (LLI) and negative active-material (LAM) loss. In the knee config
+        (dashed) the knee is accelerating LLI — LAM is disabled in this ablation, isolating the mechanism.</div>
+      </div>
+    </div>
+    <p class="cap">All gates pass: monotonicity, closure, knee detection, and control drift (control stays
+    flat at exactly 100.0%). Per-segment subprocess isolation keeps peak memory in budget.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">3 · The impedance analogue: EIS → canonical DRT</h2>
+    <p class="sub">At every ~100 cycles the aged cell is probed with a linearized EIS sweep (10&nbsp;kHz–1&nbsp;mHz)
+    and deconvolved with the canonical distribution-of-relaxation-times engine. The knee that shows up in
+    capacity has an impedance twin: the polarization resistance R_pol accelerates in exactly the config that
+    knees. This cell's aging impedance is an ohmic shift plus polarization/diffusion growth — not a
+    charge-transfer semicircle — so R_pol (total polarization) is the tracked interfacial quantity.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/pybamm/fig_pub_rpol_evolution_w2200px.png" alt="Polarization resistance R_pol vs cycle" loading="lazy">
+        <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM</span> <b>Polarization-resistance
+        evolution.</b> R_pol vs cycle. The knee config accelerates (7.6 → 17.1 mΩ, 2.25×) while the base
+        config stays gentle and the control is flat — the impedance analogue of the capacity knee.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/pybamm/fig_pub_nyquist_knee_evolution_w2200px.png" alt="Nyquist spectra evolving with aging" loading="lazy">
+        <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM</span> <b>Nyquist evolution (knee config).</b>
+        Simulated spectra colored cycle 25 → 994; the impedance grows and shifts as the cell ages, the raw
+        signal behind the DRT R_pol trace at left.</div>
+      </div>
+    </div>
+    <h3 class="m">Method validation</h3>
+    <table>
+      <tr><th>Check</th><th>Result</th><th>Reading</th></tr>
+      <tr><td>Linearized EIS (pybammeis) vs brute-force time-domain EIS</td><td class="n">≤ 0.6% over ≤1 Hz</td><td>the fast linearized solver agrees with the direct method; high-frequency residual is discretization-limited, not solver error</td></tr>
+      <tr><td>DRT reconstruction residual</td><td class="n">max 0.301%</td><td>the deconvolution faithfully represents the spectra</td></tr>
+      <tr><td>Deterministic re-solve</td><td class="n">0.0 relative</td><td>pinned versions, no RNG — bit-stable reproduction</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">4 · Pattern-level comparison with public measured data</h2>
+    <p class="sub">The same DRT engine is run on the simulated cell and on two measured public datasets, so the
+    R_pol-growth signature is computed identically on both sides. The question is deliberately modest: does the
+    <i>type</i> of degradation signature transfer across chemistries? The answer is a qualified yes — read
+    strictly at the pattern level.</p>
+
+    <div class="full">
+      <img src="assets/pybamm/fig_pub_xchem_rpol_zhang_w2200px.png" alt="Simulated vs measured Zhang R_pol growth, pattern-level" loading="lazy">
+      <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM + PUBLIC DATA</span> <b>R_pol growth: sim vs
+      measured Zhang (LCO).</b> Simulated knee config (2.25×) against 12 measured Zhang coin cells, both
+      normalized to initial R_pol over life fraction. Both grow, and the growth magnitude-class overlaps
+      (Zhang median 1.29×, range 0.92–2.05×).</div>
+      <div class="h1box"><span class="lab">H1</span> Liquid NMC811 simulation vs LCO coin-cell measurement.
+      <b>Direction and magnitude-class only</b> — not a quantitative cross-chemistry equivalence, and not a
+      model of any solid-state cell.</div>
+    </div>
+
+    <div class="full">
+      <img src="assets/pybamm/fig_pub_knee_onset_severson_w2200px.png" alt="Knee onset life fraction, sim vs Severson, pattern-level" loading="lazy">
+      <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM + PUBLIC DATA</span> <b>Knee position: sim vs
+      measured Severson (LFP).</b> The simulated knee sits at ≈0.66 of the observed window, at the lower edge
+      of the Severson distribution of knee-onset fractions (123 LFP cells, peaking ~0.77) — both place the
+      knee in the latter part of life.</div>
+      <div class="h1box"><span class="lab">H1</span> Liquid NMC811 simulation vs LFP fast-charge measurement,
+      and a <b>different knee mechanism</b> (sim: SEI-on-cracks lithium-inventory loss; Severson: lithium
+      plating). <b>Shape-class only.</b> The simulated cell ends at ~94% SOH (never reaches 80% end-of-life),
+      so its knee fraction is measured against the run window, not a true cycle-life — reported, not smoothed
+      over.</div>
+    </div>
+
+    <table>
+      <tr><th>Dataset</th><th>Verdict</th><th>What is shared (pattern-level)</th></tr>
+      <tr><td>Zhang 2020 · LCO coin cells · n=12</td><td><b>Agree</b></td><td>both simulated and measured R_pol grow with cycling; magnitude-class overlaps (~1.2–2.3×)</td></tr>
+      <tr><td>Severson 2019 · LFP fast-charge · n=123</td><td><b>Partial</b></td><td>both place the knee in the latter ~0.7–0.8 of the window; different underlying mechanism; shape-class only</td></tr>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">5 · Honest limitations</h2>
+    <div class="note">
+      <ul style="margin:0 0 0 18px;padding:0;font-size:14px;line-height:1.7">
+        <li>Liquid NMC model, <b>not a solid-state cell</b>; all cross-dataset correspondence is pattern-level.</li>
+        <li>The knee accelerant (cracking multiplier) is a literature device to force a knee within feasible
+        compute; its magnitude was chosen for survival to 1000 cycles, <b>not fit to data</b>.</li>
+        <li>The model has no distinct charge-transfer arc; a closer analogue to a measured interfacial
+        resistance would need an explicit film/contact-resistance addition (future work).</li>
+        <li>The simulated knee cell ends at ~94% SOH (never reaches 80% end-of-life), so its knee-location
+        fraction is relative to the run window, not a true cycle-life.</li>
+      </ul>
+    </div>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740"><b>Scope.</b> This page
+    displays figures and plain conclusions from a public-input methods pipeline. The pipeline source is not
+    released here — it imports a private shared DRT/figure engine — so a public code release would go through
+    a separately sanitized package, not this repository. What this page demonstrates is physics-based-modeling
+    discipline: pick the right-fidelity model, inject coupled degradation, validate the numerics, and compare
+    to measured data only as far as the chemistry honestly allows.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>PyBaMM public-parameter methods demonstration · liquid NMC811, not a solid-state model · data © original authors, CC BY 4.0.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+<div id="lb"><img src="" alt=""></div>
+<script>
+"use strict";
+(function(){
+  var lb=document.getElementById("lb"), lbi=lb.querySelector("img");
+  document.querySelectorAll(".fig img, .full img").forEach(function(im){
+    im.addEventListener("click",function(){ lbi.src=im.src; lbi.alt=im.alt; lb.style.display="flex"; });
+  });
+  lb.addEventListener("click",function(){ lb.style.display="none"; lbi.src=""; });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ lb.style.display="none"; lbi.src=""; } });
+})();
+</script>
+</body>
+</html>

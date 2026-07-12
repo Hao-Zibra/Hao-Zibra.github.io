@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>X-ray micro-CT battery image analysis (open data) · Hao Zheng</title>
+<script type="module" src="https://unpkg.com/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <style>
   :root{
     --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
@@ -52,6 +53,12 @@
   .fig .cap{margin-top:8px}
   .full{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
   .full img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  model-viewer{width:100%;height:460px;background:#0f1a24;border-radius:8px;border:1px solid var(--line);--poster-color:#0f1a24}
+  .mv-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:#cfe3e3;padding:16px}
+  .mv-fallback img{max-width:100%;max-height:380px;border-radius:6px}
+  .mv-hint{font-size:12.5px;color:var(--mut);margin-top:8px}
+  .mvgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.mvgrid{grid-template-columns:1fr}}
   .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
   .note b{color:var(--amber)}
   code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
@@ -255,6 +262,43 @@
       my own work. Peak darkened area <b>17.2%</b> (Ag-coated Cu) vs <b>2.5%</b> (bare Cu); the dataset's own
       electrochemistry corroborates — the bare-Cu cell stops repolarizing at ~15&nbsp;h (a short-circuit
       signature) while the Ag cell completes both cycles. Direction agrees with the dataset authors' published framing.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">8 · Explore the volume in 3D</h2>
+    <p class="sub">The segmented cathode and the reconstructed plated-lithium band as interactive 3D meshes —
+    <b>drag to rotate, scroll to zoom</b>. If your browser cannot render WebGL, a static view is shown instead.
+    (Meshes are un-compressed for now; Draco compression is planned.)</p>
+    <div class="mvgrid">
+      <div class="full">
+        <model-viewer src="assets/ct/3d/mesh_EIL014_particles_cracks.glb"
+          poster="assets/ct/3d/fallback_EIL014_3D.png"
+          alt="Interactive 3D subvolume of the cycled NMC811 cathode with intact particles, cracked particles, and internal cracks"
+          camera-controls auto-rotate touch-action="pan-y" shadow-intensity="1" exposure="1"
+          interaction-prompt="none" loading="lazy" reveal="auto">
+          <div class="mv-fallback"><img src="assets/ct/3d/fallback_EIL014_3D.png" alt="Static 3D render of NMC811 particles and cracks"><div class="mv-hint">3D needs WebGL — showing the static render.</div></div>
+        </model-viewer>
+        <div class="cap"><span class="data">CC0</span> <b>Interactive subvolume of the cycled NMC811 cathode</b>:
+        intact particles grey-blue, cracked particles amber, internal cracks red. Heenan et&nbsp;al. 2020, DOI 10.5522/04/12159366.v1.</div>
+      </div>
+      <div class="full">
+        <model-viewer src="assets/ct/3d/mesh_ASSB_Ag_plated_band.glb"
+          poster="assets/ct/3d/fallback_ASSB_band.png"
+          alt="Interactive 3D reconstruction of the plated-lithium band inside a solid-electrolyte pellet"
+          camera-controls auto-rotate touch-action="pan-y" shadow-intensity="1" exposure="1"
+          interaction-prompt="none" loading="lazy" reveal="auto">
+          <div class="mv-fallback"><img src="assets/ct/3d/fallback_ASSB_band.png" alt="Static 3D render of the plated-lithium band"><div class="mv-hint">3D needs WebGL — showing the static render.</div></div>
+        </model-viewer>
+        <div class="cap"><span class="data">CC BY 4.0</span> <b>Plated-lithium band reconstructed from registered
+        operando difference imaging</b> inside the solid-electrolyte pellet (Ag-coated cell); the outer pellet
+        shell renders translucent. Zenodo 15807466, DOI 10.5281/zenodo.15807466 (lengths in voxel units).</div>
+        <div class="h1box"><span class="lab">FRAMING</span> The solid-state model is an <b>independent
+        re-analysis of published open data (CC BY 4.0)</b> — not connected to any laboratory's private data or
+        to my own work.</div>
+      </div>
     </div>
   </div>
 </section>

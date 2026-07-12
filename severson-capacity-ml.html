@@ -264,6 +264,44 @@
 
 <section>
   <div class="wrap">
+    <h2 class="sec">7 · Reading the mechanism: incremental capacity (dQ/dV)</h2>
+    <p class="sub">A cycle-life number tells you <b>when</b> a cell fails; incremental capacity analysis tells you
+    <b>how</b>. Using nothing but the discharge curves already in the public Severson fleet, I compute
+    IC(V)&nbsp;=&nbsp;|dQ/dV| (Savitzky–Golay smoothing, window 21, order 3) and track the LFP two-phase plateau
+    peak near 3.15&nbsp;V. As a cell ages the peak <b>shifts down in voltage</b> (rising polarization) and
+    <b>shrinks in height</b> (loss of active material and cyclable lithium) — the degradation <i>mode</i>, not
+    just its rate.</p>
+    <div class="full">
+      <img src="assets/severson/ica_fig1_dqdv_evolution_w2200px.png" alt="dQ/dV evolution for one cell per archetype, colored by cycle" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>dQ/dV evolution</b> — IC(V) for one
+      representative cell per archetype, colored by cycle (dark → light = early → late). The plateau peak
+      shifts left and collapses with aging; the effect is most violent for the early-death cell.</div>
+    </div>
+    <div class="full">
+      <img src="assets/severson/ica_fig2_peak_tracking_w2200px.png" alt="Plateau peak voltage and normalized height vs fraction of life" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Peak tracking</b> — plateau peak voltage
+      (left) and height-normalized-to-initial (right) vs fraction of cycle life, six cells by archetype.
+      Early-death cells (red) drift down and decay fastest; normal/long cells stay high until late life
+      (early-death lose up to −0.06&nbsp;V and retain ~52% of peak height; long-lived drift ~−0.02&nbsp;V, hold ~66%).</div>
+    </div>
+    <div class="full">
+      <img src="assets/severson/ica_fig3_group_band_w2200px.png" alt="Group-mean dQ/dV with 1-sigma error bands at cycle 100" loading="lazy">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Group band (with error bands)</b> — group-mean
+      IC(V) ± 1 std at cycle 100 for the three archetype life-bands (the error-band figure). Peaks are ordered
+      by eventual life; bands overlap, quantifying why the early signal is real but subtle.</div>
+    </div>
+    <div class="note"><b>Honest caveat.</b> Averaged across the fleet at cycle 100, peak height and position
+    are monotonically ordered by eventual life (early-death lowest and leftmost, long-life highest and
+    rightmost) — but <b>the ±1σ bands still overlap (~1.5σ separation)</b>. So cycle-100 dQ/dV <i>orders</i> the
+    archetypes but does not cleanly <i>separate</i> them, which is precisely why very-early cycle-life
+    prediction on this fleet is genuinely hard: the mechanism signal is real, not yet cleanly separated at 100
+    cycles. This dQ/dV layer answers "by what mechanism," complementing the censored-Weibull "how reliable" and
+    the SPC "where's the drift."</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
     <h2 class="sec">Conclusion — why it matters</h2>
     <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740">
       <p style="margin:0 0 8px"><b>So what?</b> Using only signals a production line already logs — voltage,
@@ -281,7 +319,7 @@
 
 <section>
   <div class="wrap">
-    <h2 class="sec">7 · One-screen dashboard</h2>
+    <h2 class="sec">8 · One-screen dashboard</h2>
     <div class="panel" style="text-align:center">
       <a class="btn" href="assets/severson/dashboard.html" target="_blank" rel="noopener">Open the fleet dashboard →</a>
       <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> Prediction KPIs, the fleet

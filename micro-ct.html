@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>X-ray micro-CT battery image analysis (open data) · Hao Zheng</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:15px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:82ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .data{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  /* open-data re-analysis disclaimer — styled like the site's H1 banner */
+  .odbanner{background:#fbf1dc;border:1.5px solid var(--amber);border-radius:10px;padding:16px 20px;margin:20px 0 0;color:#5c4410}
+  .odbanner .lab{display:inline-block;background:var(--amber);color:#fff;font-size:11.5px;font-weight:800;letter-spacing:.8px;padding:3px 10px;border-radius:6px;margin-right:8px;vertical-align:2px}
+  .odbanner b{color:#7a5510}
+  .h1box{background:#fbf1dc;border:1.5px solid var(--amber);border-radius:8px;padding:11px 14px;margin-top:10px;font-size:13px;color:#5c4410;line-height:1.55}
+  .h1box .lab{display:inline-block;background:var(--amber);color:#fff;font-size:10.5px;font-weight:800;letter-spacing:.7px;padding:2px 8px;border-radius:5px;margin-right:6px;vertical-align:1px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:14px;margin:8px 0 4px}
+  th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
+  td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f2f7f9}
+  td.n{font-variant-numeric:tabular-nums;white-space:nowrap}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.gal{grid-template-columns:1fr}}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .fig img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .fig .cap{margin-top:8px}
+  .full{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
+  .full img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  .note b{color:var(--amber)}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  .big{font-size:30px;font-weight:800;color:var(--navy);line-height:1.15}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:14px;margin:14px 0}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+  .kpi .l{font-size:12.5px;color:var(--mut);letter-spacing:.4px;margin-top:4px}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
+  #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="pybamm-modeling.html">Physics Modeling</a>
+      <a href="reliability-engineering.html">Reliability</a>
+      <a class="here" href="micro-ct.html">Micro-CT</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>3D image analysis of X-ray micro-CT battery volumes</h1>
+    <p>Segmentation, microstructure metrics, and defect quantification on X-ray micro- and nano-CT battery
+    volumes, built entirely on an open-source Python stack (tifffile, scikit-image, porespy, taufactor) —
+    <b>the same underlying algorithms used by commercial CT-analysis workflows</b>. Public datasets only, and
+    the discipline is the point: every number carries an uncertainty band, two independent solvers must agree,
+    and a volume that cannot support a defensible threshold is <b>refused, not reported</b>.</p>
+    <div class="src">
+      <span class="chip"><b>Cathode nano-CT:</b> Heenan et al. 2020 · CC0</span>
+      <span class="chip"><b>Paired-quality:</b> Tang et al. 2025 · CC BY 4.0</span>
+      <span class="chip"><b>ASSB operando:</b> Zenodo 15807466 · CC BY 4.0</span>
+      <span class="chip"><b>Stack:</b> tifffile · scikit-image · porespy · taufactor</span>
+    </div>
+  </div>
+</div>
+
+<section style="padding-bottom:0">
+  <div class="wrap">
+    <div class="odbanner">
+      <span class="lab">OPEN-DATA RE-ANALYSIS</span>
+      Every dataset here is <b>public, with its license on record</b> (CC0 or CC BY 4.0); each figure carries
+      its DOI and license. The solid-state operando section is an <b>independent re-analysis of published open
+      data (CC BY 4.0)</b> — nothing on this page implies a connection to the dataset authors' laboratory, to
+      any unpublished measurement, or to my own experimental data. The toolchain is an open-source stack
+      implementing the same algorithms as commercial CT workflows — no claim of any commercial-software
+      experience is made.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="sub" style="margin-top:2px"><span class="data">OPEN DATA · CC0</span> The core cathode study is a
+    nano-CT volume of an NMC811 electrode imaged after 400 cycles (63&nbsp;nm voxel; Heenan et&nbsp;al. 2020,
+    <i>Sci. Data</i> 7:276, CC0). It anchors the whole quantification pipeline.</p>
+    <div class="kpis">
+      <div class="kpi"><div class="big">27.2%</div><div class="l">cathode porosity, with ±0.9 pp threshold band and ±2.4 pp volume-representativeness</div></div>
+      <div class="kpi"><div class="big">τ_z = 2.32</div><div class="l">tortuosity factor ±0.10; two independent solvers agree to ≤1%</div></div>
+      <div class="kpi"><div class="big">74%</div><div class="l">of intact particles (n=34) contain &gt;0.5% internal crack volume after 400 cycles</div></div>
+      <div class="kpi"><div class="big">8 gates</div><div class="l">analytic-phantom number tests certify every metric code path; bit-identical re-runs</div></div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-top:8px">
+  <div class="wrap">
+    <h2 class="sec">1 · The volume and the histogram</h2>
+    <p class="sub">Orthogonal slices and the grey-level histogram are where every CT analysis starts — the
+    histogram's phase peaks are what a segmentation threshold has to separate, and their overlap is the first
+    honest signal of how hard that will be.</p>
+    <div class="full">
+      <img src="assets/ct/F1_overview_EIL014.png" alt="Nano-CT overview of a cycled NMC811 cathode" loading="lazy">
+      <div class="cap"><span class="data">CC0</span> <b>Nano-CT of an NMC811 cathode after 400 cycles</b>
+      (63&nbsp;nm voxel): orthogonal slices and grey-level histogram. Heenan et&nbsp;al. 2020, DOI 10.5522/04/12159366.v1.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">2 · Segmentation with an honesty interval</h2>
+    <p class="sub">A porosity number without a threshold-sensitivity band is a guess dressed as a measurement.
+    Here every porosity value ships with the interval it moves across as the threshold is swept, and a
+    representative-volume check quantifies how much the answer depends on the sub-volume chosen.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/ct/F2_segmentation_EIL014.png" alt="Multi-Otsu segmentation with threshold-sensitivity band" loading="lazy">
+        <div class="cap"><span class="data">CC0</span> <b>Multi-Otsu segmentation</b> with a
+        threshold-sensitivity band: every porosity value ships with its honesty interval.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/ct/F3_rev_EIL014.png" alt="Representative-volume check and connected vs total porosity" loading="lazy">
+        <div class="cap"><span class="data">CC0</span> <b>Representative-volume check</b> and connected versus
+        total porosity: uncertainty quantified, not assumed.</div>
+      </div>
+    </div>
+    <p class="cap">Result: cathode porosity <b>27.2%</b>, with a ±0.9 pp threshold band and ±2.4 pp
+    volume-representativeness spread — the number and both of its error sources reported together.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">3 · Microstructure metrics</h2>
+    <p class="sub">From the segmented volume: the pore- and particle-size distributions by local thickness, a
+    3D rendering of the particle network, and the transport-relevant tortuosity factor — the last cross-checked
+    by two independent solvers before it is allowed into the results.</p>
+    <div class="gal">
+      <div class="fig">
+        <img src="assets/ct/F4_psd_EIL014.png" alt="Pore-size and particle-size distributions" loading="lazy">
+        <div class="cap"><span class="data">CC0</span> <b>Pore-size distribution</b> (local thickness) and
+        particle-size distribution of the cycled cathode — pore radius median 0.34&nbsp;µm, particle d50 5.3&nbsp;µm.</div>
+      </div>
+      <div class="fig">
+        <img src="assets/ct/F9_render_EIL014.png" alt="3D rendering of segmented NMC811 particles with cracks" loading="lazy">
+        <div class="cap"><span class="data">CC0</span> <b>3D rendering</b> of segmented NMC811 particles
+        (blue) with intra-particle cracks (orange), 16.2&nbsp;µm cube.</div>
+      </div>
+    </div>
+    <div class="full">
+      <img src="assets/ct/F5_tortuosity_EIL014.png" alt="Tortuosity factor along three axes, dual-engine with error bars" loading="lazy">
+      <div class="cap"><span class="data">CC0</span> <b>Tortuosity factor along three axes; two independent
+      solvers agree within one percent.</b> Error bars are the 4-subvolume sweep per axis. Heenan et&nbsp;al.
+      2020, DOI 10.5522/04/12159366.v1.</div>
+    </div>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740"><b>Tortuosity, cross-checked.</b>
+    The tortuosity factor along the through-plane axis is <b>τ_z = 2.32 ± 0.10</b>, computed by two independent
+    solvers (a finite-difference taufactor solve and a porespy algebraic-multigrid cross-check) that agree to
+    within 1% — a dual-engine gate, so a single solver's bug can never become a reported number.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">4 · Damage quantification</h2>
+    <p class="sub">After 400 cycles, intra-particle cracking is pervasive. The pipeline segments cracks inside
+    each particle envelope and reports the fraction of particles affected — a quantification of the aged state,
+    <b>not</b> an aged-versus-fresh causal comparison (no fresh reference volume is in scope).</p>
+    <div class="full">
+      <img src="assets/ct/F6_cracks_EIL014.png" alt="Internal cracking of cycled cathode particles" loading="lazy">
+      <div class="cap"><span class="data">CC0</span> <b>Most intact particles show internal cracking after
+      400 cycles</b> — cracks highlighted inside particle envelopes. <b>74% of intact particles</b> (n=34,
+      border-clipped excluded) contain &gt;0.5% internal crack volume.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">5 · The refusal mechanism — the honesty story</h2>
+    <p class="sub">The most important output of a measurement pipeline is sometimes a refusal. On the
+    graphite-SiOx anode volume, the phase contrast is too weak to support a defensible pore threshold — the
+    porosity would swing ±9.4 pp across the plausible threshold range.</p>
+    <div class="note"><b>So the pipeline refuses to report a porosity for that volume, and records why.</b> A
+    point-and-click commercial workflow will happily return a single number from an indefensible threshold; the
+    discipline here is to detect that the number is not supportable and decline it — the difference between a
+    tool that always answers and one that answers only when the data earns it.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">6 · What denoising can and cannot recover</h2>
+    <p class="sub">A paired-quality dataset — the same cathode imaged at low and high acquisition quality —
+    is an honest benchmark for denoising: you can see what a simple filter restores and, just as importantly,
+    what it does not.</p>
+    <div class="full">
+      <img src="assets/ct/F7_denoise_pair.png" alt="Paired low- and high-quality acquisitions of one cathode" loading="lazy">
+      <div class="cap"><span class="data">CC BY 4.0</span> <b>Paired low- and high-quality acquisitions</b> of
+      one cathode — what denoising can and cannot recover (qualitative; unregistered). Tang et&nbsp;al. 2025,
+      Zenodo 12633623.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">7 · Operando tomography of a solid-state cell</h2>
+    <p class="sub">Registered difference imaging on an operando dataset of zero-excess solid-state cells
+    resolves where low-density material (plated lithium / voids) appears between two states — a clean example
+    of change-detection tomography on a real cell.</p>
+    <div class="full">
+      <img src="assets/ct/F8_assb_evolution.png" alt="Registered operando difference imaging of a solid-state cell" loading="lazy">
+      <div class="cap"><span class="data">CC BY 4.0</span> <b>Registered operando difference imaging resolves
+      the plated-lithium band</b>: uniform under silver coating, sparse on bare copper. Zenodo 15807466, DOI 10.5281/zenodo.15807466.
+      (Source tif carries no voxel-size metadata, so lengths are in voxel units.)</div>
+      <div class="h1box"><span class="lab">FRAMING</span> This solid-state section is an <b>independent
+      re-analysis of published open data (CC BY 4.0)</b> — not connected to any laboratory's private data or to
+      my own work. Peak darkened area <b>17.2%</b> (Ag-coated Cu) vs <b>2.5%</b> (bare Cu); the dataset's own
+      electrochemistry corroborates — the bare-Cu cell stops repolarizing at ~15&nbsp;h (a short-circuit
+      signature) while the Ag cell completes both cycles. Direction agrees with the dataset authors' published framing.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Conclusion — why it matters</h2>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740">
+      <p style="margin:0 0 8px"><b>So what?</b> The same 3D-tomography algorithms behind expensive commercial
+      CT software run here on an open-source stack — and are held to a stricter standard than a point-and-click
+      workflow enforces: uncertainty bands on every metric, two solvers that must agree, and a pipeline that
+      refuses to report a number the data cannot defend. That refusal, not any single porosity value, is the
+      headline: measurement integrity is a feature you build in, not a disclaimer you add later.</p>
+      <p style="margin:0"><b>Future work:</b> extend the registered-difference operando workflow to
+      time-resolved series, tracking where low-density phases nucleate and grow across many states.</p>
+    </div>
+    <div class="note"><b>Provenance &amp; honesty.</b> All inputs are public: NMC811 nano-CT (Heenan
+    et&nbsp;al. 2020, <i>Sci. Data</i> 7:276, CC0, DOI 10.5522/04/12159366.v1); paired-quality nano-CT (Tang
+    et&nbsp;al. 2025, Zenodo 12633623, CC BY 4.0); operando solid-state tomography (Zenodo 15807466, CC BY
+    4.0). Crack statistics quantify the aged state and are not an aged-versus-fresh causal claim; the operando
+    section is an independent re-analysis whose direction agrees with the source authors' published framing.
+    Numbers trace to the pipeline's results manifests; every metric path is certified by analytic-phantom
+    number gates with fixed seeds.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Open-data micro-CT re-analysis · CC0 / CC BY 4.0 inputs · open-source Python stack · not a laboratory program.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+<div id="lb"><img src="" alt=""></div>
+<script>
+"use strict";
+(function(){
+  var lb=document.getElementById("lb"), lbi=lb.querySelector("img");
+  document.querySelectorAll(".fig img, .full img").forEach(function(im){
+    im.addEventListener("click",function(){ lbi.src=im.src; lbi.alt=im.alt; lb.style.display="flex"; });
+  });
+  lb.addEventListener("click",function(){ lb.style.display="none"; lbi.src=""; });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ lb.style.display="none"; lbi.src=""; } });
+})();
+</script>
+</body>
+</html>

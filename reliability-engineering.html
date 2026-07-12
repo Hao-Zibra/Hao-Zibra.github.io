@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reliability engineering — FMEA &amp; OCAP (demo) · Hao Zheng</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0; --red:#c0392b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:15px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:82ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  /* methodology-demo disclaimer — styled like the Physics-Modeling H1 banner */
+  .mdemo{background:#fbf1dc;border:1.5px solid var(--amber);border-radius:10px;padding:16px 20px;margin:20px 0 0;color:#5c4410}
+  .mdemo .lab{display:inline-block;background:var(--amber);color:#fff;font-size:11.5px;font-weight:800;letter-spacing:.8px;padding:3px 10px;border-radius:6px;margin-right:8px;vertical-align:2px}
+  .mdemo b{color:#7a5510}
+  .data{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  .tblwrap{overflow-x:auto;margin:8px 0 4px}
+  table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);font-size:13.5px;min-width:640px}
+  th{background:var(--navy);color:#e7f0f6;text-align:left;padding:8px 11px;font-weight:600;font-size:13px}
+  td{padding:8px 11px;border-top:1px solid var(--line);vertical-align:top}
+  tr:hover td{background:#f2f7f9}
+  td.n{font-variant-numeric:tabular-nums;text-align:center;white-space:nowrap}
+  .ap{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.5px;padding:1px 7px;border-radius:5px}
+  .ap.L{background:#e6f4f4;color:var(--teal);border:1px solid #bfe0df}
+  .ap.M{background:var(--amber-lt);color:#6b5312;border:1px solid #ecd9b0}
+  .ap.H{background:#fbe4e0;color:var(--red);border:1px solid #f0c3bb}
+  .full{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
+  .full img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
+  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:900px){.gal{grid-template-columns:1fr}}
+  .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px}
+  .fig img{width:100%;height:250px;object-fit:contain;border-radius:6px;border:1px solid var(--line);background:#f4f7fa;cursor:zoom-in}
+  .fig .cap{margin-top:8px}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  .note b{color:var(--amber)}
+  code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
+  .flow{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:10px 0}
+  .fl{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px 16px;position:relative}
+  .fl .n{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:99px;background:var(--teal);color:#fff;font-weight:700;font-size:12.5px;margin-bottom:7px}
+  .fl h4{font-size:14px;color:var(--navy);margin-bottom:3px}
+  .fl p{font-size:12.5px;color:var(--mut)}
+  a.fl{text-decoration:none;color:inherit;transition:box-shadow .15s,transform .15s,border-color .15s}
+  a.fl:hover{box-shadow:0 6px 18px rgba(15,39,64,.12);transform:translateY(-2px);border-color:var(--teal);text-decoration:none}
+  a.fl .jarr{position:absolute;top:11px;right:14px;color:var(--teal);font-weight:700;font-size:15px;opacity:.75}
+  html{scroll-behavior:smooth}
+  section[id]{scroll-margin-top:70px}
+  .jumpbar{position:sticky;top:52px;z-index:40;background:rgba(247,249,251,.95);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:9px 0}
+  .jumpbar .wrap{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .jumpbar .jlab{font-size:11.5px;color:var(--mut);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-right:2px}
+  .jumpbar a.jl{font-size:12.5px;color:var(--navy);background:#fff;border:1px solid var(--line);border-radius:99px;padding:4px 12px;font-weight:600}
+  .jumpbar a.jl:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+  @media(max-width:720px){.jumpbar{position:static}}
+  .xlink{background:var(--teal-lt);border:1px solid #bfe0df;border-radius:8px;padding:12px 16px;font-size:14px;color:#0f2740;margin:12px 0}
+  .xlink b{color:var(--teal)}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
+  #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="pybamm-modeling.html">Physics Modeling</a>
+      <a class="here" href="reliability-engineering.html">Reliability</a>
+      <a href="micro-ct.html">Micro-CT</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>Reliability engineering — FMEA &amp; OCAP, demonstrated on public data</h1>
+    <p>A design FMEA, a process FMEA, and an out-of-control action plan, worked to the AIAG-VDA standard and
+    tied together as <b>one failure network cut at three levels</b>: what can go wrong in the cell (DFMEA), the
+    line that builds it (PFMEA), and what monitoring those modes looks like on a real fleet (OCAP). Every rating
+    and signal traces to an open physics simulation or public data — the same PyBaMM model and Severson fleet
+    used elsewhere on this site.</p>
+    <div class="src">
+      <span class="chip"><b>Method:</b> AIAG-VDA FMEA Handbook (2019) · Action Priority, not RPN</span>
+      <span class="chip"><b>DFMEA basis:</b> PyBaMM sim (Chen 2020 / O'Kane 2022)</span>
+      <span class="chip"><b>OCAP basis:</b> Severson 2019 · CC BY 4.0</span>
+      <span class="chip"><b>SPC:</b> Phase-I individuals · Nelson rules · EWMA</span>
+    </div>
+  </div>
+</div>
+
+<section style="padding-bottom:0">
+  <div class="wrap">
+    <div class="mdemo">
+      <span class="lab">METHODOLOGY DEMO</span>
+      This is a <b>methodology demonstration on public simulation and open data — not the author's laboratory
+      program</b>. DFMEA ratings come from an open-source PyBaMM pipeline or cited literature; the PFMEA is the
+      generic, textbook Li-ion manufacturing sequence with <b>no proprietary or lab-specific process content</b>;
+      the OCAP signals are real, computed on the public Severson 2019 dataset. S/O/D ratings are illustrative
+      calibrations that demonstrate the rating logic — a production analysis would calibrate them in a
+      cross-functional review.
+    </div>
+  </div>
+</section>
+
+<div class="jumpbar">
+  <div class="wrap">
+    <span class="jlab">Jump to</span>
+    <a class="jl" href="#network">1 · Network</a>
+    <a class="jl" href="#dfmea">2 · DFMEA</a>
+    <a class="jl" href="#pfmea">3 · PFMEA</a>
+    <a class="jl" href="#op40a">OP40a case</a>
+    <a class="jl" href="#ocap">4 · OCAP</a>
+    <a class="jl" href="#conclusion">Conclusion</a>
+  </div>
+</div>
+
+<section id="network">
+  <div class="wrap">
+    <h2 class="sec">1 · One failure network, three documents</h2>
+    <p class="sub">A DFMEA and a PFMEA are not two lists — they are the same failure network cut at two levels,
+    and the OCAP is the monitoring layer that catches what escapes. Two method choices carry the weight:
+    <b>Action Priority (AP)</b> replaces the discredited multiplicative RPN — severity is weighed first, so a
+    severity-9 safety mode with modest occurrence is never buried under a high-RPN efficiency mode. And the
+    DFMEA is built on a <b>physics simulation</b>, which makes the FMEA's weakest column — Occurrence —
+    auditable: every failure mode's rate is observable in the simulated trajectories, and mechanism-ablation
+    configs play the role of prevention-control experiments.</p>
+    <div class="flow">
+      <a class="fl" href="#dfmea"><span class="jarr">↓</span><span class="n">D</span><h4>DFMEA — the cell</h4><p>Degradation-mechanism design modes on a simulated NMC811‖graphite cell; Occurrence read from physics.</p></a>
+      <a class="fl" href="#pfmea"><span class="jarr">↓</span><span class="n">P</span><h4>PFMEA — the line</h4><p>Generic assembly process modes that <i>enable</i> the design modes; linkage stated explicitly.</p></a>
+      <a class="fl" href="#ocap"><span class="jarr">↓</span><span class="n">O</span><h4>OCAP — the fleet</h4><p>Pre-agreed responses to real SPC alarms on a public fleet; an alarm triggers a procedure, not a debate.</p></a>
+    </div>
+    <p class="cap"><b>Action Priority key:</b>
+      <span class="ap H">H</span> high — act first (severity-led) ·
+      <span class="ap M">M</span> medium — action needed ·
+      <span class="ap L">L</span> low — as-resources-allow. Failure-mode IDs (<code>DM-xx</code>, <code>OP-xx</code>) are local to this demonstration.</p>
+  </div>
+</section>
+
+<section id="dfmea">
+  <div class="wrap">
+    <h2 class="sec">2 · DFMEA — design failure modes on a simulated cell</h2>
+    <p class="sub">Excerpt of the failure-mode register. Each row's Occurrence and Detection basis is an
+    observable in the physics simulation — the panels below are the evidence the ratings are read from.</p>
+    <div class="tblwrap">
+    <table>
+      <tr><th>ID</th><th>Failure mode (mechanism)</th><th>Effect</th><th class="n">S</th><th class="n">O</th><th class="n">D</th><th class="n">AP</th><th>Rating basis (simulation / public evidence)</th></tr>
+      <tr><td class="n">DM-01</td><td>Continuous SEI growth (solvent-diffusion limited)</td><td>Gradual lithium-inventory loss; fade to ~96.8% at 1000 cycles (base)</td><td class="n">6</td><td class="n">8</td><td class="n">2</td><td class="n"><span class="ap M">M</span></td><td>Active in every config — inherent chemistry, no design removes it; detected by routine capacity trending.</td></tr>
+      <tr><td class="n">DM-02</td><td>Particle cracking → SEI on fresh surfaces → accelerating LLI → <b>knee</b></td><td>Fade accelerates 2.16× at cycle 677; life prediction breaks at the knee</td><td class="n">7</td><td class="n">6</td><td class="n">3</td><td class="n"><span class="ap M">M</span></td><td>Deterministic in the cracking-accelerated corner; the impedance signature warns <i>before</i> the capacity knee.</td></tr>
+      <tr><td class="n">DM-03</td><td>Lithium plating during charge</td><td>LLI + dead Li; internal-short escalation path</td><td class="n">9</td><td class="n">4</td><td class="n">4</td><td class="n"><span class="ap H">H</span></td><td>Safety-relevant; not dominant at this 1C/RT sim, but it is the accepted knee mechanism of the public Severson LFP fleet — rate is protocol-dependent.</td></tr>
+      <tr><td class="n">DM-05</td><td>Polarization-resistance growth</td><td>Power-capability fade (R<sub>pol</sub> 7.6→17.1 mΩ, knee config)</td><td class="n">6</td><td class="n">7</td><td class="n">2</td><td class="n"><span class="ap M">M</span></td><td>Tracked by checkpoint EIS → DRT; accelerating pre-knee signature is the impedance analogue of the capacity knee.</td></tr>
+    </table>
+    </div>
+    <p class="cap"><span class="data">PUBLIC SIM</span> The one <b>H</b> row (DM-03) is the headline AP is built
+    to surface: severity-9 with a protocol-dependent occurrence — under multiplicative RPN it would score
+    <i>lower</i> than DM-02. Full register runs DM-01…DM-05.</p>
+
+    <div class="xlink">
+      <b>Mechanistic cross-link →</b> Every Occurrence and Detection rating above is read from the same
+      open PyBaMM aging simulation documented on the <a href="pybamm-modeling.html">Physics Modeling page</a> —
+      the capacity knee (DM-02), its R<sub>pol</sub> twin (DM-05), and the mechanism decomposition (DM-01/04)
+      are that page's figures, here re-used as FMEA evidence.
+    </div>
+
+    <div class="gal">
+      <div class="fig"><img src="assets/pybamm/fig_pub_fleet_fade_w2200px.png" alt="Three-config capacity fade" loading="lazy"><div class="cap"><span class="data">PUBLIC SIM</span> <b>Fleet fade</b> — base / knee-accelerated / no-degradation control (the null check). DM-01, DM-02.</div></div>
+      <div class="fig"><img src="assets/pybamm/fig_pub_mechanism_decomposition_w2200px.png" alt="Mechanism decomposition" loading="lazy"><div class="cap"><span class="data">PUBLIC SIM</span> <b>Mechanism decomposition</b> — the auditable Occurrence column. DM-01 / DM-04.</div></div>
+    </div>
+    <div class="full"><img src="assets/pybamm/fig_pub_rpol_evolution_w2200px.png" alt="Polarization-resistance evolution" loading="lazy"><div class="cap"><span class="data">PUBLIC SIM</span> <b>Polarization-resistance growth</b> — the early-warning detection channel behind DM-05 / DM-02 (accelerates before the capacity knee).</div></div>
+  </div>
+</section>
+
+<section id="pfmea">
+  <div class="wrap">
+    <h2 class="sec">3 · PFMEA — the process that enables the design modes</h2>
+    <p class="sub">The process register for a generic stacked-pouch assembly line — <b>Rev B: 11 operations,
+    19 failure modes</b>. The right-hand linkage column is the point of the exercise: where a process mode's
+    worst effect is "it hands a design mode a head start", it says so explicitly — and the
+    <a href="#op40a">OP40a case study</a> below walks one escape end-to-end, from calender drift to a
+    physics-quantified in-service knee.</p>
+
+    <h3 class="m">Process structure — 11 operations</h3>
+    <div class="tblwrap">
+    <table>
+      <tr><th>OP</th><th>Operation</th><th>Primary product characteristic</th></tr>
+      <tr><td class="n">OP10</td><td>Slurry mixing</td><td>Homogeneity (viscosity, solids, fineness)</td></tr>
+      <tr><td class="n">OP20</td><td>Coating</td><td>Areal-loading uniformity; defect-free surface</td></tr>
+      <tr><td class="n">OP30</td><td>Drying</td><td>Residual solvent / moisture; binder distribution</td></tr>
+      <tr><td class="n">OP40</td><td>Calendering</td><td>Porosity / density; particle integrity</td></tr>
+      <tr><td class="n">OP50</td><td>Slitting / notching</td><td>Edge quality (burr height); dimensions</td></tr>
+      <tr><td class="n">OP60</td><td>Stacking &amp; separator</td><td>Alignment / overhang margins; cleanliness</td></tr>
+      <tr><td class="n">OP70</td><td>Tab welding</td><td>Weld strength; spatter-free joints</td></tr>
+      <tr><td class="n">OP80</td><td>Electrolyte fill</td><td>Fill mass; complete wetting; moisture exclusion</td></tr>
+      <tr><td class="n">OP90</td><td>Formation</td><td>First-SEI quality (protocol fidelity)</td></tr>
+      <tr><td class="n">OP95</td><td>Degas &amp; final seal</td><td>Gas removal; seal integrity</td></tr>
+      <tr><td class="n">OP100</td><td>Aging &amp; EOL test</td><td>Escape screening (OCV retention); grading</td></tr>
+    </table>
+    </div>
+
+    <h3 class="m">Failure-mode excerpt (8 of 19)</h3>
+    <div class="tblwrap">
+    <table>
+      <tr><th>OP</th><th>Failure mode</th><th>Effect (worst perspective)</th><th class="n">S</th><th class="n">O</th><th class="n">D</th><th class="n">AP</th><th>DFMEA link</th></tr>
+      <tr><td class="n">OP10a</td><td>Binder / additive maldistribution</td><td>Adhesion &amp; resistance variation; early fade</td><td class="n">6</td><td class="n">4</td><td class="n">4</td><td class="n"><span class="ap L">L</span></td><td>accelerates DM-05</td></tr>
+      <tr><td class="n">OP20a</td><td>Areal-loading variation</td><td>Local N/P imbalance → plating risk at end user</td><td class="n">8</td><td class="n">4</td><td class="n">2</td><td class="n"><span class="ap M">M</span></td><td>enables <b>DM-03</b></td></tr>
+      <tr><td class="n">OP30b</td><td>Binder migration (over-fast drying)</td><td>Delamination → active-material loss</td><td class="n">6</td><td class="n">4</td><td class="n">5</td><td class="n"><span class="ap L">L</span></td><td>accelerates DM-04</td></tr>
+      <tr style="background:#fdf7ec"><td class="n">OP40a ★</td><td>Over-compaction → particle micro-cracking</td><td>Crack-growth head start → early accelerating-fade knee (case study ↓)</td><td class="n">7</td><td class="n">4</td><td class="n">3</td><td class="n"><span class="ap M">M</span></td><td>head start for <b>DM-02</b></td></tr>
+      <tr><td class="n">OP50a</td><td>Slitting burrs above spec</td><td>Separator puncture → internal short at end user</td><td class="n">9</td><td class="n">4</td><td class="n">4</td><td class="n"><span class="ap H">H</span></td><td>escalates like DM-03 worst case</td></tr>
+      <tr><td class="n">OP60b</td><td>Foreign-particle / separator wrinkle</td><td>Local pressure point → latent internal short</td><td class="n">9</td><td class="n">3</td><td class="n">4</td><td class="n"><span class="ap L">L</span></td><td>latent DM-03-class hazard</td></tr>
+      <tr><td class="n">OP80a</td><td>Electrolyte underfill / poor wetting</td><td>Dry spots → local current focusing, early fade</td><td class="n">7</td><td class="n">4</td><td class="n">5</td><td class="n"><span class="ap M">M</span></td><td>accelerates DM-05</td></tr>
+      <tr><td class="n">OP100a</td><td>Soft-short escapes aging screen</td><td>Field self-discharge / latent short</td><td class="n">8</td><td class="n">3</td><td class="n">3</td><td class="n"><span class="ap L">L</span></td><td>residual DM-03-class risk</td></tr>
+    </table>
+    </div>
+    <p class="cap"><span class="data">GENERIC PROCESS</span> Across all 19 modes: one <b>H</b> (OP50a), four
+    <b>M</b>, fourteen <b>L</b>. The teaching row <b>OP60b</b> — severity 9 but rare, with credible detection —
+    lands <b>L</b> under the AP table: severity-first does not mean "9 is always urgent", which is exactly where
+    AP differs from RPN. Content is textbook only, by design.</p>
+
+    <h3 class="m" id="op40a" style="scroll-margin-top:70px">Case study — OP40a walked end-to-end: over-calendering → early knee</h3>
+    <p class="sub">One process escape, followed from cause to a physics-quantified consequence and a
+    verification plan — the DFMEA's quantified discipline applied to a process mode, anchored entirely to
+    public simulation and open data.</p>
+    <div class="tblwrap">
+    <table>
+      <tr><th style="width:150px">Step</th><th>Content</th></tr>
+      <tr><td><b>Failure chain</b></td><td>Calender roll-gap drifts low → electrode compacted past porosity spec, particles carry micro-cracks → in service each crack exposes fresh surface that re-consumes lithium as new SEI → an accelerating-LLI capacity <b>knee</b>.</td></tr>
+      <tr><td><b>Severity · S=7</b></td><td>Quantified by public sim: cracking-accelerated fade <b>accelerates 2.16× at cycle 677</b>, ends 94.3% vs 96.8% graceful — and, worse than the retention delta, the knee <b>breaks life predictability</b>. Loss of predictable primary-function life, no safety dimension → S=7.</td></tr>
+      <tr><td><b>Occurrence · O=4</b></td><td>Cause is calibration drift on a maintained parameter; prevention (calibration schedule) exists but is time-based, not closed-loop → moderately effective → O=4.</td></tr>
+      <tr><td><b>Detection · D=3</b></td><td>Porosity + thickness measured per roll — quantitative and upstream of cell build, but sampled, not 100% → D=3.</td></tr>
+      <tr><td><b>Action Priority</b></td><td>S7 · O4 · D3 → <span class="ap M">M</span> per the AIAG-VDA table — an obligation to identify improvement actions.</td></tr>
+    </table>
+    </div>
+    <div class="tblwrap">
+    <table>
+      <tr><th>Recommended action</th><th>Type</th><th>Rating move</th><th class="n">AP after</th></tr>
+      <tr><td>Closed-loop roll-gap control + inline pressure/gap monitoring</td><td>Prevention</td><td>O 4 → 3</td><td class="n">—</td></tr>
+      <tr><td>Inline density proxy at 100% coverage</td><td>Detection</td><td>D 3 → 2</td><td class="n">—</td></tr>
+      <tr><td><b>Combined</b></td><td>—</td><td>S7 · O3 · D2</td><td class="n"><span class="ap L">L</span></td></tr>
+    </table>
+    </div>
+    <p class="cap"><b>Verification (all-public demonstration).</b> The acceptance criterion for the fix is
+    <b>no fade-rate knee within the mission window</b>: the cracking-accelerated config <i>fails</i> it (knee at
+    cycle 677; R<sub>pol</sub> grows 7.6→17.1 mΩ, accelerating), the base config <i>passes</i> (96.8%, graceful)
+    — a process fix must move the article from the failing trajectory class to the passing one. Fleet-level
+    guard: build-to-build drift surfaces in early-cycle features long before field failures —
+    <a href="#ocap">OCAP Case A</a> shows a +3.1σ shift in the public Severson fleet.</p>
+    <div class="gal">
+      <div class="fig"><img src="assets/pybamm/fig_pub_fleet_fade_w2200px.png" alt="Fleet fade, three configs" loading="lazy"><div class="cap"><span class="data">PUBLIC SIM</span> <b>Product-level consequence of the OP40a escape class</b> — base vs cracking-accelerated vs no-degradation control.</div></div>
+      <div class="fig"><img src="assets/pybamm/fig_pub_rpol_evolution_w2200px.png" alt="Polarization-resistance evolution" loading="lazy"><div class="cap"><span class="data">PUBLIC SIM</span> <b>The early acceptance signal</b> — accelerating polarization-resistance growth precedes the capacity knee.</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="ocap">
+  <div class="wrap">
+    <h2 class="sec">4 · OCAP — responses to real alarms on a public fleet</h2>
+    <p class="sub">An out-of-control action plan turns a chart signal into a pre-agreed procedure. Every signal
+    below is real, computed by an open pipeline on the public Severson 2019 fleet (124 LFP/graphite cells,
+    <a href="severson-capacity-ml.html">also analyzed here</a>). The generic flow is the same for every alarm;
+    the cases show it applied.</p>
+    <div class="flow">
+      <div class="fl"><span class="n">1</span><h4>Trigger</h4><p>Pipeline flags the rule hit at ingest — the alarm is data, not blame.</p></div>
+      <div class="fl"><span class="n">2</span><h4>Containment</h4><p>Quarantine articles / freeze affected decisions (including model deployment).</p></div>
+      <div class="fl"><span class="n">3</span><h4>Diagnosis</h4><p>Walk the pre-agreed path: measurement system first, process second, physics third.</p></div>
+      <div class="fl"><span class="n">4</span><h4>Disposition</h4><p>Name and fix the assignable cause / re-baseline with a documented reason / escalate to FA.</p></div>
+      <div class="fl"><span class="n">5</span><h4>Release</h4><p>Pre-defined release criteria met; downstream consumers notified.</p></div>
+    </div>
+
+    <h3 class="m">Case A — cross-build drift of the predictive feature (batch 2: +3.1σ)</h3>
+    <div class="full"><img src="assets/severson/fig5_spc_build_stability_w3125px.png" alt="Build stability control chart" loading="lazy"><div class="cap"><span class="data">PUBLIC DATA</span> <b>Build-stability chart.</b> The life-prediction model's key input feature (log-variance ΔQ) sits +3.1σ in batch 2 and −1.7σ in batch 3 vs batch-1 limits, with corroborating shifts on independent metrics.</div></div>
+    <p class="cap">Because the drifting quantity is the <b>model's input feature</b>, the pre-agreed containment is
+    to freeze naive reuse of the batch-1 model on later builds — the documented reason published models degrade
+    on batch 3. Disposition: re-baseline limits per batch, add batch as a covariate, never silently pool
+    drifted builds. <b>Method lesson: run SPC on features, not only on product metrics — a model is a consumer
+    of the process, and its inputs deserve control charts.</b></p>
+
+    <h3 class="m">Case B — within-cell EWMA drift (the prognostic channel)</h3>
+    <div class="gal">
+      <div class="fig"><img src="assets/severson/fig6_fleet_ewma_drift_w2200px.png" alt="Fleet EWMA drift" loading="lazy"><div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet EWMA drift</b> vs the batch-1 baseline — the epoch shift as a control-chart signal.</div></div>
+      <div class="fig"><img src="assets/severson/fig7_ewma_alarms_w3125px.png" alt="Within-cell EWMA alarms" loading="lazy"><div class="cap"><span class="data">PUBLIC DATA</span> <b>Within-cell alarms</b> — 124/124 cells alarm at a median 36% of life (median lead 459 cycles); alarm timing predicts eventual life at ρ=0.84.</div></div>
+    </div>
+    <p class="cap">The pre-agreed response class here is <b>prognostic, not quarantine</b>: no line is stopped — the
+    article is scheduled for derating / replacement per its predicted remaining life. The standing rule the case
+    demonstrates: process-OCAP and article-health-OCAP are <i>different response classes</i>; conflating them
+    either stops lines for physics or ignores real process faults. The whole loop — signal → response → record →
+    limit update — is a FRACAS in miniature, shown end-to-end on open data.</p>
+  </div>
+</section>
+
+<section id="conclusion">
+  <div class="wrap">
+    <h2 class="sec">Conclusion — why it matters</h2>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740">
+      <p style="margin:0 0 8px"><b>So what?</b> The reliability toolkit only earns trust when its weakest
+      column is made auditable and its documents actually connect. Here Occurrence is read from physics, not
+      guessed; Action Priority puts the severity-9 safety mode where it belongs; and DFMEA → PFMEA → OCAP form
+      one traceable chain from a design mechanism, to the process step that enables it, to the control-chart
+      response that catches it on a real fleet. That is the difference between an FMEA as a compliance artifact
+      and an FMEA as an engineering instrument.</p>
+      <p style="margin:0"><b>Future work:</b> close the loop live — feed OCAP dispositions back into the FMEA
+      Occurrence ratings so the risk model updates itself as field evidence arrives.</p>
+    </div>
+    <div class="note"><b>Honest limitations &amp; provenance.</b> The DFMEA article is a liquid-electrolyte
+    NMC811‖graphite <i>simulation</i>, not a solid-state cell; the knee accelerant is a literature device chosen
+    for run survival, not fitted to data; S/O/D values are illustrative rating logic, not a calibrated
+    production analysis. The Severson OCAP signals are real but retrospective, so containment/release stages
+    describe what the signals <i>would</i> trigger on a live line, and Case A's diagnosis is shown to its honest
+    end state (unresolved-assignable, re-baseline) rather than a fabricated root cause. Method: AIAG-VDA FMEA
+    Handbook (2019). Simulation: PyBaMM (Chen 2020 / O'Kane 2022, <i>PCCP</i> 24, 7909). Data: Severson
+    et&nbsp;al., <i>Nature Energy</i> 4, 383–391 (2019), CC BY 4.0.</div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Reliability-engineering methodology demonstration · public simulation + open data · not a laboratory program.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+<div id="lb"><img src="" alt=""></div>
+<script>
+"use strict";
+(function(){
+  var lb=document.getElementById("lb"), lbi=lb.querySelector("img");
+  document.querySelectorAll(".fig img, .full img").forEach(function(im){
+    im.addEventListener("click",function(){ lbi.src=im.src; lbi.alt=im.alt; lb.style.display="flex"; });
+  });
+  lb.addEventListener("click",function(){ lb.style.display="none"; lbi.src=""; });
+  document.addEventListener("keydown",function(e){ if(e.key==="Escape"){ lb.style.display="none"; lbi.src=""; } });
+})();
+</script>
+</body>
+</html>

@@ -191,20 +191,21 @@
       LLZO top face (statics check: 633&nbsp;N / 126.7&nbsp;mm² = 5.0&nbsp;MPa mean, recovered by the
       model). First-pass bar uses the initial all-steel-proxy cell of the screening study; Case A/B use
       the refined proxies above — materials differ, so compare trends, not decimals. Peak-to-mean:
-      <b>2.24 → ≈1.20</b> with the pad.</div>
+      <b>2.24</b> for the rigid platen; a compliant Grafoil interlayer reduces the concentration —
+      quantitative cross-engine re-run in progress (2026-07).</div>
     </div>
 
     <div class="kpis">
       <div class="kpi"><div class="big">2.24×</div><div class="l">Case A (rigid platen): 11.20 MPa rim peak over 5.0 MPa mean on the LLZO face</div></div>
-      <div class="kpi"><div class="big">≈1.20×</div><div class="l">Case B (+0.75 mm Grafoil): face ring max 5.99 MPa, center 4.99 MPa</div></div>
+      <div class="kpi"><div class="big">Reduced</div><div class="l">Case B (+0.75 mm Grafoil): the compliant interlayer reduces the rim concentration — quantitative cross-engine re-run in progress (2026-07)</div></div>
       <div class="kpi"><div class="big">12.5</div><div class="l">min safety factor, Case A structure (Al plates barely notice 633 N)</div></div>
     </div>
 
     <div class="gal">
-      <div class="fig"><img src="assets/fea/caseA_vonmises.png" alt="Case A von Mises"><div class="cap"><b>Case A von Mises</b> (max 8.255 MPa) — note the stress ring at the LLZO rim under the rigid platen.</div></div>
-      <div class="fig"><img src="assets/fea/caseB_vonmises.png" alt="Case B von Mises"><div class="cap"><b>Case B von Mises</b> (max 8.402 MPa) — the Grafoil pad spreads the contact; the LLZO face goes uniform.</div></div>
+      <div class="fig"><img src="assets/fea/caseA_vonmises.png" alt="Case A von Mises"><div class="cap"><b>Case A von Mises</b> (max 10.718 MPa) — note the stress ring at the LLZO rim under the rigid platen.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_vonmises.png" alt="Case B von Mises"><div class="cap"><b>Case B von Mises</b> — the Grafoil pad spreads the contact; the LLZO face goes uniform (maxima under cross-engine re-run, 2026-07).</div></div>
       <div class="fig"><img src="assets/fea/caseA_safetyfactor.png" alt="Case A safety factor"><div class="cap"><b>Case A safety factor</b> — min 12.507; the fixture is structurally overbuilt by design (stiffness, not strength, drives it).</div></div>
-      <div class="fig"><img src="assets/fea/caseB_principal3.png" alt="Case B third principal stress"><div class="cap"><b>Case B 3rd principal stress</b> (+1.342 / −13.527 MPa) — compression-dominated as intended; tensile excursions stay small, which is what matters for a brittle ceramic.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_principal3.png" alt="Case B third principal stress"><div class="cap"><b>Case B 3rd principal stress</b> — compression-dominated as intended; tensile excursions stay small, which is what matters for a brittle ceramic (values under cross-engine re-run, 2026-07).</div></div>
     </div>
   </div>
 </section>
@@ -218,21 +219,23 @@
     <div class="panel">
       <div id="mesh" class="plot"></div>
       <div class="cap"><span class="real">STUDY RESULT</span> LLZO-face peak holds at 5.4–6.1&nbsp;MPa
-      (peak/mean 1.08–1.22) across a 3× element-count refinement → the pad conclusion is mesh-robust.
-      The global max (at the bonded Li/base bi-material edge, z=11.5&nbsp;mm) keeps falling
-      (9.29 → 8.20 → 6.92&nbsp;MPa) — a known singular-edge artifact of bonded dissimilar materials, not a
-      physical failure prediction; it is reported, not used.</div>
+      across a 3× element-count refinement (face-probe values; cross-engine re-run in progress, 2026-07)
+      → the pad conclusion is mesh-robust.
+      The global max (at the bonded Li/base bi-material edge, z=11.5&nbsp;mm) sits on a known singular edge
+      of bonded dissimilar materials — a numerical artifact, not a physical failure prediction. Its
+      mesh-sequence values are under cross-engine re-run (2026-07); only the finest-mesh value
+      (6.92&nbsp;MPa) is report-verified. It is reported, not used.</div>
     </div>
     <table>
       <tr><th>Study</th><th>Mesh</th><th>Elements</th><th>LLZO-face peak (MPa)</th><th>Global max (MPa)</th><th>Notes</th></tr>
-      <tr><td>Case B</td><td>default (model-based)</td><td>7,032</td><td>5.99</td><td>9.294</td><td>von Mises max 8.402</td></tr>
-      <tr><td>Case B fine</td><td>5 mm absolute</td><td>6,488</td><td>6.085</td><td>8.201</td><td>absolute sizing redistributes elements (plates finer, cell coarser)</td></tr>
-      <tr><td>Case B finer</td><td>2.5 mm absolute</td><td>21,683</td><td>5.372</td><td>6.917</td><td>von Mises max 8.962; max displacement 8.986×10⁻⁴ mm</td></tr>
+      <tr><td>Case B</td><td>default (model-based)</td><td>7,032</td><td>5.99</td><td>—</td><td>von Mises &amp; global max under cross-engine re-run (2026-07)</td></tr>
+      <tr><td>Case B fine</td><td>5 mm absolute</td><td>6,488</td><td>6.085</td><td>—</td><td>absolute sizing redistributes elements (plates finer, cell coarser); global max under cross-engine re-run (2026-07)</td></tr>
+      <tr><td>Case B finer</td><td>2.5 mm absolute</td><td>21,683</td><td>5.372</td><td>6.917</td><td>von Mises max 12.307; max displacement 0.013 mm</td></tr>
     </table>
 
     <div class="gal" style="margin-top:14px">
       <div class="fig"><img src="assets/fea/caseB_mesh25_vonmises.png" alt="Finest mesh von Mises"><div class="cap"><b>Finest mesh (21,683 tets) von Mises</b> — the contact ring resolves smoothly; no new hot spots appear with refinement.</div></div>
-      <div class="fig"><img src="assets/fea/caseB_mesh25_displacement.png" alt="Finest mesh displacement"><div class="cap"><b>Finest mesh displacement</b> — max 8.986×10⁻⁴ mm; the stack barely moves at 633 N, consistent with the stiffness-driven design.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_mesh25_displacement.png" alt="Finest mesh displacement"><div class="cap"><b>Finest mesh displacement</b> — max 0.013 mm; the stack barely moves at 633 N, consistent with the stiffness-driven design.</div></div>
     </div>
 
     <div class="note"><b>Scope statement.</b> This is a portfolio-grade linear-static study with declared
@@ -279,9 +282,6 @@ const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#
     {x, y:[5.99,6.085,5.372], mode:"lines+markers+text", name:"LLZO-face peak (converged)",
      line:{color:"#0e7c7b",width:3}, marker:{size:9},
      text:["5.99","6.09","5.37"], textposition:"top center", textfont:{size:12}},
-    {x, y:[9.294,8.201,6.917], mode:"lines+markers+text", name:"global max @ Li/base bonded edge (NOT converged — singular edge)",
-     line:{color:"#b7791f",width:2,dash:"dash"}, marker:{size:9,symbol:"square"},
-     text:["9.29","8.20","6.92"], textposition:"top center", textfont:{size:12}},
     {x, y:[5.0,5.0,5.0], mode:"lines", name:"design mean 5.0 MPa",
      line:{color:"#1c2733",width:1.5,dash:"dot"}}
   ],{

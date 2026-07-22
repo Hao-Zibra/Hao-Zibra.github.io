@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>COMSOL model library — download &amp; explore · Hao Zheng</title>
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:15px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  section{padding:38px 0 8px}
+  h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
+  h3.m{font-size:17px;color:var(--navy);margin:26px 0 4px}
+  p.sub{color:var(--mut);margin-bottom:16px;max-width:84ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  .real{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
+  .mcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px;margin:8px 0 6px}
+  .mcard{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:8px}
+  .mcard img{width:100%;height:170px;object-fit:contain;border:1px solid var(--line);border-radius:6px;background:#fff}
+  .mcard .mname{font-weight:700;color:var(--navy);font-size:15px}
+  .mcard p{font-size:13.5px;color:var(--mut);flex:1;line-height:1.5}
+  .mcard .dl{display:inline-block;background:var(--teal);color:#fff;font-weight:600;font-size:13px;padding:8px 12px;border-radius:8px;text-align:center}
+  .mcard .dl:hover{background:#0a6463;text-decoration:none}
+  .mcard .slim{font-size:11.5px;color:var(--mut)}
+  .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
+  .note b{color:var(--amber)}
+  .btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .btns button{border:1px solid var(--line);background:#fff;color:var(--navy);font-size:13.5px;font-weight:600;padding:7px 13px;border-radius:8px;cursor:pointer}
+  .btns button.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+  .plot{width:100%;min-height:440px}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="pybamm-modeling.html">Physics Modeling</a>
+      <a href="reliability-engineering.html">Reliability</a>
+      <a href="micro-ct.html">Micro-CT</a>
+      <a class="here" href="models.html">Models</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>COMSOL model library — download and explore</h1>
+    <p>Every finite-element model behind this site's simulation results, packaged for download. All files are
+    saved <b>without solutions</b> (each card shows the honest before/after size), and each re-solves in
+    minutes. Three families: the ground-up reproduction of the published single-frequency void-detection
+    study, a thermal-EIS coupling correlated against published CC BY data, and the two-engine fixture-stress
+    models behind the <a style="color:#7fd1cf" href="mechanical.html">rim-riding discovery</a>.</p>
+    <div class="src">
+      <span class="chip"><b>Files:</b> 12 × .mph · 27 MB total (solutions stripped)</span>
+      <span class="chip"><b>Track A anchor:</b> ACS Electrochemistry 2026 (co-first author)</span>
+      <span class="chip"><b>Model B data:</b> published σ(T), CC BY</span>
+      <span class="chip"><b>Model C:</b> cross-validated vs Fusion 360</span>
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">1 · Model cards</h2>
+    <p class="sub">One card per model. Sizes are the shipped, solution-stripped files; the strikethrough of
+    every "was" size is deliberate — shipping solved files would be bulk without insight.</p>
+    <h3 class="m">Track A — single-frequency void detection, rebuilt</h3>
+    <p class="sub">A ground-up COMSOL reproduction of the published single-frequency operando void-detection study (ACS Electrochemistry 2026 — co-first-author paper): layered unit cell, void sweep, detection curves, and the numerics checks behind them.</p>
+    <div class="mcards">
+      <div class="mcard">
+        <img src="assets/models/TrackAUnitCellGeometry.png" alt="TrackASmokeTest card image" loading="lazy">
+        <div class="mname">TrackASmokeTest</div>
+        <p>The validated skeleton: a layered unit cell whose 3-frequency no-void impedance matches the analytic R-CPE circuit to 0.20% — the smoke test every later model builds on.</p>
+        <a class="dl" href="assets/models/mph/TrackASmokeTest.mph" download>⬇ TrackASmokeTest.mph · 0.63 MB</a>
+        <div class="slim">saved without solutions — 3.26 MB → 0.63 MB (-80.8%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/TrackAG1VsPaperFigS7.png" alt="TrackAG1NoVoidSpectrum card image" loading="lazy">
+        <div class="mname">TrackAG1NoVoidSpectrum</div>
+        <p>The 41-frequency no-void spectrum that ties the rebuild to the published paper: 0.010% vs the analytic circuit, and 7/7 digitized points of the published Fig S7 within 4%.</p>
+        <a class="dl" href="assets/models/mph/TrackAG1NoVoidSpectrum.mph" download>⬇ TrackAG1NoVoidSpectrum.mph · 0.64 MB</a>
+        <div class="slim">saved without solutions — 6.28 MB → 0.64 MB (-89.8%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/TrackAG2ReproductionFourPanel.png" alt="TrackAG2VoidSweep card image" loading="lazy">
+        <div class="mname">TrackAG2VoidSweep</div>
+        <p>The heart of the reproduction: cylindrical voids carved into the Li layer on a 5 um triangular lattice, sweeping void coverage to show -Im(Z) rising far faster than Re(Z).</p>
+        <a class="dl" href="assets/models/mph/TrackAG2VoidSweep.mph" download>⬇ TrackAG2VoidSweep.mph · 2.96 MB</a>
+        <div class="slim">saved without solutions — 64.92 MB → 2.96 MB (-95.4%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/TrackAG3VsPaperFig3d7b.png" alt="TrackAG3SingleFrequencyDetection card image" loading="lazy">
+        <div class="mname">TrackAG3SingleFrequencyDetection</div>
+        <p>The paper's early-detection method rebuilt: %change of -Im and Re at a single frequency vs void fraction, compared point-by-point against the digitized published figures.</p>
+        <a class="dl" href="assets/models/mph/TrackAG3SingleFrequencyDetection.mph" download>⬇ TrackAG3SingleFrequencyDetection.mph · 3.31 MB</a>
+        <div class="slim">saved without solutions — 30.56 MB → 3.31 MB (-89.2%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/TrackAG4MeshConvergence.png" alt="TrackAG4MeshConvergence card image" loading="lazy">
+        <div class="mname">TrackAG4MeshConvergence</div>
+        <p>The credibility check: at the worst void fraction the -Im peak moves only 0.2% across a 34k-to-93k element refinement, so the reproduction rests on converged numerics.</p>
+        <a class="dl" href="assets/models/mph/TrackAG4MeshConvergence.mph" download>⬇ TrackAG4MeshConvergence.mph · 4.22 MB</a>
+        <div class="slim">saved without solutions — 41.03 MB → 4.22 MB (-89.7%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/TrackAFig2CurrentDensity.png" alt="TrackAFig2CurrentDensity card image" loading="lazy">
+        <div class="mname">TrackAFig2CurrentDensity</div>
+        <p>The paper's Figure 2 rebuilt: the 3-D computational domain and the current-density field crowding around a void at low frequency.</p>
+        <a class="dl" href="assets/models/mph/TrackAFig2CurrentDensity.mph" download>⬇ TrackAFig2CurrentDensity.mph · 2.88 MB</a>
+        <div class="slim">saved without solutions — 16.74 MB → 2.88 MB (-82.8%)</div>
+      </div>
+    </div>
+    <h3 class="m">Model B — thermal-EIS coupling</h3>
+    <p class="sub">Coupled Heat Transfer + impedance models of a garnet pellet, correlated against published CC BY conductivity-vs-temperature data.</p>
+    <div class="mcards">
+      <div class="mcard">
+        <img src="assets/models/ModelBThermalEisCorrelation.png" alt="ModelBThermalEisIsothermal card image" loading="lazy">
+        <div class="mname">ModelBThermalEisIsothermal</div>
+        <p>A coupled Heat Transfer + impedance model of a garnet pellet, correlated against published CC BY sigma(T) data with a fit-cold-predict-warm hold-out (-18% on the held-out point).</p>
+        <a class="dl" href="assets/models/mph/ModelBThermalEisIsothermal.mph" download>⬇ ModelBThermalEisIsothermal.mph · 0.47 MB</a>
+        <div class="slim">saved without solutions — 4.44 MB → 0.47 MB (-89.3%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/ModelBThermalEisCorrelation.png" alt="ModelBThermalEisGradient card image" loading="lazy">
+        <div class="mname">ModelBThermalEisGradient</div>
+        <p>The thermal showpiece: a genuinely solved 40 K through-thickness temperature field (energy balance exact to machine precision) reshaping the impedance spectrum.</p>
+        <a class="dl" href="assets/models/mph/ModelBThermalEisGradient.mph" download>⬇ ModelBThermalEisGradient.mph · 0.46 MB</a>
+        <div class="slim">saved without solutions — 4.43 MB → 0.46 MB (-89.6%)</div>
+      </div>
+    </div>
+    <h3 class="m">Model C — fixture stress, two engines</h3>
+    <p class="sub">The COMSOL side of the two-engine fixture-stress cross-validation on the mechanical page — bonded benchmarks and the contact-physics pair behind the rim-riding discovery.</p>
+    <div class="mcards">
+      <div class="mcard">
+        <img src="assets/models/ModelCPelletFacePressureProfiles.png" alt="ModelCFixtureCaseABenchmark card image" loading="lazy">
+        <div class="mname">ModelCFixtureCaseABenchmark</div>
+        <p>COMSOL twin of a Fusion 360 fixture-stress study, bonded idealization: engines agree on every convergent quantity (statics exact, stiffness within 12%).</p>
+        <a class="dl" href="assets/models/mph/ModelCFixtureCaseABenchmark.mph" download>⬇ ModelCFixtureCaseABenchmark.mph · 2.92 MB</a>
+        <div class="slim">saved without solutions — 14.39 MB → 2.92 MB (-79.7%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/ModelCPelletFacePressureProfiles.png" alt="ModelCFixtureCaseBBenchmark card image" loading="lazy">
+        <div class="mname">ModelCFixtureCaseBBenchmark</div>
+        <p>The Grafoil-pad variant of the two-engine benchmark: the compliant pad regularises the edge field and the engines match the face peak to 13%.</p>
+        <a class="dl" href="assets/models/mph/ModelCFixtureCaseBBenchmark.mph" download>⬇ ModelCFixtureCaseBBenchmark.mph · 3.00 MB</a>
+        <div class="slim">saved without solutions — 14.85 MB → 3.00 MB (-79.8%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/ModelCPelletFacePressureProfiles.png" alt="ModelCFixtureCaseAContact card image" loading="lazy">
+        <div class="mname">ModelCFixtureCaseAContact</div>
+        <p>The answer the bonded models hid: with true unilateral contact the rigid platen rides the pellet rim - the centre unloads and the whole 633 N crowds into a sub-mm edge ring.</p>
+        <a class="dl" href="assets/models/mph/ModelCFixtureCaseAContact.mph" download>⬇ ModelCFixtureCaseAContact.mph · 2.83 MB</a>
+        <div class="slim">saved without solutions — 16.34 MB → 2.83 MB (-82.7%)</div>
+      </div>
+      <div class="mcard">
+        <img src="assets/models/ModelCPelletFacePressureProfiles.png" alt="ModelCFixtureCaseBContact card image" loading="lazy">
+        <div class="mname">ModelCFixtureCaseBContact</div>
+        <p>Why fixtures need compliant interlayers: under contact physics the Grafoil pad restores near-uniform ~5 MPa across the pellet face, verified by an exact statics audit.</p>
+        <a class="dl" href="assets/models/mph/ModelCFixtureCaseBContact.mph" download>⬇ ModelCFixtureCaseBContact.mph · 3.01 MB</a>
+        <div class="slim">saved without solutions — 17.60 MB → 3.01 MB (-82.9%)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">2 · Interactive explorer — where the clamp load actually goes</h2>
+    <p class="sub">Pellet-face pressure profiles from the four Model C fixture studies, plotted from the
+    models' exported radial bins. Toggle between the bonded idealization and contact physics — the same
+    comparison that produced the rim-riding finding — or click legend entries to isolate single curves.</p>
+    <div class="panel">
+      <div class="btns" id="pbtns">
+        <button data-set="all" class="on">All four</button>
+        <button data-set="bonded">Bonded idealization</button>
+        <button data-set="contact">Contact physics</button>
+        <button data-set="pair">Rigid vs +Grafoil (contact)</button>
+      </div>
+      <div id="pplot" class="plot"></div>
+      <div class="cap"><span class="real">STUDY RESULT</span> Median-binned radial profiles on the pellet top
+      face (Model C exports). Dotted line = 4.997&nbsp;MPa nominal mean (633&nbsp;N / 126.677&nbsp;mm²). Note
+      the display bins understate the contact-physics rim ring — the sub-bin rim mass is recovered only by the
+      exact surface integral recorded in each export header — so read the curves for <i>where</i> the load
+      sits, and the §6 table on the mechanical page for the convergent magnitudes.</div>
+    </div>
+    <div class="note"><b>Two more explorers are queued.</b> A void-fraction slider (Track A sweep) and a
+    temperature slider (Model B) will land here once their public data extracts are packaged alongside the
+    models — the model files above already contain everything needed to regenerate those sweeps locally.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Conclusion — why it matters</h2>
+    <div class="note" style="background:#eef4f4;border-color:#bfe0df;color:#0f2740">
+      <p style="margin:0"><b>So what?</b> Publishing the actual model files — solution-stripped, re-solvable,
+      with an honest slimming ledger — is the simulation equivalent of publishing code: anyone with COMSOL can
+      open, inspect, and re-run every claim this site makes about voids, thermal gradients, or fixture stress.
+      The library also shows range: electrochemical impedance physics, coupled heat transfer, and contact
+      mechanics, each validated against a published anchor or a second engine.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Own simulation work · Track A reproduces the published ACS Electrochemistry 2026 study · Model B correlated to published CC BY data.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+<script>
+"use strict";
+const PROFILES = [{"key": "caseA_benchmark", "label": "Case A rigid \u2014 bonded benchmark", "color": "#0f2740", "dash": "solid", "r": [0.149, 0.446, 0.743, 1.04, 1.337, 1.635, 1.932, 2.229, 2.526, 2.824, 3.121, 3.418, 3.715, 4.013, 4.31, 4.607, 4.904, 5.201, 5.375, 5.425, 5.475, 5.525, 5.575, 5.625, 5.675, 5.725, 5.775, 5.825, 5.875, 6.025, 6.075, 6.125, 6.325], "p": [2.2771, 2.2922, 2.3145, 2.3582, 2.4004, 2.4587, 2.516, 2.5967, 2.6793, 2.7665, 2.8519, 2.9213, 2.9815, 3.0256, 3.063, 3.0903, 3.2017, 3.4576, 3.6596, 3.7395, 3.9557, 4.1555, 4.2107, 4.2368, 4.2561, 4.6615, 4.7668, 4.937, 5.2355, 7.4659, 8.7931, 11.1117, 14.2336]}, {"key": "caseB_benchmark", "label": "Case B +Grafoil \u2014 bonded benchmark", "color": "#0e7c7b", "dash": "solid", "r": [0.149, 0.446, 0.743, 1.04, 1.337, 1.635, 1.932, 2.229, 2.526, 2.824, 3.121, 3.418, 3.715, 4.013, 4.31, 4.607, 4.904, 5.201, 5.375, 5.425, 5.475, 5.525, 5.575, 5.625, 5.675, 5.725, 5.775, 5.825, 5.875, 6.025, 6.075, 6.125], "p": [4.4101, 4.4235, 4.4345, 4.459, 4.4891, 4.5268, 4.5744, 4.6282, 4.6995, 4.7826, 4.8736, 4.9552, 5.0544, 5.1629, 5.2417, 5.3348, 5.3832, 5.425, 5.4373, 5.4174, 5.3935, 5.3699, 5.4673, 5.3426, 5.4155, 5.1251, 5.0203, 4.9334, 4.5553, 4.5406, 4.5621, 4.4953]}, {"key": "caseA_physics", "label": "Case A rigid \u2014 contact physics", "color": "#c0392b", "dash": "dash", "r": [0.149, 0.446, 0.743, 1.04, 1.337, 1.635, 1.932, 2.229, 2.526, 2.824, 3.121, 3.418, 3.715, 4.013, 4.31, 4.607, 4.904, 5.201, 5.375, 5.425, 5.475, 5.525, 5.575, 5.625, 5.675, 5.725, 5.775, 5.825, 5.875, 6.025, 6.075, 6.125, 6.325], "p": [0.6034, 1.598, 2.0485, 1.2767, -0.2393, 0.251, 0.7998, 0.327, 1.3283, 1.1702, 1.2074, 0.3439, -0.0511, -0.4268, -0.2918, 1.6414, 0.7307, -0.7238, -1.5049, -1.4879, -0.9823, -0.7317, -0.011, 0.1434, -0.4037, 5.5846, 3.9547, 2.5752, 4.1755, 21.9498, 8.4968, 5.0442, 5.7162]}, {"key": "caseB_physics", "label": "Case B +Grafoil \u2014 contact physics", "color": "#b7791f", "dash": "dash", "r": [0.149, 0.446, 0.743, 1.04, 1.337, 1.635, 1.932, 2.229, 2.526, 2.824, 3.121, 3.418, 3.715, 4.013, 4.31, 4.607, 4.904, 5.201, 5.375, 5.425, 5.475, 5.525, 5.575, 5.625, 5.675, 5.725, 5.775, 5.825, 5.875, 6.025, 6.075, 6.125], "p": [4.9138, 5.2326, 5.5526, 5.2825, 4.5375, 4.606, 5.4338, 5.1739, 5.0522, 4.6089, 4.8081, 3.885, 3.7758, 4.4487, 4.7599, 5.3766, 4.4154, 3.6119, 3.8029, 3.4529, 3.6317, 3.9445, 4.077, 4.5354, 3.4776, 4.5199, 5.59, 5.0949, 5.364, 7.3034, 6.4131, 7.1791]}];
+(function(){
+  const MEAN=4.997;
+  function traces(setName){
+    const pick = {
+      all: ["caseA_benchmark","caseB_benchmark","caseA_physics","caseB_physics"],
+      bonded: ["caseA_benchmark","caseB_benchmark"],
+      contact: ["caseA_physics","caseB_physics"],
+      pair: ["caseA_physics","caseB_physics"]
+    }[setName];
+    const t=PROFILES.filter(s=>pick.includes(s.key)).map(s=>({
+      x:s.r, y:s.p, mode:"lines+markers", name:s.label,
+      line:{color:s.color,width:2.5,dash:s.dash}, marker:{size:5},
+      hovertemplate:"r=%{x:.2f} mm · %{y:.2f} MPa<extra>"+s.label+"</extra>"
+    }));
+    const rmax=Math.max(...PROFILES.map(s=>Math.max(...s.r)));
+    t.push({x:[0,rmax], y:[MEAN,MEAN], mode:"lines", name:"nominal mean 4.997 MPa",
+      line:{color:"#1c2733",width:1.5,dash:"dot"}, hoverinfo:"skip"});
+    return t;
+  }
+  const LAYOUT={
+    font:{family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#1c2733"},
+    margin:{l:70,r:20,t:52,b:64}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
+    title:{text:"Pellet-face pressure vs radius — bonded idealization vs contact physics", font:{size:15}},
+    xaxis:{title:{text:"radius on pellet face (mm)",font:{size:13}}, tickfont:{size:12}, gridcolor:"#eef2f6", rangemode:"tozero"},
+    yaxis:{title:{text:"interface pressure −σ_z (MPa)",font:{size:13}}, tickfont:{size:12}, gridcolor:"#eef2f6"},
+    legend:{font:{size:12}, orientation:"h", y:-0.22}
+  };
+  function draw(set){ Plotly.react("pplot", traces(set), LAYOUT, {responsive:true, displaylogo:false}); }
+  document.querySelectorAll("#pbtns button").forEach(b=>{
+    b.addEventListener("click",()=>{
+      document.querySelectorAll("#pbtns button").forEach(x=>x.classList.remove("on"));
+      b.classList.add("on"); draw(b.dataset.set);
+    });
+  });
+  draw("all");
+})();
+</script>
+</body>
+</html>

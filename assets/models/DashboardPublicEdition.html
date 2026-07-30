@@ -1,0 +1,750 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Single-Frequency Void Detection — Digital Twin Dashboard (PoC, public edition)</title>
+<!--
+  Single-Frequency Void Detection — Digital Twin Dashboard (PoC)
+  Self-contained interview proof-of-concept: no external assets, vanilla JS,
+  all data embedded inline. Built 2026-07-26 by
+  InteractiveDashboardPoC/BuildVoidDetectionDashboardFromSpectraCsvs.py
+-->
+<style>
+:root{
+  --plane:#f9f9f7; --surface:#fcfcfb;
+  --ink:#0b0b0b; --sec:#52514e; --muted:#898781;
+  --grid:#e1e0d9; --axis:#c3c2b7; --border:rgba(11,11,11,.10);
+  --s1:#2a78d6; --s2:#eb6834;
+  --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --plane:#0d0d0d; --surface:#1a1a19;
+    --ink:#ffffff; --sec:#c3c2b7; --muted:#898781;
+    --grid:#2c2c2a; --axis:#383835; --border:rgba(255,255,255,.10);
+    --s1:#3987e5; --s2:#d95926;
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box; margin:0; padding:0}
+html{background:var(--plane)}
+body{
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  color:var(--ink); background:var(--plane);
+  padding:20px clamp(12px,3vw,36px) 30px;
+  max-width:1340px; margin:0 auto;
+}
+h1{font-size:clamp(19px,2.4vw,26px); font-weight:650; letter-spacing:-.01em}
+h2{font-size:13.5px; font-weight:600; color:var(--ink)}
+.sub{color:var(--sec); font-size:12.5px; margin-top:4px; line-height:1.45}
+.titlerow{display:flex; flex-wrap:wrap; align-items:center; gap:10px}
+.badge{
+  font-size:11px; font-weight:600; color:var(--sec);
+  border:1px solid var(--warn); border-radius:6px; padding:2.5px 8px;
+  background:color-mix(in srgb, var(--warn) 12%, var(--surface));
+  white-space:nowrap;
+}
+.badge[hidden]{display:none}
+
+/* ---- controls row (scopes everything below it) ---- */
+.controls{
+  margin-top:16px; display:flex; flex-wrap:wrap; gap:12px 22px; align-items:flex-end;
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:12px 16px;
+}
+.ctl{display:flex; flex-direction:column; gap:5px; min-width:170px}
+.ctl.grow{flex:1 1 240px}
+.ctl label{font-size:11.5px; color:var(--sec); font-weight:600}
+.ctl .readout{font-size:12.5px; color:var(--ink); font-weight:600}
+.seg{display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; width:max-content}
+.seg button{
+  font:inherit; font-size:12.5px; padding:7px 14px; border:0; cursor:pointer;
+  background:transparent; color:var(--sec);
+}
+.seg button[aria-pressed="true"]{background:var(--s1); color:#fff; font-weight:600}
+.seg button:not([aria-pressed="true"]):hover{background:color-mix(in srgb, var(--ink) 6%, transparent)}
+input[type=range]{accent-color:var(--s1); width:100%; cursor:pointer}
+.chip{
+  font:inherit; font-size:11px; color:var(--sec); background:transparent;
+  border:1px solid var(--border); border-radius:999px; padding:3px 10px; cursor:pointer;
+  width:max-content;
+}
+.chip:hover{border-color:var(--s1); color:var(--ink)}
+button:disabled, input:disabled{opacity:.45; cursor:not-allowed}
+
+/* ---- shared legend ---- */
+.legendrow{
+  display:flex; flex-wrap:wrap; gap:6px 20px; align-items:center;
+  font-size:11.5px; color:var(--sec); margin:12px 4px 0;
+}
+.lk{display:inline-block; width:18px; height:0; border-top:3px solid; border-radius:2px;
+    vertical-align:middle; margin-right:6px}
+.lk.dash{border-top-style:dashed; border-top-width:2px}
+
+/* ---- cards grid ---- */
+.grid{display:grid; grid-template-columns:repeat(12,1fr); gap:14px; margin-top:12px}
+.card{
+  background:var(--surface); border:1px solid var(--border); border-radius:12px;
+  padding:14px 16px 12px; min-width:0;
+}
+.card .note{font-size:11px; color:var(--muted); margin-top:2px}
+.nyq{grid-column:span 5}
+.spec{grid-column:span 4}
+.det{grid-column:span 3; display:flex; flex-direction:column}
+.strip{grid-column:span 12}
+@media (max-width:1020px){ .nyq{grid-column:span 6} .spec{grid-column:span 6} .det{grid-column:span 12} }
+@media (max-width:700px){ .nyq,.spec{grid-column:span 12} }
+.cwrap{position:relative; margin-top:8px}
+canvas{display:block; width:100%; touch-action:pan-y}
+#cvNyq,#cvSpec{height:272px}
+
+/* ---- detector card ---- */
+.det .dlabel{font-size:11.5px; color:var(--sec); font-weight:600; line-height:1.4; margin-top:8px}
+.hero{font-size:52px; font-weight:650; letter-spacing:-.02em; margin:6px 0 2px; line-height:1.05}
+.hero small{font-size:20px; font-weight:600; color:var(--sec)}
+.lamp{
+  display:flex; align-items:center; gap:10px; margin:10px 0 6px;
+  border-radius:10px; padding:10px 12px; font-weight:650; font-size:14px;
+  border:1px solid var(--border);
+}
+.lamp .dot{width:15px; height:15px; border-radius:50%; flex:none;
+  box-shadow:0 0 0 2px var(--surface), 0 0 0 3px currentColor}
+.lamp.ok{color:var(--good); background:color-mix(in srgb, var(--good) 10%, var(--surface))}
+.lamp.alarm{color:var(--crit); background:color-mix(in srgb, var(--crit) 12%, var(--surface))}
+.lamp .dot{background:currentColor}
+.lamp .ltext{color:var(--ink)} .lamp .lstate{margin-right:2px}
+.dets{font-size:12px; color:var(--sec); line-height:1.65; margin-top:2px}
+.dets b{color:var(--ink); font-weight:600}
+.warnchip{
+  display:none; margin-top:8px; font-size:11.5px; color:var(--ink);
+  border:1px solid var(--warn); border-radius:8px; padding:6px 9px;
+  background:color-mix(in srgb, var(--warn) 14%, var(--surface));
+}
+.warnchip.show{display:block}
+
+/* ---- replay ---- */
+.striphead{display:flex; flex-wrap:wrap; align-items:center; gap:10px 14px}
+.btn{
+  font:inherit; font-size:13px; font-weight:600; color:#fff; background:var(--s1);
+  border:0; border-radius:8px; padding:8px 16px; cursor:pointer;
+}
+.btn:hover{filter:brightness(1.08)}
+.replaystatus{font-size:12.5px; color:var(--sec); line-height:1.5; margin-top:6px; min-height:1.4em}
+.replaystatus b{color:var(--ink)}
+
+/* ---- tooltip ---- */
+.tip{
+  position:absolute; pointer-events:none; z-index:5; max-width:270px;
+  background:var(--surface); border:1px solid var(--border); border-radius:8px;
+  box-shadow:0 4px 14px rgba(0,0,0,.16); padding:8px 10px; font-size:11.5px;
+}
+.tip[hidden]{display:none}
+.tip .tt{color:var(--muted); margin-bottom:4px; font-weight:600}
+.tip .row{display:flex; align-items:center; gap:7px; line-height:1.7; white-space:nowrap}
+.tip .row .lk{width:14px; margin-right:0}
+.tip .tv{font-weight:650; color:var(--ink)} .tip .tl{color:var(--sec)}
+
+/* ---- tables ---- */
+details{margin-top:14px; background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:10px 16px}
+summary{cursor:pointer; font-size:12.5px; font-weight:600; color:var(--sec)}
+.tablewrap{max-height:300px; overflow:auto; margin-top:10px; border-top:1px solid var(--grid)}
+table{border-collapse:collapse; width:100%; font-size:11.5px}
+th{position:sticky; top:0; background:var(--surface); text-align:right;
+  color:var(--sec); font-weight:600; padding:6px 10px; border-bottom:1px solid var(--axis)}
+th:first-child, td:first-child{text-align:left}
+td{padding:4px 10px; text-align:right; font-variant-numeric:tabular-nums;
+  color:var(--ink); border-bottom:1px solid var(--grid)}
+td.alarmcell{color:var(--crit); font-weight:650}
+
+footer{margin-top:18px; font-size:11px; color:var(--muted); line-height:1.65}
+footer b{color:var(--sec)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="titlerow">
+    <h1>Single-Frequency Void Detection &mdash; Digital Twin Dashboard (PoC)</h1>
+  </div>
+  <p class="sub" id="subline">
+    Pick a chemistry, a void coverage &phi; and one frequency: the detector reads the change of
+    &minus;Im&nbsp;Z at that single frequency against the no-void baseline and trips an alarm at
+    +20%.
+  </p>
+</header>
+
+<section class="controls" aria-label="Dashboard controls">
+  <div class="ctl">
+    <label id="chemLabel">Chemistry</label>
+    <div class="seg" role="group" aria-labelledby="chemLabel">
+      <button type="button" id="btnLpscl" aria-pressed="true">LPSCl model</button>
+    </div>
+  </div>
+  <div class="ctl grow">
+    <label for="phiSlider">Void coverage &phi; <span style="font-weight:400">(snaps to computed cases)</span></label>
+    <input type="range" id="phiSlider" min="0" max="6" step="1" value="2" list="phiTicks">
+    <datalist id="phiTicks"></datalist>
+    <span class="readout" id="phiReadout"></span>
+  </div>
+  <div class="ctl grow">
+    <label for="fSlider">Detection frequency f <span style="font-weight:400">(snaps to grid)</span></label>
+    <input type="range" id="fSlider" min="0" max="80" step="1" value="0">
+    <span class="readout" id="fReadout"></span>
+  </div>
+  <div class="ctl">
+    <label>Suggested f</label>
+    <button type="button" class="chip" id="optChip" title="Snap frequency slider"></button>
+  </div>
+</section>
+
+<div class="legendrow" id="legend">
+  <span><span class="lk" id="lkSel"></span>selected &phi;</span>
+  <span><span class="lk" id="lkBase"></span>no-void baseline (&phi;&thinsp;&asymp;&thinsp;0)</span>
+  <span><span class="lk" id="lkCtx"></span>other computed &phi;</span>
+  <span><span class="lk dash" id="lkThr"></span>+20% alarm threshold</span>
+  <span><span class="lk" id="lkF" style="border-top-width:1px"></span>selected f</span>
+</div>
+
+<main class="grid">
+  <div class="card nyq">
+    <h2>Nyquist &mdash; &minus;Im Z vs Re Z</h2>
+    <div class="note" id="nyqNote"></div>
+    <div class="cwrap"><canvas id="cvNyq" role="img"></canvas><div class="tip" id="tipNyq" hidden></div></div>
+  </div>
+
+  <div class="card spec">
+    <h2>&minus;Im Z vs frequency <span style="color:var(--muted);font-weight:400">(log&ndash;log; click to set f)</span></h2>
+    <div class="note" id="specNote"></div>
+    <div class="cwrap"><canvas id="cvSpec" role="img"></canvas><div class="tip" id="tipSpec" hidden></div></div>
+  </div>
+
+  <div class="card det">
+    <h2>Single-frequency detector</h2>
+    <div class="dlabel" id="detLabel"></div>
+    <div class="hero" id="detHero" aria-live="polite">&mdash;</div>
+    <div class="lamp ok" id="lamp" aria-live="polite">
+      <span class="dot" aria-hidden="true"></span>
+      <span class="ltext"><span class="lstate" id="lampState">OK</span><span id="lampMsg" style="font-weight:500;color:var(--sec)"></span></span>
+    </div>
+    <div class="dets" id="detDetails"></div>
+    <div class="warnchip" id="clampChip">&#9650; measured &phi; beyond computed twin range &mdash; detector value clamped at the largest computed case</div>
+  </div>
+
+  </div>
+</main>
+
+<details id="tableDetails">
+  <summary>Data table &mdash; selected spectrum &amp; detector response (tooltip-free view)</summary>
+  <div class="tablewrap"><table id="dataTable"></table></div>
+</details>
+
+
+
+<footer>
+  <b>What this is:</b> interactive proof-of-concept for single-frequency EIS void detection
+  (detector = %change of &minus;Im&nbsp;Z at one frequency vs the &phi;&thinsp;&asymp;&thinsp;0 case; alarm at +20%),
+  driving the embedded published LPSCl COMSOL model (config tableS1,
+  &phi; = 0.0009, 0.0907, 0.2539, 0.4169, 0.5804, 0.7436, 0.8889; 81 f, 10&nbsp;Hz&ndash;100&nbsp;kHz).
+  <b>Sources:</b> OriginalModelFigures/Data/OriginalModelSpectra_tableS1.csv (all read-only).
+  <b>Built:</b> 2026-07-26 by BuildVoidDetectionDashboardFromSpectraCsvs.py &middot;
+  self-contained (no CDNs, vanilla JS, inline data) &middot; PoC, not a deployed monitor.
+</footer>
+
+<script id="dashData" type="application/json">{"generated":"2026-07-26","alarmPct":20.0,"chems":{"lpscl":{"label":"LPSCl model (published)","showcase":false,"optF":100.0,"optFLabel":"paper detection band ~66.6\u2013100 Hz","configNote":"ORIGINAL published LPSCl COMSOL model, config=tableS1; 7 \u03c6 cases \u00d7 81 f (10 Hz\u2013100000 Hz); Z full-cell \u03a9, A = 0.283 cm\u00b2","freqs":[10.0,11.2202,12.5893,14.1254,15.8489,17.7828,19.9526,22.3872,25.1189,28.1838,31.6228,35.4813,39.8107,44.6684,50.1187,56.2341,63.0957,70.7946,79.4328,89.1251,100.0,112.202,125.893,141.254,158.489,177.828,199.526,223.872,251.189,281.838,316.228,354.813,398.107,446.684,501.187,562.341,630.957,707.946,794.328,891.251,1000.0,1122.02,1258.93,1412.54,1584.89,1778.28,1995.26,2238.72,2511.89,2818.38,3162.28,3548.13,3981.07,4466.84,5011.87,5623.41,6309.57,7079.46,7943.28,8912.51,10000.0,11220.2,12589.3,14125.4,15848.9,17782.8,19952.6,22387.2,25118.9,28183.8,31622.8,35481.3,39810.7,44668.4,50118.7,56234.1,63095.7,70794.6,79432.8,89125.1,100000.0],"cases":[{"phi":0.0009,"rvow":0.03162,"re":[234.83,234.396,233.941,233.466,232.971,232.455,231.919,231.365,230.792,230.201,229.594,228.973,228.337,227.69,227.033,226.367,225.695,225.019,224.34,223.66,222.981,222.304,221.632,220.966,220.307,219.656,219.013,218.381,217.757,217.144,216.541,215.947,215.363,214.787,214.219,213.657,213.1,212.547,211.997,211.447,210.897,210.343,209.784,209.219,208.644,208.058,207.458,206.842,206.207,205.55,204.869,204.162,203.425,202.656,201.852,201.009,200.127,199.201,198.229,197.209,196.139,195.017,193.841,192.609,191.322,189.978,188.578,187.122,185.612,184.051,182.439,180.783,179.084,177.349,175.582,173.79,171.98,170.158,168.331,166.506,164.692],"nim":[5.73149,5.95084,6.16885,6.38436,6.59617,6.80305,7.00373,7.19696,7.38151,7.55618,7.71985,7.87152,8.0103,8.13544,8.2464,8.34279,8.42446,8.49147,8.5441,8.58286,8.60849,8.62193,8.62433,8.61699,8.6014,8.57918,8.55203,8.52176,8.49022,8.45932,8.43095,8.407,8.38932,8.37975,8.38004,8.39188,8.41687,8.45655,8.51236,8.58563,8.67761,8.78943,8.92214,9.07666,9.2538,9.45424,9.67856,9.92719,10.2004,10.4983,10.8209,11.1678,11.5388,11.933,12.3496,12.7875,13.245,13.7206,14.212,14.7168,15.2323,15.7553,16.2824,16.8096,17.333,17.8479,18.3499,18.8338,19.2949,19.7279,20.1279,20.4901,20.8098,21.0827,21.305,21.4734,21.5854,21.6388,21.6327,21.5665,21.4406]},{"phi":0.0907,"rvow":0.3162,"re":[236.057,235.603,235.127,234.629,234.11,233.57,233.009,232.428,231.828,231.21,230.575,229.924,229.26,228.583,227.895,227.199,226.496,225.789,225.079,224.368,223.659,222.953,222.251,221.556,220.868,220.19,219.52,218.861,218.213,217.576,216.949,216.333,215.727,215.131,214.543,213.962,213.388,212.818,212.252,211.687,211.122,210.555,209.984,209.406,208.82,208.224,207.614,206.988,206.344,205.679,204.991,204.276,203.532,202.756,201.946,201.098,200.21,199.279,198.303,197.279,196.205,195.078,193.899,192.664,191.373,190.026,188.623,187.165,185.653,184.089,182.475,180.816,179.116,177.379,175.61,173.817,172.005,170.181,168.353,166.527,164.711],"nim":[5.99823,6.22727,6.45482,6.67966,6.90053,7.11613,7.32512,7.52618,7.71801,7.89934,8.06901,8.22593,8.36917,8.49794,8.61164,8.70988,8.79246,8.85945,8.91113,8.94801,8.97086,8.98064,8.97854,8.96592,8.94431,8.91539,8.88094,8.84283,8.80297,8.76334,8.7259,8.69261,8.6654,8.64615,8.63666,8.6387,8.65392,8.68388,8.73008,8.79388,8.87656,8.97929,9.10312,9.24901,9.41777,9.61011,9.82661,10.0677,10.3336,10.6246,10.9405,11.281,11.6459,12.0343,12.4454,12.8779,13.3304,13.8012,14.288,14.7886,15.3,15.8191,16.3425,16.8664,17.3864,17.8983,18.3973,18.8785,19.337,19.7676,20.1653,20.5253,20.8429,21.1139,21.3344,21.5011,21.6114,21.6634,21.6557,21.5882,21.4611]},{"phi":0.2539,"rvow":0.52915,"re":[239.05,238.545,238.016,237.464,236.888,236.289,235.667,235.022,234.357,233.671,232.967,232.246,231.509,230.759,229.998,229.227,228.449,227.667,226.882,226.097,225.314,224.534,223.761,222.995,222.239,221.493,220.758,220.036,219.326,218.629,217.946,217.275,216.617,215.97,215.335,214.709,214.091,213.481,212.875,212.274,211.674,211.074,210.472,209.866,209.252,208.629,207.995,207.346,206.681,205.996,205.288,204.556,203.795,203.004,202.179,201.317,200.416,199.473,198.485,197.45,196.366,195.231,194.042,192.799,191.5,190.146,188.736,187.271,185.753,184.183,182.564,180.9,179.195,177.453,175.681,173.883,172.068,170.24,168.409,166.58,164.761],"nim":[6.64787,6.90051,7.15129,7.39887,7.6418,7.87863,8.10787,8.328,8.53756,8.73514,8.91939,9.08911,9.24321,9.38081,9.50121,9.60394,9.68876,9.7557,9.80505,9.83736,9.85343,9.8543,9.84125,9.81577,9.77952,9.73431,9.68207,9.62485,9.56473,9.50385,9.44434,9.38832,9.33788,9.29504,9.26178,9.23995,9.23136,9.23767,9.26047,9.30122,9.36127,9.44186,9.54409,9.66896,9.81734,9.98995,10.1874,10.4101,10.6584,10.9324,11.232,11.5571,11.907,12.2813,12.6788,13.0985,13.5388,13.9979,14.4738,14.9639,15.4654,15.9751,16.4897,17.0051,17.5172,18.0216,18.5135,18.9881,19.4402,19.8648,20.257,20.6117,20.9243,21.1906,21.4066,21.5692,21.6756,21.7238,21.7127,21.6418,21.5116]},{"phi":0.4169,"rvow":0.678,"re":[243.706,243.123,242.513,241.876,241.211,240.519,239.801,239.058,238.291,237.5,236.689,235.858,235.009,234.145,233.269,232.382,231.488,230.588,229.687,228.786,227.888,226.995,226.11,225.234,224.371,223.52,222.683,221.862,221.057,220.268,219.496,218.74,218.001,217.276,216.566,215.87,215.185,214.511,213.845,213.186,212.532,211.882,211.231,210.579,209.923,209.26,208.587,207.903,207.204,206.488,205.751,204.99,204.204,203.388,202.54,201.657,200.735,199.773,198.768,197.716,196.616,195.466,194.264,193.007,191.697,190.331,188.911,187.436,185.908,184.329,182.702,181.03,179.317,177.569,175.79,173.986,172.165,170.332,168.495,166.661,164.838],"nim":[7.65906,7.94843,8.23539,8.51834,8.79562,9.06551,9.32624,9.57605,9.81322,10.0361,10.243,10.4327,10.6037,10.755,10.8859,10.9956,11.0839,11.1507,11.1965,11.2216,11.2272,11.2142,11.1841,11.1386,11.0795,11.0089,10.929,10.8421,10.7504,10.6564,10.5626,10.4712,10.3846,10.305,10.2347,10.1758,10.1301,10.0996,10.086,10.0908,10.1156,10.1618,10.2304,10.3225,10.4392,10.5811,10.7488,10.943,11.1638,11.4114,11.6857,11.9865,12.3134,12.6655,13.042,13.4417,13.8629,14.304,14.7626,15.2364,15.7225,16.2176,16.7183,17.2207,17.7204,18.2132,18.694,19.1582,19.6005,20.0159,20.3993,20.7457,21.0506,21.3096,21.5187,21.6748,21.775,21.8175,21.8009,21.7249,21.5899]},{"phi":0.5804,"rvow":0.8,"re":[252.007,251.286,250.53,249.74,248.917,248.061,247.173,246.253,245.304,244.326,243.323,242.295,241.247,240.181,239.099,238.005,236.903,235.795,234.686,233.578,232.474,231.379,230.294,229.223,228.167,227.13,226.111,225.114,224.138,223.185,222.255,221.348,220.463,219.6,218.757,217.934,217.13,216.342,215.568,214.807,214.057,213.315,212.579,211.846,211.113,210.378,209.638,208.89,208.131,207.359,206.569,205.759,204.926,204.067,203.178,202.256,201.299,200.303,199.266,198.185,197.057,195.881,194.654,193.375,192.042,190.656,189.217,187.724,186.179,184.585,182.943,181.257,179.531,177.77,175.98,174.165,172.334,170.491,168.646,166.803,164.972],"nim":[9.46338,9.81827,10.1698,10.5159,10.8544,11.1833,11.5002,11.803,12.0894,12.3574,12.6049,12.83,13.0312,13.2071,13.3565,13.4787,13.5732,13.6399,13.6792,13.6916,13.6783,13.6405,13.5801,13.4988,13.3991,13.2832,13.1539,13.0139,12.8659,12.7129,12.5577,12.4031,12.252,12.1069,11.9706,11.8453,11.7335,11.6372,11.5586,11.4994,11.4613,11.4459,11.4545,11.4882,11.5482,11.6353,11.7501,11.8932,12.0649,12.2654,12.4945,12.7521,13.0377,13.3504,13.6893,14.0532,14.4404,14.8491,15.277,15.7217,16.1802,16.6492,17.1252,17.6041,18.0818,18.5536,19.0148,19.4603,19.885,20.2839,20.6516,20.9834,21.2744,21.5202,21.7171,21.8615,21.9508,21.983,21.9567,21.8715,21.7278]},{"phi":0.7436,"rvow":0.9055,"re":[270.829,269.791,268.705,267.571,266.389,265.159,263.883,262.563,261.201,259.799,258.36,256.888,255.386,253.86,252.312,250.749,249.174,247.593,246.012,244.434,242.865,241.31,239.773,238.257,236.766,235.305,233.874,232.477,231.115,229.789,228.5,227.248,226.033,224.855,223.712,222.603,221.527,220.48,219.462,218.47,217.501,216.552,215.62,214.703,213.797,212.899,212.006,211.114,210.22,209.32,208.411,207.489,206.55,205.592,204.611,203.602,202.564,201.491,200.383,199.234,198.043,196.808,195.525,194.194,192.813,191.382,189.899,188.366,186.784,185.154,183.478,181.761,180.006,178.218,176.401,174.563,172.708,170.844,168.978,167.117,165.268],"nim":[13.5579,14.0615,14.5594,15.0488,15.5264,15.9891,16.4336,16.8565,17.2547,17.625,17.9644,18.2702,18.5399,18.7714,18.963,19.1134,19.222,19.2884,19.313,19.2966,19.2405,19.1465,19.017,18.8547,18.6625,18.4439,18.2025,17.9419,17.6662,17.3792,17.0848,16.7869,16.4892,16.1955,15.9091,15.6333,15.3713,15.1259,14.8997,14.6951,14.5142,14.3591,14.2314,14.1325,14.0639,14.0264,14.021,14.0482,14.1084,14.2018,14.3284,14.4877,14.6794,14.9025,15.156,15.4386,15.7484,16.0836,16.4418,16.8202,17.216,17.6256,18.0453,18.4711,18.8985,19.3228,19.7391,20.1423,20.5271,20.8882,21.2204,21.5187,21.7781,21.9942,22.163,22.2811,22.3455,22.3542,22.3059,22.2,22.0367]},{"phi":0.8889,"rvow":0.99,"re":[334.041,331.943,329.746,327.453,325.063,322.578,320.001,317.336,314.586,311.757,308.855,305.888,302.864,299.791,296.678,293.536,290.375,287.205,284.037,280.881,277.748,274.647,271.588,268.579,265.627,262.74,259.924,257.183,254.522,251.943,249.449,247.04,244.718,242.481,240.328,238.257,236.266,234.353,232.513,230.742,229.037,227.394,225.807,224.272,222.784,221.338,219.93,218.554,217.204,215.877,214.566,213.268,211.976,210.686,209.393,208.093,206.781,205.452,204.103,202.729,201.327,199.893,198.425,196.92,195.376,193.791,192.165,190.497,188.788,187.04,185.253,183.432,181.579,179.699,177.796,175.876,173.946,172.01,170.077,168.154,166.245],"nim":[27.317,28.3203,29.3105,30.2812,31.2261,32.1385,33.0116,33.8384,34.6122,35.3264,35.9747,36.5514,37.0511,37.4695,37.8028,38.0483,38.204,38.2694,38.2446,38.1311,37.9312,37.6484,37.2869,36.8519,36.3493,35.7854,35.1671,34.5016,33.7964,33.0589,32.2967,31.517,30.727,29.9334,29.1429,28.3614,27.5946,26.8478,26.1255,25.4321,24.7713,24.1466,23.5607,23.0162,22.5151,22.059,21.6493,21.2868,20.9722,20.7058,20.4873,20.3164,20.1925,20.1143,20.0806,20.0896,20.1393,20.2272,20.3506,20.5064,20.6911,20.9008,21.1313,21.378,21.6362,21.9006,22.166,22.4266,22.6769,22.9112,23.1238,23.3093,23.4624,23.5785,23.653,23.6822,23.663,23.5929,23.4705,23.2948,23.0658]}]}},"caption":{"lpsclPhis":"0.0009, 0.0907, 0.2539, 0.4169, 0.5804, 0.7436, 0.8889","srcLpscl":"OriginalModelSpectra_tableS1.csv (Table S1 CPE configuration)"},"edition":"PUBLIC - published-parameter LPSCl model only; no unpublished data"}</script>
+<!--
+  PUBLIC EDITION. Contains only the published-parameter LPSCl model re-solved from the
+  original COMSOL file (ACS Electrochemistry 2026, 2, 384-393; original FEM implementation
+  by Kim & Gjerde; independent re-solution by Hao Zheng). All unpublished experimental
+  content has been removed at the data layer, not merely hidden — see
+  InteractiveDashboardPoC/BuildPublicEditionDashboard.py for the strip-and-verify pass.
+-->
+<script>
+'use strict';
+/* ============================ data & state ============================ */
+const D = JSON.parse(document.getElementById('dashData').textContent);
+const OP = null;   /* PUBLIC edition: measured-series data not included */
+const ALARM = D.alarmPct;               // +20 (%)
+const $ = id => document.getElementById(id);
+
+const state = {
+  replay: {on: false, i: 0, results: []},   /* PUBLIC edition stub: replay disabled */
+  chem: 'lpscl',
+  per: {},                              // per-chem {phiIdx, fIdx}
+  hover: null,                          // {type:'spec'|'nyq'|'strip', ...}
+};
+for (const key of Object.keys(D.chems)) {
+  const c = D.chems[key];
+  state.per[key] = {
+    phiIdx: Math.min(2, c.cases.length - 1),
+    fIdx: nearestIdx(c.freqs, c.optF, true)
+  };
+}
+
+function cur() {
+  const chem = D.chems[state.chem], p = state.per[state.chem];
+  return {chem, p, sel: chem.cases[p.phiIdx], base: chem.cases[0], f: chem.freqs[p.fIdx]};
+}
+function nearestIdx(arr, v, log) {
+  let bi = 0, bd = Infinity;
+  for (let i = 0; i < arr.length; i++) {
+    const d = log ? Math.abs(Math.log10(arr[i] / v)) : Math.abs(arr[i] - v);
+    if (d < bd) { bd = d; bi = i; }
+  }
+  return bi;
+}
+
+/* ============================ formatting ============================ */
+function sig(x, n) {
+  if (!isFinite(x)) return '—';
+  const s = x.toPrecision(n || 3);
+  return String(+s);                     // strips trailing zeros
+}
+function fmtHz(f) {
+  if (f >= 1e6) return sig(f / 1e6) + ' MHz';
+  if (f >= 1e3) return sig(f / 1e3) + ' kHz';
+  return sig(f) + ' Hz';
+}
+function fmtPhi(p) { return p <= 0.001 ? '≈0 (' + p + ')' : sig(p, 3); }
+function fmtPct(p) { return (p >= 0 ? '+' : '−') + Math.abs(p).toFixed(1) + '%'; }
+
+/* ============================ theme ============================ */
+function theme() {
+  const cs = getComputedStyle(document.documentElement);
+  const g = n => cs.getPropertyValue(n).trim();
+  return {surface: g('--surface'), ink: g('--ink'), sec: g('--sec'), muted: g('--muted'),
+          grid: g('--grid'), axis: g('--axis'), s1: g('--s1'), s2: g('--s2'),
+          good: g('--good'), warn: g('--warn'), crit: g('--crit')};
+}
+
+/* ============================ detector math ============================ */
+function pctAt(chem, phiCaseIdx, fIdx) {
+  const c = D.chems[chem];
+  const b = c.cases[0].nim[fIdx], v = c.cases[phiCaseIdx].nim[fIdx];
+  return 100 * (v - b) / b;
+}
+/* linear interpolation of -Im across the computed phi cases (replay) */
+function nimAtPhi(chem, fIdx, phi) {
+  const cs = D.chems[chem].cases;
+  if (phi <= cs[0].phi) return {v: cs[0].nim[fIdx], clamped: false};
+  const last = cs[cs.length - 1];
+  if (phi >= last.phi) return {v: last.nim[fIdx], clamped: phi > last.phi + 1e-9};
+  for (let j = 1; j < cs.length; j++) {
+    if (phi <= cs[j].phi) {
+      const a = cs[j - 1], b = cs[j];
+      const t = (phi - a.phi) / (b.phi - a.phi);
+      return {v: a.nim[fIdx] + t * (b.nim[fIdx] - a.nim[fIdx]), clamped: false};
+    }
+  }
+  return {v: last.nim[fIdx], clamped: true};
+}
+/* smallest phi whose -Im crosses the +20% threshold at fIdx (null if outside range) */
+function phiStar(chem, fIdx) {
+  const cs = D.chems[chem].cases, th = (1 + ALARM / 100) * cs[0].nim[fIdx];
+  for (let j = 1; j < cs.length; j++) {
+    if (cs[j].nim[fIdx] >= th) {
+      const a = cs[j - 1], b = cs[j];
+      const t = (th - a.nim[fIdx]) / (b.nim[fIdx] - a.nim[fIdx]);
+      return a.phi + t * (b.phi - a.phi);
+    }
+  }
+  return null;
+}
+
+/* ============================ canvas helpers ============================ */
+function setupCanvas(cv) {
+  const dpr = window.devicePixelRatio || 1;
+  const w = cv.clientWidth, h = cv.clientHeight;
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) {
+    cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr);
+  }
+  const ctx = cv.getContext('2d');
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, w, h);
+  return {ctx, w, h};
+}
+const MARGIN = {l: 58, r: 16, t: 12, b: 40};
+function linTicks(min, max, n) {
+  const span = max - min, raw = span / (n || 5), p = Math.pow(10, Math.floor(Math.log10(raw)));
+  let step = p; for (const m of [1, 2, 2.5, 5, 10]) if (m * p >= raw) { step = m * p; break; }
+  const out = [];
+  for (let v = Math.ceil(min / step) * step; v <= max + 1e-9 * step; v += step) out.push(+v.toFixed(10));
+  return out;
+}
+function logTicks(min, max) {          // {1,2,5} x 10^k inside [min,max]
+  const out = [];
+  for (let k = Math.floor(Math.log10(min)) - 1; k <= Math.ceil(Math.log10(max)); k++)
+    for (const m of [1, 2, 5]) { const v = m * Math.pow(10, k); if (v >= min * 0.999 && v <= max * 1.001) out.push(v); }
+  return out;
+}
+function axisText(ctx, T) { ctx.fillStyle = T.muted; ctx.font = '11px system-ui, sans-serif'; }
+
+function frame(ctx, T, w, h) {         // baseline axes (solid hairlines)
+  ctx.strokeStyle = T.axis; ctx.lineWidth = 1; ctx.beginPath();
+  ctx.moveTo(MARGIN.l, MARGIN.t); ctx.lineTo(MARGIN.l, h - MARGIN.b); ctx.lineTo(w - MARGIN.r, h - MARGIN.b);
+  ctx.stroke();
+}
+function marker(ctx, T, x, y, color, r) {
+  ctx.beginPath(); ctx.arc(x, y, (r || 4.5) + 2, 0, 7); ctx.fillStyle = T.surface; ctx.fill();
+  ctx.beginPath(); ctx.arc(x, y, r || 4.5, 0, 7); ctx.fillStyle = color; ctx.fill();
+}
+function polyline(ctx, pts, color, width, dash, alpha) {
+  ctx.save();
+  if (alpha != null) ctx.globalAlpha = alpha;
+  ctx.strokeStyle = color; ctx.lineWidth = width; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+  ctx.setLineDash(dash || []);
+  ctx.beginPath();
+  pts.forEach((p, i) => i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]));
+  ctx.stroke(); ctx.restore();
+}
+
+/* ============================ Nyquist chart ============================ */
+const nyqScale = {};                    // cached per render for hover mapping
+function drawNyq() {
+  const cv = $('cvNyq'), {ctx, w, h} = setupCanvas(cv), T = theme();
+  const {chem, p} = cur();
+  let xmin = Infinity, xmax = -Infinity, ymax = -Infinity;
+  for (const c of chem.cases) for (let i = 0; i < c.re.length; i++) {
+    if (c.re[i] < xmin) xmin = c.re[i]; if (c.re[i] > xmax) xmax = c.re[i];
+    if (c.nim[i] > ymax) ymax = c.nim[i];
+  }
+  const xpad = (xmax - xmin) * 0.04;
+  xmin -= xpad; xmax += xpad; ymax *= 1.08;
+  const X = v => MARGIN.l + (v - xmin) / (xmax - xmin) * (w - MARGIN.l - MARGIN.r);
+  const Y = v => (h - MARGIN.b) - v / ymax * (h - MARGIN.b - MARGIN.t);
+  Object.assign(nyqScale, {X, Y, w, h});
+
+  // grid + ticks
+  axisText(ctx, T); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (const t of linTicks(xmin, xmax, 6)) {
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(X(t), MARGIN.t); ctx.lineTo(X(t), h - MARGIN.b); ctx.stroke();
+    ctx.fillText(sig(t, 4), X(t), h - MARGIN.b + 6);
+  }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (const t of linTicks(0, ymax, 4)) {
+    ctx.strokeStyle = T.grid; ctx.beginPath();
+    ctx.moveTo(MARGIN.l, Y(t)); ctx.lineTo(w - MARGIN.r, Y(t)); ctx.stroke();
+    ctx.fillText(sig(t, 3), MARGIN.l - 7, Y(t));
+  }
+  frame(ctx, T, w, h);
+  ctx.save(); ctx.fillStyle = T.sec; ctx.font = '11.5px system-ui, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('Re Z (Ω)', MARGIN.l + (w - MARGIN.l - MARGIN.r) / 2, h - 6);
+  ctx.translate(13, MARGIN.t + (h - MARGIN.t - MARGIN.b) / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('−Im Z (Ω)', 0, 0); ctx.restore();
+
+  const toPts = c => c.re.map((r, i) => [X(r), Y(c.nim[i])]);
+  chem.cases.forEach((c, ci) => {                       // context first
+    if (ci !== 0 && ci !== p.phiIdx) polyline(ctx, toPts(c), T.muted, 1.5, null, 0.45);
+  });
+  polyline(ctx, toPts(chem.cases[0]), T.s2, 2);          // baseline
+  if (p.phiIdx !== 0) polyline(ctx, toPts(chem.cases[p.phiIdx]), T.s1, 2);   // selected
+  // markers at the selected frequency
+  const b = chem.cases[0], s = chem.cases[p.phiIdx];
+  marker(ctx, T, X(b.re[p.fIdx]), Y(b.nim[p.fIdx]), T.s2);
+  marker(ctx, T, X(s.re[p.fIdx]), Y(s.nim[p.fIdx]), T.s1);
+
+  if (state.hover && state.hover.type === 'nyq') {       // hovered point ring
+    const hc = chem.cases[state.hover.ci];
+    marker(ctx, T, X(hc.re[state.hover.fi]), Y(hc.nim[state.hover.fi]),
+           state.hover.ci === 0 ? T.s2 : (state.hover.ci === p.phiIdx ? T.s1 : T.muted), 5);
+  }
+  cv.setAttribute('aria-label',
+    'Nyquist plot, ' + chem.label + ', selected phi ' + s.phi + ', baseline phi ' + b.phi +
+    ', markers at ' + fmtHz(chem.freqs[p.fIdx]) + '. Values available in the data table below.');
+}
+
+/* ============================ -Im(f) chart ============================ */
+const specScale = {};
+function drawSpec() {
+  const cv = $('cvSpec'), {ctx, w, h} = setupCanvas(cv), T = theme();
+  const {chem, p} = cur();
+  const fr = chem.freqs;
+  let ymin = Infinity, ymax = -Infinity;
+  for (const c of chem.cases) for (const v of c.nim) { if (v < ymin) ymin = v; if (v > ymax) ymax = v; }
+  ymin *= 0.85; ymax *= 1.18;
+  const lx0 = Math.log10(fr[0]), lx1 = Math.log10(fr[fr.length - 1]);
+  const ly0 = Math.log10(ymin), ly1 = Math.log10(ymax);
+  const X = f => MARGIN.l + (Math.log10(f) - lx0) / (lx1 - lx0) * (w - MARGIN.l - MARGIN.r);
+  const Y = v => (h - MARGIN.b) - (Math.log10(v) - ly0) / (ly1 - ly0) * (h - MARGIN.b - MARGIN.t);
+  Object.assign(specScale, {X, Y, w, h, fr});
+
+  axisText(ctx, T); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+  for (let k = Math.ceil(lx0); k <= Math.floor(lx1); k++) {
+    const f = Math.pow(10, k), lbl = fmtHz(f);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
+    ctx.moveTo(X(f), MARGIN.t); ctx.lineTo(X(f), h - MARGIN.b); ctx.stroke();
+    // clamp so edge labels (e.g. "100 kHz") never clip at the canvas border
+    const tx = Math.min(X(f), w - ctx.measureText(lbl).width / 2 - 2);
+    ctx.fillText(lbl, tx, h - MARGIN.b + 6);
+  }
+  ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+  for (const t of logTicks(ymin, ymax)) {
+    ctx.strokeStyle = T.grid; ctx.beginPath();
+    ctx.moveTo(MARGIN.l, Y(t)); ctx.lineTo(w - MARGIN.r, Y(t)); ctx.stroke();
+    ctx.fillText(sig(t, 2), MARGIN.l - 7, Y(t));
+  }
+  frame(ctx, T, w, h);
+  ctx.save(); ctx.fillStyle = T.sec; ctx.font = '11.5px system-ui, sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
+  ctx.fillText('f (Hz)', MARGIN.l + (w - MARGIN.l - MARGIN.r) / 2, h - 6);
+  ctx.translate(13, MARGIN.t + (h - MARGIN.t - MARGIN.b) / 2); ctx.rotate(-Math.PI / 2);
+  ctx.fillText('−Im Z (Ω)', 0, 0); ctx.restore();
+
+  // selected-frequency hairline
+  const fx = X(fr[p.fIdx]);
+  ctx.strokeStyle = T.axis; ctx.lineWidth = 1; ctx.beginPath();
+  ctx.moveTo(fx, MARGIN.t); ctx.lineTo(fx, h - MARGIN.b); ctx.stroke();
+
+  const toPts = arr => arr.map((v, i) => [X(fr[i]), Y(v)]);
+  chem.cases.forEach((c, ci) => {
+    if (ci !== 0 && ci !== p.phiIdx) polyline(ctx, toPts(c.nim), T.muted, 1.5, null, 0.45);
+  });
+  // +20% alarm threshold = 1.2 x baseline (dashed: it is a real threshold, not grid)
+  polyline(ctx, toPts(chem.cases[0].nim.map(v => v * (1 + ALARM / 100))), T.crit, 1.5, [5, 4], 0.8);
+  polyline(ctx, toPts(chem.cases[0].nim), T.s2, 2);
+  if (p.phiIdx !== 0) polyline(ctx, toPts(chem.cases[p.phiIdx].nim), T.s1, 2);
+  marker(ctx, T, fx, Y(chem.cases[0].nim[p.fIdx]), T.s2);
+  marker(ctx, T, fx, Y(chem.cases[p.phiIdx].nim[p.fIdx]), T.s1);
+
+  if (state.hover && state.hover.type === 'spec') {      // crosshair snapped to nearest f
+    const hx = X(fr[state.hover.fi]);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(hx, MARGIN.t); ctx.lineTo(hx, h - MARGIN.b); ctx.stroke();
+  }
+  cv.setAttribute('aria-label',
+    'Minus imaginary impedance versus frequency, log-log, ' + chem.label +
+    ', with +' + ALARM + ' percent alarm threshold curve. Values available in the data table below.');
+}
+
+/* ============================ replay strip chart ============================ */
+const stripScale = {};
+
+
+/* ============================ detector card ============================ */
+function updateDetector() {
+  const {chem, p, f} = cur();
+  const R = state.replay;
+  let pct, lines, clamped = false, tag = '';
+  if (R.i >= 0 && R.results[R.i]) {
+    const r = R.results[R.i];
+    pct = r.pct; clamped = r.clamped; tag = ' (replay: measured φ, interpolated)';
+  } else {
+    pct = pctAt(state.chem, p.phiIdx, p.fIdx);
+    const sv = chem.cases[p.phiIdx].nim[p.fIdx], bv = chem.cases[0].nim[p.fIdx];
+    lines = '<b>' + sig(sv, 4) + ' Ω</b> at selected φ = <b>' + fmtPhi(chem.cases[p.phiIdx].phi) +
+            '</b><br>baseline φ≈0: <b>' + sig(bv, 4) + ' Ω</b>' +
+            (p.phiIdx === 0 ? '<br><span style="color:var(--muted)">selected φ is the baseline case</span>' : '');
+  }
+  $('detLabel').textContent =
+    'Δ(−Im Z) vs no-void baseline at f = ' + fmtHz(f) + ' — ' + chem.label + tag;
+  $('detHero').textContent = fmtPct(pct);
+  const alarm = pct >= ALARM;
+  const lamp = $('lamp');
+  lamp.classList.toggle('alarm', alarm); lamp.classList.toggle('ok', !alarm);
+  $('lampState').textContent = alarm ? '⚠ ALARM' : '✓ OK';
+  $('lampMsg').textContent = alarm
+    ? ' — Δ ≥ +' + ALARM + '% threshold crossed'
+    : ' — below +' + ALARM + '% threshold';
+  $('detDetails').innerHTML = lines +
+    '<br>alarm threshold: <b>+' + ALARM + '%</b> of baseline −Im Z';
+  $('clampChip').classList.toggle('show', !!clamped);
+  return {pct, alarm, clamped};
+}
+
+/* ============================ tables ============================ */
+function buildDataTable() {
+  const tbl = $('dataTable');
+  if (!$('tableDetails').open) { tbl.dataset.stale = '1'; return; }
+  const {chem, p} = cur();
+  const sel = chem.cases[p.phiIdx], base = chem.cases[0];
+  const frag = document.createDocumentFragment();
+  const hr = document.createElement('tr');
+  for (const t of ['f (Hz)', 'Re Z sel (Ω)', '−Im Z sel (Ω)',
+                   '−Im Z φ≈0 (Ω)', 'Δ (%)']) {
+    const th_ = document.createElement('th'); th_.textContent = t; hr.appendChild(th_);
+  }
+  frag.appendChild(hr);
+  chem.freqs.forEach((f, i) => {
+    const pct = 100 * (sel.nim[i] - base.nim[i]) / base.nim[i];
+    const tr = document.createElement('tr');
+    for (const [j, v] of [sig(f, 4), sig(sel.re[i], 5), sig(sel.nim[i], 4),
+                          sig(base.nim[i], 4), fmtPct(pct)].entries()) {
+      const td = document.createElement('td'); td.textContent = v;
+      if (j === 4 && pct >= ALARM) { td.textContent = '⚠ ' + v; td.className = 'alarmcell'; }
+      tr.appendChild(td);
+    }
+    frag.appendChild(tr);
+  });
+  tbl.replaceChildren(frag);
+  tbl.dataset.stale = '';
+  const cap = document.createElement('caption');
+  cap.style.cssText = 'caption-side:top;text-align:left;font-size:11px;color:var(--muted);padding:6px 10px';
+  cap.textContent = chem.label + ' — selected φ = ' + sel.phi +
+    (sel.rvow != null ? ' (rvow ' + sel.rvow + ')' : '') + ' vs baseline φ = ' + base.phi +
+    '; ⚠ rows exceed the +' + ALARM + '% alarm threshold.' +
+    (chem.showcase ? ' ' : '');
+  tbl.prepend(cap);
+}
+
+
+/* ============================ tooltips ============================ */
+function showTip(tipEl, wrapEl, px, py, title, rows) {
+  tipEl.replaceChildren();
+  const t = document.createElement('div'); t.className = 'tt'; t.textContent = title;
+  tipEl.appendChild(t);
+  for (const r of rows) {
+    const row = document.createElement('div'); row.className = 'row';
+    if (r.key) {
+      const k = document.createElement('span'); k.className = 'lk';
+      k.style.borderTopColor = r.key; if (r.dash) k.classList.add('dash');
+      row.appendChild(k);
+    }
+    const v = document.createElement('span'); v.className = 'tv'; v.textContent = r.value;
+    const l = document.createElement('span'); l.className = 'tl'; l.textContent = r.label;
+    row.appendChild(v); row.appendChild(l);
+    tipEl.appendChild(row);
+  }
+  tipEl.hidden = false;
+  const wr = wrapEl.getBoundingClientRect(), tr = tipEl.getBoundingClientRect();
+  let x = px + 14, y = py + 10;
+  if (x + tr.width > wr.width - 4) x = px - tr.width - 14;
+  if (y + tr.height > wr.height - 4) y = Math.max(2, wr.height - tr.height - 4);
+  tipEl.style.left = x + 'px'; tipEl.style.top = y + 'px';
+}
+function hideTip(tipEl) { tipEl.hidden = true; }
+
+function bindSpecHover() {
+  const cv = $('cvSpec'), tip = $('tipSpec'), wrap = cv.parentElement;
+  cv.addEventListener('pointermove', e => {
+    const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    const {chem, p} = cur(), fr = chem.freqs;
+    let fi = 0, bd = Infinity;
+    for (let i = 0; i < fr.length; i++) {
+      const d = Math.abs(specScale.X(fr[i]) - px); if (d < bd) { bd = d; fi = i; }
+    }
+    state.hover = {type: 'spec', fi};
+    drawSpec();
+    const T = theme(), rows = [];
+    chem.cases.forEach((c, ci) => {
+      rows.push({key: ci === 0 ? T.s2 : (ci === p.phiIdx ? T.s1 : T.muted),
+                 value: sig(c.nim[fi], 4) + ' Ω',
+                 label: 'φ ' + fmtPhi(c.phi) + (ci === 0 ? ' (baseline)' : '')});
+    });
+    rows.push({key: T.crit, dash: true,
+               value: sig(chem.cases[0].nim[fi] * (1 + ALARM / 100), 4) + ' Ω',
+               label: '+' + ALARM + '% threshold'});
+    showTip(tip, wrap, px, py, fmtHz(fr[fi]) + ' — −Im Z', rows);
+  });
+  cv.addEventListener('pointerleave', () => { state.hover = null; hideTip(tip); drawSpec(); });
+  cv.addEventListener('click', e => {
+    const r = cv.getBoundingClientRect(), px = e.clientX - r.left;
+    const {chem, p} = cur(), fr = chem.freqs;
+    let fi = 0, bd = Infinity;
+    for (let i = 0; i < fr.length; i++) {
+      const d = Math.abs(specScale.X(fr[i]) - px); if (d < bd) { bd = d; fi = i; }
+    }
+    p.fIdx = fi; syncControls(); render();
+  });
+}
+function bindNyqHover() {
+  const cv = $('cvNyq'), tip = $('tipNyq'), wrap = cv.parentElement;
+  cv.addEventListener('pointermove', e => {
+    const r = cv.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    const {chem} = cur();
+    let best = null, bd = 24;                            // 24px minimum hit radius
+    chem.cases.forEach((c, ci) => {
+      for (let i = 0; i < c.re.length; i++) {
+        const dx = nyqScale.X(c.re[i]) - px, dy = nyqScale.Y(c.nim[i]) - py;
+        const d = Math.hypot(dx, dy);
+        if (d < bd) { bd = d; best = {ci, fi: i}; }
+      }
+    });
+    if (!best) { state.hover = null; hideTip(tip); drawNyq(); return; }
+    state.hover = {type: 'nyq', ...best};
+    drawNyq();
+    const T = theme(), c = chem.cases[best.ci], p = cur().p;
+    showTip(tip, wrap, px, py,
+      'φ ' + fmtPhi(c.phi) + (best.ci === 0 ? ' (baseline)' : '') + ' — ' + fmtHz(chem.freqs[best.fi]),
+      [{key: best.ci === 0 ? T.s2 : (best.ci === p.phiIdx ? T.s1 : T.muted),
+        value: sig(c.re[best.fi], 5) + ' Ω', label: 'Re Z'},
+       {key: null, value: sig(c.nim[best.fi], 4) + ' Ω', label: '−Im Z'}]);
+  });
+  cv.addEventListener('pointerleave', () => { state.hover = null; hideTip(tip); drawNyq(); });
+}
+
+
+/* ============================ replay ============================ */
+const STEP_MS = matchMedia('(prefers-reduced-motion: reduce)').matches ? 900 : 430;
+
+
+
+
+
+
+
+/* ============================ controls & render ============================ */
+function syncControls() {
+  const {chem, p} = cur();
+  $('btnLpscl').setAttribute('aria-pressed', state.chem === 'lpscl');
+  const ps = $('phiSlider');
+  ps.max = chem.cases.length - 1; ps.value = p.phiIdx;
+  const dl = $('phiTicks');
+  dl.replaceChildren(...chem.cases.map((c, i) => {
+    const o = document.createElement('option'); o.value = i; return o;
+  }));
+  $('phiReadout').textContent = 'φ = ' + fmtPhi(chem.cases[p.phiIdx].phi) +
+    '  (case ' + (p.phiIdx + 1) + '/' + chem.cases.length + ')';
+  const fs = $('fSlider');
+  fs.max = chem.freqs.length - 1; fs.value = p.fIdx;
+  $('fReadout').textContent = 'f = ' + fmtHz(chem.freqs[p.fIdx]);
+  $('optChip').textContent = chem.optFLabel;
+  $('nyqNote').textContent = chem.configNote;
+  $('specNote').textContent = chem.showcase ? ' ' + chem.label
+                                            : chem.label;
+}
+function render() {
+  drawNyq(); drawSpec();
+  updateDetector();
+  buildDataTable();
+}
+
+/* ============================ wiring ============================ */
+
+/* any manual control change invalidates a finished replay overlay */
+
+$('phiSlider').addEventListener('input', e => {
+  state.per[state.chem].phiIdx = +e.target.value; syncControls(); render();
+});
+$('fSlider').addEventListener('input', e => {
+  state.per[state.chem].fIdx = +e.target.value; syncControls(); render();
+});
+$('optChip').addEventListener('click', () => {
+  const {chem, p} = cur();
+  p.fIdx = nearestIdx(chem.freqs, chem.optF, true); syncControls(); render();
+});
+$('tableDetails').addEventListener('toggle', buildDataTable);
+bindSpecHover(); bindNyqHover(); 
+
+/* legend swatches take live theme colors */
+function paintLegend() {
+  const T = theme();
+  $('lkSel').style.borderTopColor = T.s1;
+  $('lkBase').style.borderTopColor = T.s2;
+  $('lkCtx').style.borderTopColor = T.muted;
+  $('lkThr').style.borderTopColor = T.crit;
+  $('lkF').style.borderTopColor = T.axis;
+}
+new ResizeObserver(() => render()).observe(document.querySelector('.grid'));
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { paintLegend(); render(); });
+
+paintLegend();
+syncControls();
+render();
+</script>
+<noscript><p style="color:var(--crit)">This dashboard needs JavaScript (all of it inline; nothing is fetched).</p></noscript>
+</body>
+</html>

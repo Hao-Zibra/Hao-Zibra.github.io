@@ -77,13 +77,14 @@
     <h1>COMSOL model library — download and explore</h1>
     <p>Every finite-element model behind this site's simulation results, packaged for download. All files are
     saved <b>without solutions</b> (each card shows the honest before/after size), and each re-solves in
-    minutes. Three families: the ground-up reproduction of the published single-frequency void-detection
-    study, a thermal-EIS coupling correlated against published CC BY data, and the two-engine fixture-stress
-    models behind the <a style="color:#7fd1cf" href="mechanical.html">rim-riding discovery</a>.</p>
+    minutes. Four families: the ground-up reproduction of the published single-frequency void-detection
+    study, a thermal-EIS coupling correlated against published CC BY data, the two-engine fixture-stress
+    models behind the <a style="color:#7fd1cf" href="mechanical.html">rim-riding discovery</a>, and the
+    void×stack-pressure study that ties the electrochemical and mechanical halves together.</p>
     <div class="src">
       <span class="chip"><b>Files:</b> 12 × .mph · 27 MB total (solutions stripped)</span>
       <span class="chip"><b>Track A anchor:</b> ACS Electrochemistry 2026 (co-first author)</span>
-      <span class="chip"><b>Model B data:</b> published σ(T), CC BY</span>
+      <span class="chip"><b>Model B data:</b> Yamazaki et al., Batteries 2022, 8(10), 158 (CC BY 4.0)</span>
       <span class="chip"><b>Model C:</b> cross-validated vs Fusion 360</span>
     </div>
   </div>
@@ -128,7 +129,7 @@
       <div class="mcard">
         <img src="assets/models/TrackAG4MeshConvergence.png" alt="TrackAG4MeshConvergence card image" loading="lazy">
         <div class="mname">TrackAG4MeshConvergence</div>
-        <p>The credibility check: at the worst void fraction the -Im peak moves only 0.2% across a 34k-to-93k element refinement, so the reproduction rests on converged numerics.</p>
+        <p>The credibility check: at phi = 0.74 (the highest coverage in the spectral sweep) the -Im peak moves only 0.2% across a 35.8k-to-58.6k element refinement, so the reproduction rests on converged numerics.</p>
         <a class="dl" href="assets/models/mph/TrackAG4MeshConvergence.mph" download>⬇ TrackAG4MeshConvergence.mph · 4.22 MB</a>
         <div class="slim">saved without solutions — 41.03 MB → 4.22 MB (-89.7%)</div>
       </div>
@@ -146,16 +147,16 @@
       <div class="mcard">
         <img src="assets/models/ModelBThermalEisCorrelation.png" alt="ModelBThermalEisIsothermal card image" loading="lazy">
         <div class="mname">ModelBThermalEisIsothermal</div>
-        <p>A coupled Heat Transfer + impedance model of a garnet pellet, correlated against published CC BY sigma(T) data with a fit-cold-predict-warm hold-out (-18% on the held-out point).</p>
-        <a class="dl" href="assets/models/mph/ModelBThermalEisIsothermal.mph" download>⬇ ModelBThermalEisIsothermal.mph · 0.47 MB</a>
-        <div class="slim">saved without solutions — 4.44 MB → 0.47 MB (-89.3%)</div>
+        <p>A coupled Heat Transfer + impedance model of a garnet pellet — blocking-electrode double layer included, spectrum verified against the closed form at every frequency — correlated against published CC BY sigma(T) data with a fit-cold-predict-warm hold-out (-18% on the held-out point).</p>
+        <a class="dl" href="assets/models/mph/ModelBThermalEisIsothermal.mph" download>⬇ ModelBThermalEisIsothermal.mph · 0.50 MB</a>
+        <div class="slim">saved without solutions — 4.49 MB → 0.50 MB (-88.9%)</div>
       </div>
       <div class="mcard">
         <img src="assets/models/ModelBThermalEisCorrelation.png" alt="ModelBThermalEisGradient card image" loading="lazy">
         <div class="mname">ModelBThermalEisGradient</div>
-        <p>The thermal showpiece: a genuinely solved 40 K through-thickness temperature field (energy balance exact to machine precision) reshaping the impedance spectrum.</p>
-        <a class="dl" href="assets/models/mph/ModelBThermalEisGradient.mph" download>⬇ ModelBThermalEisGradient.mph · 0.46 MB</a>
-        <div class="slim">saved without solutions — 4.43 MB → 0.46 MB (-89.6%)</div>
+        <p>The thermal showpiece: a genuinely solved 40 K through-thickness temperature field (boundary conditions honoured to 6e-14 K; the solved profile is the exact linear steady solution) reshaping the impedance spectrum.</p>
+        <a class="dl" href="assets/models/mph/ModelBThermalEisGradient.mph" download>⬇ ModelBThermalEisGradient.mph · 0.48 MB</a>
+        <div class="slim">saved without solutions — 4.47 MB → 0.48 MB (-89.2%)</div>
       </div>
     </div>
     <h3 class="m">Model C — fixture stress, two engines</h3>
@@ -190,6 +191,19 @@
         <div class="slim">saved without solutions — 17.60 MB → 3.01 MB (-82.9%)</div>
       </div>
     </div>
+    <h3 class="m">Void × stack pressure — the mechanical counterpart</h3>
+    <p class="sub">The bridge between the two halves of this library: the published void-impedance unit cell,
+    re-loaded with the real 5&nbsp;MPa stack pressure of the fixture on the CAD&nbsp;·&nbsp;FEA page — asking
+    whether a void field that impedance can already see is anywhere near breaking the ceramic.</p>
+    <div class="mcards">
+      <div class="mcard">
+        <img src="assets/models/VoidStackPressureAmplification.png" alt="Contact-pressure amplification versus void coverage" loading="lazy">
+        <div class="mname">VoidStackPressureMechanics</div>
+        <p>The mechanical counterpart to the void-impedance study: the same triangular-lattice unit cell carrying the fixture's 5 MPa stack load, showing that the electrochemical alarm fires while rim stresses are still about five times below the LLZO strength band.</p>
+        <a class="dl" href="#void-stack">▸ See the result in §3</a>
+        <div class="slim">figure and swept results published here; the model file is not in the download set — it has not been through the solution-stripping and ledger process the twelve models above went through</div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -209,13 +223,55 @@
       <div id="pplot" class="plot"></div>
       <div class="cap"><span class="real">STUDY RESULT</span> Median-binned radial profiles on the pellet top
       face (Model C exports). Dotted line = 4.997&nbsp;MPa nominal mean (633&nbsp;N / 126.677&nbsp;mm²). Note
-      the display bins understate the contact-physics rim ring — the sub-bin rim mass is recovered only by the
-      exact surface integral recorded in each export header — so read the curves for <i>where</i> the load
-      sits, and the §6 table on the mechanical page for the convergent magnitudes.</div>
+      the display bins understate the rim ring — its mass sits below bin resolution, so each export header
+      also records the exact surface integral. The two contact profiles close there to +1.5% of the applied
+      633&nbsp;N; the bonded case-A profile reaches only 563.5&nbsp;N (−11%), which is why statics is audited
+      per run on the reaction force at the fixed face instead (exact to 0.01&nbsp;N). Read the curves for
+      <i>where</i> the load sits, and the §6 table on the mechanical page for the convergent magnitudes.</div>
     </div>
     <div class="note"><b>Two more explorers are queued.</b> A void-fraction slider (Track A sweep) and a
     temperature slider (Model B) will land here once their public data extracts are packaged alongside the
     models — the model files above already contain everything needed to regenerate those sweeps locally.</div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec" id="void-stack">3 · Void growth under stack pressure — is impedance the early sensor?</h2>
+    <p class="sub">A fixture holds a cell at 5&nbsp;MPa, but the load is carried only by the parts of the
+    interface still in contact. As voids open, the surviving annulus must carry the same force over less
+    area, so the local pressure climbs as <i>P</i>/(1&nbsp;−&nbsp;φ). The question this study answers is a
+    reliability question, not a curiosity: by the time single-frequency impedance raises the alarm, is the
+    ceramic already at risk?</p>
+    <div class="panel">
+      <img src="assets/models/VoidStackMechAnalysis.png" alt="Contact-pressure amplification and rim stress versus void coverage" style="width:100%;border-radius:6px;border:1px solid var(--line);background:#fff">
+      <div class="cap"><span class="real">STUDY RESULT</span> <b>Contact-pressure amplification and rim
+      stress versus void coverage.</b> (a) Exact statics requires the mean contact pressure to rise as
+      P/(1 − φ), reaching 19.5 MPa at φ = 0.74 for a 5 MPa nominal stack load, shown against the ~120 MPa
+      LLZO strength band and the ~1 MPa Li yield scale. (b) Finite-element maximum principal and von Mises
+      stresses in the LLZO versus void coverage. <b>Key result: the electrochemical alarm threshold
+      (φ ≈ 0.2–0.35) is reached while rim stresses are still ~10–12 MPa, about five times below the LLZO
+      strength band — single-frequency impedance is unambiguously the earlier sensor.</b></div>
+    </div>
+    <table>
+      <tr><th>Void fraction φ</th><th>Elements</th><th>Contact pressure, exact statics 5/(1−φ) (MPa)</th><th>FEM max principal in LLZO (MPa)</th><th>FEM max von Mises in LLZO (MPa)</th></tr>
+      <tr><td>0.091</td><td>111,902</td><td>5.50</td><td>5.57</td><td>9.41</td></tr>
+      <tr><td>0.254</td><td>110,868</td><td>6.70</td><td>10.48</td><td>12.17</td></tr>
+      <tr><td>0.417</td><td>109,339</td><td>8.58</td><td>11.95</td><td>14.47</td></tr>
+      <tr><td>0.580</td><td>107,808</td><td>11.92</td><td>16.61</td><td>17.64</td></tr>
+      <tr><td>0.744</td><td>106,770</td><td>19.50</td><td>25.08</td><td>25.37</td></tr>
+    </table>
+    <div class="note"><b>What this model does not claim.</b> It is <b>linear elastic throughout</b> — real
+    lithium yields near 1&nbsp;MPa and creeps under pressure, so the lithium and rim stresses here are an
+    elastic <i>upper bound</i>: the model quantifies the elastic driving force, not a healed steady state.
+    The rim values are mesh-bounded estimates on a singular re-entrant edge, and one exported column
+    (mean contact pressure) is invalid — its selection captured the full interface plane rather than the
+    contact annulus, so the exact-statics column supersedes it. Both caveats are printed on the figure
+    itself rather than left to a footnote.</div>
+    <p class="sub" style="margin-top:14px">This closes the loop with the fixture study on the
+    <a href="mechanical.html#xeng">CAD&nbsp;·&nbsp;FEA page</a>: there, a compliant interlayer was needed to
+    stop the platen riding the pellet rim; here, the same 5&nbsp;MPa load meets a <i>degrading</i> interface,
+    and the mechanics confirm that impedance sees the damage long before the ceramic is endangered.</p>
   </div>
 </section>
 

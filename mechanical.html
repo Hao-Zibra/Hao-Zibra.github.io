@@ -69,6 +69,7 @@
       <a href="pybamm-modeling.html">Physics Modeling</a>
       <a href="reliability-engineering.html">Reliability</a>
       <a href="micro-ct.html">Micro-CT</a>
+      <a href="models.html">Models</a>
       <a href="toolkit.html">Toolkit</a>
     </nav>
   </div>
@@ -206,7 +207,7 @@
       <div class="fig"><img src="assets/fea/caseA_vonmises.png" alt="Case A von Mises"><div class="cap"><b>Case A von Mises</b> (max 10.718 MPa) — note the stress ring at the LLZO rim under the rigid platen.</div></div>
       <div class="fig"><img src="assets/fea/caseB_vonmises.png" alt="Case B von Mises"><div class="cap"><b>Case B von Mises</b> — the Grafoil pad spreads the contact; the LLZO face goes uniform (Model C contact physics: von Mises max 32.7 MPa with the pad vs 216.1 MPa rigid — §6).</div></div>
       <div class="fig"><img src="assets/fea/caseA_safetyfactor.png" alt="Case A safety factor"><div class="cap"><b>Case A safety factor</b> — min 12.507; the fixture is structurally overbuilt by design (stiffness, not strength, drives it).</div></div>
-      <div class="fig"><img src="assets/fea/caseB_principal3.png" alt="Case B third principal stress"><div class="cap"><b>Case B 3rd principal stress</b> — compression-dominated as intended; tensile excursions stay small, which is what matters for a brittle ceramic (edge maxima are mesh samples of a singular field; this page quotes convergent quantities only — §6).</div></div>
+      <div class="fig"><img src="assets/fea/caseB_principal3.png" alt="Case B third principal stress"><div class="cap"><b>Case B 3rd principal stress</b> — compression-dominated as intended; tensile excursions stay small, which is what matters for a brittle ceramic (edge maxima are singular-field samples; the design conclusion rests on the convergent quantities — centre pressure, statics, displacement — with singular peaks shown only to compare magnitudes — §6).</div></div>
     </div>
   </div>
 </section>
@@ -215,24 +216,30 @@
   <div class="wrap">
     <h2 class="sec">5 · Mesh convergence — trust, but verify</h2>
     <p class="sub">Case B re-solved at two absolute mesh sizes (5&nbsp;mm, 2.5&nbsp;mm) on cloned studies.
-    The quantity the conclusion rests on — the LLZO-face peak — is mesh-stable. The global maximum is not,
-    and saying so matters.</p>
+    Under refinement neither the LLZO-face peak nor the global maximum settles — both sit on the singular
+    contact / bi-material edge — so the conclusion rests instead on the quantities that do converge (§6) and
+    on the Grafoil trend both engines agree on. Saying that plainly matters.</p>
     <div class="panel">
       <div id="mesh" class="plot"></div>
-      <div class="cap"><span class="real">STUDY RESULT</span> LLZO-face peak holds at 5.4–6.1&nbsp;MPa
-      across a 3× element-count refinement, and lands within 13% of the independent COMSOL benchmark
-      (6.74&nbsp;MPa, peak/mean 1.35× vs Fusion ≈1.20×) → the pad conclusion is engine-robust: the Grafoil
-      case is the convergent one, because the pad de-singularizes the contact edge (§6).
+      <div class="cap"><span class="real">STUDY RESULT</span> Fusion's own Case B face peak does not settle under refinement either —
+      it wanders 5.99 → 6.09 → 5.37&nbsp;MPa, the finest mesh landing below the coarsest — just as COMSOL's
+      benchmark peak/mean wanders 4.61×–5.65×: non-convergence on both sides, because the rigid rim is a
+      singular edge. What <i>is</i> engine-robust is the Grafoil trend — with the pad the concentration drops
+      to peak/mean ≈1.20× (Fusion, 5.99&nbsp;MPa) and 1.35× (COMSOL benchmark, 6.74&nbsp;MPa), the two engines
+      agreeing to 13% because the pad de-singularizes the edge. The design conclusion rests on that trend and
+      on the convergent quantities of §6 (centre pressure, statics, displacement), not on any single rim
+      maximum (§6).
       The global max (at the bonded Li/base bi-material edge, z=11.5&nbsp;mm) sits on a known singular edge
       of bonded dissimilar materials — a numerical artifact, not a physical failure prediction. Model C demonstrates the
-      singularity directly: refining the rim mesh 3.0&nbsp;mm → 0.6&nbsp;mm drives the benchmark peak/mean
-      5.10× → 9.26×, monotonically — edge maxima are mesh samples and are not quoted. Only the finest-mesh
+      singularity directly: across a five-step rim refinement (3.0 → 0.6&nbsp;mm) the benchmark peak/mean
+      never settles — it wanders between 4.61× and 5.65× with no monotonic trend — so edge maxima are mesh
+      samples, not quoted as converged numbers. Only the finest-mesh
       value (6.92&nbsp;MPa) is report-verified. It is reported, not used.</div>
     </div>
     <table>
       <tr><th>Study</th><th>Mesh</th><th>Elements</th><th>LLZO-face peak (MPa)</th><th>Global max (MPa)</th><th>Notes</th></tr>
-      <tr><td>Case B</td><td>default (model-based)</td><td>7,032</td><td>5.99</td><td>—</td><td>edge maxima not quoted — singular field (Model C, §6)</td></tr>
-      <tr><td>Case B fine</td><td>5 mm absolute</td><td>6,488</td><td>6.085</td><td>—</td><td>absolute sizing redistributes elements (plates finer, cell coarser); edge maxima not quoted — singular field (Model C, §6)</td></tr>
+      <tr><td>Case B</td><td>default (model-based)</td><td>7,032</td><td>5.99</td><td>—</td><td>edge maxima are singular-field samples, not converged numbers (Model C, §6)</td></tr>
+      <tr><td>Case B fine</td><td>5 mm absolute</td><td>6,488</td><td>6.085</td><td>—</td><td>absolute sizing redistributes elements (plates finer, cell coarser); edge maxima are singular-field samples, not converged numbers (Model C, §6)</td></tr>
       <tr><td>Case B finer</td><td>2.5 mm absolute</td><td>21,683</td><td>5.372</td><td>6.917</td><td>von Mises max 12.307; max displacement 0.013 mm</td></tr>
     </table>
 
@@ -252,7 +259,7 @@
 
 <section>
   <div class="wrap">
-    <h2 class="sec">6 · Two-engine cross-validation — and the rim-riding discovery</h2>
+    <h2 class="sec" id="xeng">6 · Two-engine cross-validation — and the rim-riding discovery</h2>
     <p class="sub">To make the conclusion tool-independent, the whole fixture-stress study was rebuilt in a
     second, independent engine (COMSOL — "Model C"): first a <b>benchmark-match</b> variant (same idealization
     and proxy materials as the Fusion studies), then a <b>physics-correct</b> variant (intended materials and
@@ -266,33 +273,47 @@
       <tr><td>Case B peak / mean</td><td>1.35×</td><td>≈1.20×</td><td>+13% — the pad de-singularizes the edge</td></tr>
     </table>
     <p class="cap">The rigid-platen "peak" is deliberately absent from this table: the mesh sweep shows it is
-    <b>edge-singular</b> (rim refinement 3.0&nbsp;mm → 0.6&nbsp;mm drives the benchmark peak/mean
-    5.10× → 9.26×, monotonically), so any single "max" there is a mesh sample, not a physical number. The
-    design-meaningful quantities are the convergent ones above.</p>
+    <b>edge-singular</b>: across a five-step rim refinement (3.0 → 2 → 1.5 → 1 → 0.6&nbsp;mm) the benchmark
+    peak/mean never settles — it wanders between 4.61× and 5.65× with no monotonic trend — so any single
+    "max" there is a mesh-resolution sample, not a physical number. Fusion's own refinement series does not
+    settle either, and drifts the other way: that is non-convergence on both sides, not a shared trend. The
+    design-meaningful quantities are the convergent ones above — and the pellet-<i>centre</i> pressure, stable
+    to about 1.5% across that same refinement series, is quoted for exactly that reason.</p>
 
     <h3 class="m">What true contact physics reveals — the load rides the rim</h3>
     <p class="sub">Refining the model toward real contact physics makes the design conclusion <b>stronger</b>,
     not weaker. With unilateral contact and intended materials, the corner-loaded platen bends concave-up, the
     pellet centre nearly unloads, and essentially the whole 633&nbsp;N rides a sub-millimetre ring at the
-    pellet rim — each profile's surface integral recovers the applied load to ±3.8%.</p>
+    pellet rim. Both contact profiles close statically on their own: the exact surface integral of the
+    contact traction over the pellet face returns 642.6&nbsp;N (rigid) and 642.3&nbsp;N (+Grafoil) against
+    633&nbsp;N applied, i.e. +1.5%.</p>
     <div class="panel">
       <img src="assets/fea/PelletFacePressureProfiles.png" alt="Pellet-face pressure profiles: bonded idealization vs unilateral-contact physics, cases A and B" style="width:100%;border-radius:6px;border:1px solid var(--line);background:#fff">
       <div class="cap"><span class="real">STUDY RESULT</span> <b>Where the 633 N actually goes.</b>
       Pellet-face pressure vs radius for the bonded idealization (solid) and unilateral-contact physics
       (dashed), Model C. Rigid platen under contact physics (red dashed): centre nearly unloaded, load
       concentrated at the rim. With the 0.75&nbsp;mm Grafoil pad (amber dashed): near-uniform at the
-      5&nbsp;MPa design mean. Legend integrals confirm each profile carries the applied load (±3.8%).</div>
+      5&nbsp;MPa design mean. Statics is audited per run on the reaction force at the fixed face (exact to
+      0.01&nbsp;N); the two contact profiles also close on their own surface integral (+1.5%), while the
+      <i>bonded</i> case-A profile reaches only 563.5&nbsp;N (−11%) — on a tied interface the singular rim ring
+      carries load the mesh cannot resolve, one more reason the bonded edge value is not quoted as a converged number.</div>
     </div>
     <div class="kpis">
       <div class="kpi"><div class="big">35.32× → 3.07×</div><div class="l">pellet-face peak/mean under contact physics, rigid vs +Grafoil — ~94% of the excess concentration removed (Model C)</div></div>
       <div class="kpi"><div class="big">216.1 → 32.7 MPa</div><div class="l">von Mises max under contact physics, rigid vs +Grafoil; the rigid case exceeds the ~120 MPa LLZO strength scale at any plausible sampling</div></div>
-      <div class="kpi"><div class="big">16.31 / 10.09 MPa</div><div class="l">centre pressure (r &lt; 1 mm, convergent), rigid vs +Grafoil — contact physics vs the 5.0 MPa nominal mean</div></div>
+      <div class="kpi"><div class="big">1.60 → 5.23 MPa</div><div class="l">median pellet-centre pressure (r &lt; 1 mm) under contact physics, rigid vs +Grafoil — the rigid platen leaves the centre at about a third of the 5.0 MPa design mean and the pad restores it (raw nodal maxima over the same region, 16.31 / 10.09 MPa, include local stress-recovery spikes)</div></div>
     </div>
     <div class="note"><b>Design conclusion — stronger than the bonded story.</b> Under contact physics the
     Grafoil pad is not a modest improvement; it is the difference between rim-only loading and near-uniform
     loading of a brittle ceramic. The recommendation — <b>always fixture ceramic pellets through a compliant
     interlayer</b> — survives every modelling choice tested: engine (Fusion vs COMSOL), proxy vs intended
     materials, bonded vs contact.</div>
+    <p class="sub" style="margin-top:14px"><b>Where this goes next — void unit cell × stack pressure.</b>
+    The same 5&nbsp;MPa load was carried into a degrading interface: as voids open, the surviving contact
+    annulus carries the full force over less area. That extension lives on the
+    <a href="models.html#void-stack">COMSOL model library</a>, together with every model file behind this
+    page — and it answers the reliability question this study raises, namely whether the electrochemical
+    alarm fires before the ceramic is at risk.</p>
   </div>
 </section>
 
@@ -328,14 +349,14 @@ const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#
 (function(){
   const x=["default (7,032 tets)","5 mm abs (6,488 tets)","2.5 mm abs (21,683 tets)"];
   Plotly.newPlot("mesh",[
-    {x, y:[5.99,6.085,5.372], mode:"lines+markers+text", name:"LLZO-face peak (converged)",
+    {x, y:[5.99,6.085,5.372], mode:"lines+markers+text", name:"Fusion Case B face peak (wanders — singular edge)",
      line:{color:"#0e7c7b",width:3}, marker:{size:9},
      text:["5.99","6.09","5.37"], textposition:"top center", textfont:{size:12}},
     {x, y:[5.0,5.0,5.0], mode:"lines", name:"design mean 5.0 MPa",
      line:{color:"#1c2733",width:1.5,dash:"dot"}}
   ],{
     font:FONT, margin:{l:70,r:20,t:56,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
-    title:{text:"Case B mesh convergence — the number the conclusion uses is the stable one", font:{size:15}},
+    title:{text:"Case B mesh series — the rim peak wanders (non-convergent); the design quantities are the convergent ones in §6", font:{size:15}},
     yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", range:[0,10.6]},
     xaxis:{tickfont:TICK},
     legend:{font:{size:12}, orientation:"h", y:-0.24}

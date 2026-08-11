@@ -81,6 +81,8 @@
   #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
   #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 
+  .btn{display:inline-block;background:var(--teal);color:#fff;font-weight:600;font-size:14px;padding:10px 18px;border-radius:8px}
+  .btn:hover{background:#0a6463;text-decoration:none}
 /* ==== two-theme layer (appended 2026-08-09): light values equal the original design; dark swaps variables only ==== */
 :root{color-scheme:light;
   --head:#0f2740;
@@ -439,6 +441,35 @@ tr.hl{background:var(--hl-bg)}
     demonstrates: process-OCAP and article-health-OCAP are <i>different response classes</i>; conflating them
     either stops lines for physics or ignores real process faults. The whole loop — signal → response → record →
     limit update — is a FRACAS in miniature, shown end-to-end on open data.</p>
+  </div>
+</section>
+
+<section id="tableau">
+  <div class="wrap">
+    <h2 class="sec">5 · Live Tableau dashboard — the fleet on one screen</h2>
+    <p class="sub"><span class="data">PUBLIC DATA</span> The same 124-cell fleet, rebuilt as a live
+    <b>reliability data dashboard</b> in <b>Tableau</b>: a <b>Weibull</b> probability plot fitted by
+    median-rank regression (Bernard approximation), capacity-fade trajectories against the 80% end-of-life
+    line, life-by-family distributions, and fleet KPIs on one screen. Built on the public Severson 2019
+    124-cell dataset (CC BY 4.0, credited inside the visualization) as a working surface for
+    <b>data-driven decision making</b> in <b>failure analysis</b> — not a static report.</p>
+
+    <div class="full">
+      <img src="assets/tableau/TableauDashboard_FullFleet.png" alt="Tableau dashboard fleet view: Weibull probability plot, capacity fade, life by family, and fleet KPIs">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet view.</b> Four linked panels with the
+      fleet KPIs — median Weibull shape 2.7, 124 cells, median cycle life 736.5, median characteristic life
+      899.2 — computed from the full population. End of life is 80% of nominal capacity; zero cells censored.</div>
+    </div>
+    <div class="full">
+      <img src="assets/tableau/TableauDashboard_DrillDown_SingleCell6C.png" alt="Tableau dashboard drill-down: one cell from the fastest-charge family selected, all panels re-filtered">
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Cross-filter drill-down.</b> Selecting a
+      single cell from the fastest-charge family re-computes every panel around that one unit — the KPI strip
+      recalculates to count 1 and median 702, while the Weibull and fade panels isolate the same selection;
+      filtered views retain fleet-relative ranks.</div>
+    </div>
+    <div style="text-align:center;margin:16px 0 6px">
+      <a class="btn" href="https://public.tableau.com/app/profile/hao.zheng2066/viz/BatteryFleetReliabilityDashboardWeibullLifeAnalysisof124Li-ionCells/Dashboard1" target="_blank" rel="noopener">Open the live interactive dashboard on Tableau Public →</a>
+    </div>
   </div>
 </section>
 

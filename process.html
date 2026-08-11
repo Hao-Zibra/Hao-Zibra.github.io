@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thin-film process engineering — substrate to SPC · Hao Zheng</title>
+<style>
+  :root{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0; --shadow:rgba(15,39,64,.10);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --navy:#0b1a2b; --navy2:#12283d; --teal:#3fb5b0; --teal-lt:#12312f;
+      --ink:#e6edf3; --mut:#9fb2c4; --line:#25384b; --bg:#0d1620; --card:#131f2c;
+      --amber:#e0a643; --amber-lt:#2c2312; --shadow:rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --navy:#0b1a2b; --navy2:#12283d; --teal:#3fb5b0; --teal-lt:#12312f;
+    --ink:#e6edf3; --mut:#9fb2c4; --line:#25384b; --bg:#0d1620; --card:#131f2c;
+    --amber:#e0a643; --amber-lt:#2c2312; --shadow:rgba(0,0,0,.45);
+  }
+  :root[data-theme="light"]{
+    --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
+    --ink:#1c2733; --mut:#5b6b7b; --line:#dde5ec; --bg:#f7f9fb; --card:#ffffff;
+    --amber:#b7791f; --amber-lt:#fdf3e0; --shadow:rgba(15,39,64,.10);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+  a{color:var(--teal);text-decoration:none} a:hover{text-decoration:underline}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  header.site{background:var(--navy);color:#fff;padding:14px 0;position:sticky;top:0;z-index:50;box-shadow:0 1px 6px rgba(0,0,0,.25)}
+  header.site .wrap{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+  .brand{font-weight:700;letter-spacing:.4px;font-size:17px;color:#fff}
+  nav.top{display:flex;gap:15px;flex-wrap:wrap;font-size:14.5px}
+  nav.top a{color:#cfe3e3;padding:3px 2px;border-bottom:2px solid transparent}
+  nav.top a:hover{color:#fff;text-decoration:none;border-color:var(--teal)}
+  nav.top a.here{color:#fff;border-color:var(--teal)}
+  .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
+  .pagehead h1{font-size:28px;margin-bottom:8px}
+  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+  .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
+  .src .chip b{color:#fff}
+  section{padding:34px 0 8px}
+  h2.sec{font-size:22px;color:var(--ink);margin-bottom:6px}
+  p.sub{color:var(--mut);margin-bottom:16px;max-width:84ch;font-size:15px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
+  .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
+  code{background:var(--teal-lt);border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--ink)}
+
+  /* ---- station flow ---- */
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:6px 0 4px}
+  .flow a{background:var(--card);border:1px solid var(--line);border-radius:99px;padding:6px 13px;font-size:13px;color:var(--ink);font-weight:600}
+  .flow a:hover{border-color:var(--teal);color:var(--teal);text-decoration:none}
+  .flow span{color:var(--mut);font-size:14px}
+
+  .stn{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin-bottom:16px;box-shadow:0 2px 10px var(--shadow)}
+  .stn>h3{font-size:18px;color:var(--ink);margin-bottom:4px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  .stn>h3 .n{font-size:12px;font-weight:800;letter-spacing:1px;color:var(--teal);text-transform:uppercase}
+  .stn .lead{color:var(--mut);font-size:14.5px;margin:6px 0 12px;max-width:82ch}
+  .stn .risk{font-size:13.5px;color:var(--ink);background:var(--teal-lt);border-left:3px solid var(--teal);border-radius:0 8px 8px 0;padding:9px 14px;margin-bottom:12px}
+  .stn .risk b{color:var(--teal)}
+  .ev{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.7px;padding:3px 9px;border-radius:99px;vertical-align:2px;white-space:nowrap}
+  .ev.pub{background:var(--teal-lt);border:1px solid var(--teal);color:var(--teal)}
+  .ev.own{background:var(--teal-lt);border:1px solid var(--line);color:var(--ink)}
+  .ev.none{background:var(--amber-lt);border:1px solid var(--amber);color:var(--amber)}
+  .stn img{width:100%;max-height:330px;object-fit:contain;border:1px solid var(--line);border-radius:8px;background:var(--card)}
+  .stn .two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  @media(max-width:820px){.stn .two{grid-template-columns:1fr}}
+  .nofig{border:1.5px dashed var(--amber);border-radius:10px;padding:16px 18px;background:var(--amber-lt);color:var(--ink);font-size:14px}
+  .nofig b{color:var(--amber)}
+  .go{font-size:14px;font-weight:600;margin-top:10px;display:inline-block}
+  .note{background:var(--amber-lt);border:1px solid var(--amber);border-radius:8px;padding:14px 18px;font-size:14px;color:var(--ink);margin:14px 0}
+  .note b{color:var(--amber)}
+  footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
+  footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <span class="brand">HAO ZHENG</span>
+    <nav class="top">
+      <a href="index.html">Overview</a>
+      <a class="here" href="process.html">Process</a>
+      <a href="mechanical.html">CAD · FEA</a>
+      <a href="zhang-eis-ml.html">EIS × ML</a>
+      <a href="severson-capacity-ml.html">Capacity × ML</a>
+      <a href="pybamm-modeling.html">Physics Modeling</a>
+      <a href="reliability-engineering.html">Reliability</a>
+      <a href="micro-ct.html">Micro-CT</a>
+      <a href="models.html">Models</a>
+      <a href="toolkit.html">Toolkit</a>
+    </nav>
+  </div>
+</header>
+
+<div class="pagehead">
+  <div class="wrap">
+    <h1>A thin-film process, end to end — substrate, deposition, anneal, metrology, validation, control</h1>
+    <p>The rest of this site is organised by technique. This page is organised the way a process engineer
+    actually works: one flow, six stations, each with the failure mode that station owns and the evidence
+    that closes it out. My own line is a sputtered metal interlayer on a ceramic electrolyte, annealed to a
+    controlled morphology, then measured and cycled — the same substrate&nbsp;→&nbsp;deposition&nbsp;→
+    &nbsp;anneal&nbsp;→&nbsp;metrology&nbsp;→&nbsp;electrical&nbsp;→&nbsp;SPC loop that a fab runs on wafers.</p>
+    <div class="src">
+      <span class="chip"><b>Read this if:</b> you hire for process, integration or yield</span>
+      <span class="chip"><b>Every station labels its evidence</b></span>
+      <span class="chip"><b>Unpublished steps are marked, not dressed up</b></span>
+    </div>
+  </div>
+</div>
+
+<section style="padding-bottom:0">
+  <div class="wrap">
+    <div class="note"><b>How to read the evidence labels.</b> Process fluency is easy to claim and hard to
+    show, so every station below says exactly what backs it.
+    <span class="ev pub">PUBLIC DATA</span> means an openly licensed dataset re-analysed here;
+    <span class="ev own">OWN WORK</span> means my own design or simulation, published on this site;
+    <span class="ev none">NO PUBLIC FIGURE</span> means the step belongs to unpublished research — described
+    qualitatively, with no figure and no numbers, until the manuscript is out. Nothing on this page is a
+    stand-in for something I cannot show.</div>
+    <div class="flow">
+      <a href="#s1">1 Substrate</a><span>&rarr;</span>
+      <a href="#s2">2 Deposition</a><span>&rarr;</span>
+      <a href="#s3">3 Anneal</a><span>&rarr;</span>
+      <a href="#s4">4 Metrology</a><span>&rarr;</span>
+      <a href="#s5">5 Electrical</a><span>&rarr;</span>
+      <a href="#s6">6 SPC &amp; reliability</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">The six stations</h2>
+    <p class="sub">Each station: what it owns, what goes wrong there, and what I can show for it.</p>
+
+    <div class="stn" id="s1">
+      <h3><span class="n">Station 1</span> Substrate preparation and fixturing <span class="ev own">OWN WORK</span></h3>
+      <p class="lead">Everything downstream inherits the surface. A ceramic pellet is lapped and polished
+      flat, then held in a fixture that must load it evenly — because a substrate that is clamped unevenly
+      is, from the film's point of view, not flat at all.</p>
+      <div class="risk"><b>Failure mode this station owns:</b> non-uniform contact. Load that rides the rim
+      instead of the face changes local stress by an order of magnitude, and a brittle substrate has no
+      ductility to redistribute it.</div>
+      <div class="two">
+        <div>
+          <img src="assets/cad/BasePlate_GDT.png" alt="GD and T detail drawing of the fixture base plate">
+          <div class="cap">Surface and location specified rather than assumed: datum system A/B/C, position
+          tolerance on the tapped pattern, section through the cell pocket. This is the language a supplier
+          and an incoming-inspection gauge both read.</div>
+        </div>
+        <div>
+          <img src="assets/fea/PelletFacePressureProfiles.png" alt="Pellet-face pressure profiles, bonded idealization versus contact physics">
+          <div class="cap">And verified rather than assumed: pressure across the pellet face under a rigid
+          platen versus a compliant interlayer, from a two-engine finite-element cross-check. The rigid case
+          rides the rim; the interlayer restores near-uniform loading.</div>
+        </div>
+      </div>
+      <a class="go" href="mechanical.html">▸ Fixture design, GD&amp;T and the FEA campaign</a>
+    </div>
+
+    <div class="stn" id="s2">
+      <h3><span class="n">Station 2</span> PVD deposition of the interlayer <span class="ev none">NO PUBLIC FIGURE</span></h3>
+      <p class="lead">A thin metal interlayer is sputtered onto the polished ceramic. The knobs are the
+      familiar ones — base pressure, working gas pressure, power, throw distance, substrate condition — and
+      they set thickness uniformity, adhesion and the film's starting microstructure.</p>
+      <div class="risk"><b>Failure mode this station owns:</b> a film that is nominally correct and
+      practically useless — right average thickness, wrong uniformity or adhesion, so the defect appears
+      three stations later as a scattered electrical result rather than as a deposition alarm.</div>
+      <div class="nofig"><b>Deliberately no figure here.</b> The deposition work belongs to my anode-free
+      solid-state programme in the Sakamoto group, which is <i>manuscript in preparation</i>. Rather than
+      substitute a stock image or a lookalike from someone else's paper, this station stays qualitative —
+      process reasoning without unpublished process data. What the site <i>can</i> show is the discipline
+      applied to the steps that are publishable, on either side of this one.</div>
+    </div>
+
+    <div class="stn" id="s3">
+      <h3><span class="n">Station 3</span> Anneal and morphology control <span class="ev none">NO PUBLIC FIGURE</span></h3>
+      <p class="lead">The as-deposited film is not the film you want. A controlled thermal step under inert
+      atmosphere does two jobs at once: it cleans the interface, and it lets the metal reorganise into the
+      morphology that the device actually needs. Temperature, dwell and atmosphere are the recipe; the
+      morphology is the response.</p>
+      <div class="risk"><b>Failure mode this station owns:</b> a thermal budget that is right for one goal
+      and wrong for the other — enough to clean the interface but too much for the morphology, or the
+      reverse. This is a classic process trade-off: the two objectives share one knob.</div>
+      <div class="nofig"><b>Deliberately no figure here</b>, same reason as Station 2 — <i>manuscript in
+      preparation</i>. The recipe window and the resulting morphology are unpublished, so no micrographs and
+      no numbers appear on this page.</div>
+    </div>
+
+    <div class="stn" id="s4">
+      <h3><span class="n">Station 4</span> Metrology — turning images into numbers <span class="ev pub">PUBLIC DATA</span></h3>
+      <p class="lead">A micrograph is an opinion until someone defines the segmentation. This station is
+      where imaging becomes measurement: denoise, segment, then extract distributions and transport
+      descriptors with the choice of threshold written down rather than tuned until the answer looks right.
+      The worked example below is X-ray micro-computed tomography on published open data — not
+      SEM, AFM or XPS, which are the tools this flow would use for a thin film, and which are not shown
+      because I have no openly licensed example of my own to show.</p>
+      <div class="risk"><b>Failure mode this station owns:</b> a measurement that moves when the operator
+      changes, not when the process changes. If the segmentation is not pinned, every downstream chart is
+      measuring the analyst.</div>
+      <div class="two">
+        <div>
+          <img src="assets/ct/F2_segmentation_EIL014.png" alt="Segmentation of a micro-CT volume into phases">
+          <div class="cap">Segmentation with a stated, reproducible criterion — the step that decides
+          whether the numbers that follow mean anything.</div>
+        </div>
+        <div>
+          <img src="assets/ct/F7_denoise_pair.png" alt="Denoising comparison on a micro-CT slice">
+          <div class="cap">Denoise before threshold, judged on a paired comparison rather than on
+          appearance — the imaging equivalent of a gauge study.</div>
+        </div>
+      </div>
+      <a class="go" href="micro-ct.html">▸ The full imaging-to-numbers pipeline, on open data</a>
+    </div>
+
+    <div class="stn" id="s5">
+      <h3><span class="n">Station 5</span> Electrochemical validation <span class="ev pub">PUBLIC DATA</span> <span class="ev none">OWN WORK UNPUBLISHED</span></h3>
+      <p class="lead">A film that looks right still has to work. Impedance spectroscopy separates the
+      interface from the bulk, so a change in the process shows up as a change in a specific arc rather than
+      as a vague shift in cell performance — which is what makes it useful as a process response rather than
+      just a characterisation result. On my own cells this is run operando, while the cell is cycling; that
+      work is <i>manuscript in preparation</i>, so no results from it appear here. The public example below
+      is the same method on an openly licensed dataset.</p>
+      <div class="risk"><b>Failure mode this station owns:</b> a validation that cannot attribute. If the
+      test says only "worse", it cannot tell deposition from anneal from assembly, and the process team gets
+      no direction.</div>
+      <div class="two">
+        <div>
+          <img src="assets/zhang/f2_nyquist_drt_evolution_w2200px.png" alt="Nyquist spectra and their distribution-of-relaxation-times evolution">
+          <div class="cap">Spectra resolved into separate relaxation processes, so a shift can be attributed
+          to an interface rather than to the cell as a whole. Openly licensed dataset, re-analysed here.</div>
+        </div>
+        <div>
+          <img src="assets/models/TrackAG2ReproductionFourPanel.png" alt="Finite-element reproduction of a void-detection study">
+          <div class="cap">The same signal built from first principles in a finite-element model, so the
+          measurement has a physical picture behind it rather than a fitted circuit alone.</div>
+        </div>
+      </div>
+      <a class="go" href="models.html#live">▸ Drive that model yourself, live in the browser</a>
+    </div>
+
+    <div class="stn" id="s6">
+      <h3><span class="n">Station 6</span> SPC and reliability — is the process in control? <span class="ev pub">PUBLIC DATA</span></h3>
+      <p class="lead">One good part proves nothing. The last station asks whether the line is stable and what
+      it will do over life: control charts on a build-to-build feature, drift detection on the population,
+      and a censored life model that turns cycling into an early-life risk statement instead of a single
+      average.</p>
+      <div class="risk"><b>Failure mode this station owns:</b> reacting to noise, or missing a real drift.
+      Both look identical on a single unit and are separable only on the population.</div>
+      <div class="two">
+        <div>
+          <img src="assets/severson/fig5_spc_build_stability_w3125px.png" alt="Statistical process control chart of build stability">
+          <div class="cap">Build stability as a control chart: limits set from the process, not from a
+          specification, so the question becomes "did anything change?" rather than "is it in spec?".</div>
+        </div>
+        <div>
+          <img src="assets/severson/fig7_ewma_alarms_w3125px.png" alt="EWMA drift alarms on individual units">
+          <div class="cap">Drift detection on individual units, with the alarm timing checked against what
+          actually happened later — an alarm nobody can act on early enough is not an alarm.</div>
+        </div>
+      </div>
+      <a class="go" href="reliability-engineering.html">▸ FMEA, control plan and out-of-control action plan</a>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2 class="sec">Why this transfers</h2>
+    <div class="note" style="background:var(--teal-lt);border-color:var(--teal)">
+      <p style="margin:0"><b>So what?</b> The substrate is a ceramic pellet rather than a silicon wafer and
+      the electrical test is an impedance sweep rather than a parametric probe, but the loop is the same one
+      a fab runs: specify the incoming surface, control the deposition, spend the thermal budget where it
+      buys the most, pin the metrology before trusting it, validate with a measurement that can attribute a
+      failure, and then hold the whole thing with control charts. What travels between industries is not the
+      tool set — it is the habit of asking, at every station, which failure mode this step owns and what
+      evidence would close it out.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span>Public datasets re-analysed under their original licences · own design and simulation work published on this site · unpublished process work marked as such.</span>
+    <span><a style="color:#cfe3e3" href="index.html">Back to overview</a></span>
+  </div>
+</footer>
+
+</body>
+</html>

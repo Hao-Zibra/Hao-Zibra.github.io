@@ -24,14 +24,14 @@
   nav.top a.here{color:#fff;border-color:var(--teal)}
   .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
   .pagehead h1{font-size:28px;margin-bottom:8px}
-  .pagehead p{color:#d6e2ec;max-width:82ch;font-size:15.5px}
+  .pagehead p{color:#d6e2ec;max-width:none;font-size:15.5px}
   .src{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
   .src .chip{background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.22);color:#e7f0f6;font-size:12.5px;padding:4px 11px;border-radius:99px}
   .src .chip b{color:#fff}
   section{padding:38px 0 8px}
   h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
   h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
-  p.sub{color:var(--mut);margin-bottom:18px;max-width:82ch;font-size:15px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:none;font-size:15px}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
   .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
   .data{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
@@ -53,8 +53,9 @@
   .fig .cap{margin-top:8px}
   .full{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:14px}
   .full img{width:100%;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:zoom-in}
-  model-viewer{width:100%;height:460px;background:#0f1a24;border-radius:8px;border:1px solid var(--line);--poster-color:#0f1a24}
-  .mv-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:#cfe3e3;padding:16px}
+  model-viewer{width:100%;height:460px;background:#fff;border-radius:8px;border:1px solid var(--line);--poster-color:#fff}
+  model-viewer:defined .mv-fallback{display:none}
+  .mv-fallback{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;text-align:center;color:var(--mut);padding:16px}/* was #cfe3e3: sized for the old dark viewer, invisible now the viewer is white */
   .mv-fallback img{max-width:100%;max-height:380px;border-radius:6px}
   .mv-hint{font-size:12.5px;color:var(--mut);margin-top:8px}
   .mvgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -71,27 +72,18 @@
   #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
   #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 
-/* ==== two-theme layer (appended 2026-08-09): light values equal the original design; dark swaps variables only ==== */
+/* ==== theme layer v2 (2026-08-11) — dark mode = dark frame + WHITE PAPER column.
+   Content palette stays light in both themes (black-on-white), so figures sit seamlessly
+   on the page instead of floating as white rectangles. Only the outer frame goes dark. ==== */
 :root{color-scheme:light;
-  --head:#0f2740;
-  --code-bg:#eef2f6;
-  --hover:#f2f7f9;
-  --amber-fg:#6b5312;
-  --amber-bd:#ecd9b0;
-  --amber-deep:#7a5510;
-  --banner-bg:#fbf1dc;
-  --banner-fg:#5c4410;
-  --teal-bd:#bfe0df;
-  --xlink-fg:#0f2740;
-  --concl-bg:#eef4f4;
-  --concl-bd:#bfe0df;
-  --concl-fg:#0f2740;
-  --hl-bg:#fdf7ec;
-  --btn-bg:#ffffff;
-  --jump-bg:rgba(247,249,251,.95);
-  --apH-bg:#fbe4e0;
-  --apH-bd:#f0c3bb;
-  --apH-fg:#c0392b;
+  --head:#0f2740; --code-bg:#eef2f6; --hover:#f2f7f9;
+  --amber-fg:#6b5312; --amber-bd:#ecd9b0; --amber-deep:#7a5510;
+  --banner-bg:#fbf1dc; --banner-fg:#5c4410;
+  --teal-bd:#bfe0df; --xlink-fg:#0f2740;
+  --concl-bg:#eef4f4; --concl-bd:#bfe0df; --concl-fg:#0f2740;
+  --hl-bg:#fdf7ec; --btn-bg:#ffffff; --jump-bg:rgba(247,249,251,.95);
+  --apH-bg:#fbe4e0; --apH-bd:#f0c3bb; --apH-fg:#c0392b;
+  --frame:#f7f9fb; --paper:#f7f9fb;
 }
 h2.sec,h3.m,.big,.kpi .big,.card h3,.sk h3,.c h4,.pub b,.mcard .mname,.ctl .val,.fl h4,.step h4{color:var(--head)}
 code{background:var(--code-bg);color:var(--head)}
@@ -99,11 +91,12 @@ tr:hover td{background:var(--hover)}
 .note{color:var(--amber-fg);border-color:var(--amber-bd)}
 .proxy,.honest,.synth{color:var(--amber-fg);border-color:var(--amber-bd)}
 .ap.M{color:var(--amber-fg);border-color:var(--amber-bd)}
-.ap.L{border-color:var(--teal-bd)}
-.ap.H{background:var(--apH-bg);border-color:var(--apH-bd)}
-.real,.data,.sim{border-color:var(--teal-bd)}
+.ap.L{border-color:var(--teal-bd);background:var(--teal-lt)}
+.ap.H{background:var(--apH-bg);border-color:var(--apH-bd);color:var(--apH-fg)}
+.real,.data,.sim{border-color:var(--teal-bd);color:#0d6f6e}
+.ap.L{color:#0d6f6e}
 .h1banner,.h1box,.odbanner,.mdemo{background:var(--banner-bg);color:var(--banner-fg)}
-.h1banner b,.h1box b,.odbanner b,.mdemo b{color:var(--amber-deep)}
+.h1banner b,.h1box b,.odbanner b,.mdemo b,.note b{color:var(--amber-deep)}
 .xlink{border-color:var(--teal-bd);color:var(--xlink-fg)}
 .note.concl{background:var(--concl-bg);border-color:var(--concl-bd);color:var(--concl-fg)}
 .note.concl b{color:var(--concl-fg)}
@@ -111,90 +104,35 @@ tr.hl{background:var(--hl-bg)}
 .btns button{background:var(--btn-bg);color:var(--head)}
 .jumpbar{background:var(--jump-bg)}
 .jumpbar a.jl{background:var(--btn-bg);color:var(--head)}
-
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){color-scheme:dark;
-  --navy:#0b1a2b;
-  --navy2:#12283d;
-  --teal:#3fb5b0;
-  --teal-lt:#12312f;
-  --ink:#e6edf3;
-  --mut:#9fb2c4;
-  --line:#25384b;
-  --bg:#0d1620;
-  --card:#131f2c;
-  --amber:#e0a643;
-  --amber-lt:#2c2312;
-  --head:#e6edf3;
-  --code-bg:#1b2a3a;
-  --hover:#1a2836;
-  --amber-fg:#e8d9b8;
-  --amber-bd:#6b5312;
-  --amber-deep:#e0a643;
-  --banner-bg:#2c2312;
-  --banner-fg:#e8d9b8;
-  --teal-bd:#2a6360;
-  --xlink-fg:#cfe6e5;
-  --concl-bg:#12312f;
-  --concl-bd:#2a6360;
-  --concl-fg:#dbe9e8;
-  --hl-bg:#34290f;
-  --btn-bg:#131f2c;
-  --jump-bg:rgba(13,22,32,.92);
-  --apH-bg:#3a1512;
-  --apH-bd:#7a3b33;
-  --apH-fg:#e8887b;
-  }
-  :root:not([data-theme="light"]) .fig img,  :root:not([data-theme="light"]) .full img,  :root:not([data-theme="light"]) .mcard img{background:#fff}
-  :root:not([data-theme="light"]) .herofig .frame{background:#fff}
-  :root:not([data-theme="light"]) .hero{background:linear-gradient(160deg,var(--navy),var(--navy2))}
-  :root:not([data-theme="light"]) .card:hover,  :root:not([data-theme="light"]) .fl:hover{box-shadow:0 6px 22px rgba(0,0,0,.5)}
-}
-:root[data-theme="dark"]{color-scheme:dark;
-  --navy:#0b1a2b;
-  --navy2:#12283d;
-  --teal:#3fb5b0;
-  --teal-lt:#12312f;
-  --ink:#e6edf3;
-  --mut:#9fb2c4;
-  --line:#25384b;
-  --bg:#0d1620;
-  --card:#131f2c;
-  --amber:#e0a643;
-  --amber-lt:#2c2312;
-  --head:#e6edf3;
-  --code-bg:#1b2a3a;
-  --hover:#1a2836;
-  --amber-fg:#e8d9b8;
-  --amber-bd:#6b5312;
-  --amber-deep:#e0a643;
-  --banner-bg:#2c2312;
-  --banner-fg:#e8d9b8;
-  --teal-bd:#2a6360;
-  --xlink-fg:#cfe6e5;
-  --concl-bg:#12312f;
-  --concl-bd:#2a6360;
-  --concl-fg:#dbe9e8;
-  --hl-bg:#34290f;
-  --btn-bg:#131f2c;
-  --jump-bg:rgba(13,22,32,.92);
-  --apH-bg:#3a1512;
-  --apH-bd:#7a3b33;
-  --apH-fg:#e8887b;
-}
-:root[data-theme="dark"] .fig img,:root[data-theme="dark"] .full img,:root[data-theme="dark"] .mcard img{background:#fff}
-:root[data-theme="dark"] .herofig .frame{background:#fff}
-:root[data-theme="dark"] .hero{background:linear-gradient(160deg,var(--navy),var(--navy2))}
-:root[data-theme="dark"] .card:hover,:root[data-theme="dark"] .fl:hover{box-shadow:0 6px 22px rgba(0,0,0,.5)}
-
-/* theme fixups (2026-08-09): solid chips keep light-mode solids in dark; AP badges readable both themes */
-.ap.L{background:var(--teal-lt)}
-.ap.H{color:var(--apH-fg)}
+.pub .prep{color:var(--amber-fg)}
 .dl,.mcard .dl,.btn,.btns button.on,.fl .n,.step .n{background:#0e7c7b}
 .btns button.on{color:#fff}
-.mdemo .lab,.h1banner .lab,.h1box .lab,.odbanner .lab{background:#b7791f}
-.pub .prep{color:var(--amber-fg)}
-#fixture3d{background:#fff;border-radius:6px}
+.mdemo .lab,.h1banner .lab,.h1box .lab,.odbanner .lab{background:var(--amber-deep)}
+/* figures always sit on white, whatever the theme */
+.fig img,.full img,.mcard img,.stn img,.frame,#fixture3d{background:#fff}
+
+/* ---- readable width: body copy runs as wide as the figures and tables under it ---- */
+p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
+
+/* ---- dark mode: only the frame darkens; the content column stays white paper ---- */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--frame:#0d1620}
+  :root:not([data-theme="light"]) body{
+    min-height:100vh;
+    background-color:var(--frame);
+    background-image:linear-gradient(var(--paper),var(--paper));
+    background-repeat:no-repeat;background-position:top center;
+    background-size:min(1080px,100%) 100%;
+  }
+}
+:root[data-theme="dark"]{--frame:#0d1620}
+:root[data-theme="dark"] body{
+  min-height:100vh;
+  background-color:var(--frame);
+  background-image:linear-gradient(var(--paper),var(--paper));
+  background-repeat:no-repeat;background-position:top center;
+  background-size:min(1080px,100%) 100%;
+}
 </style>
 </head>
 <body>

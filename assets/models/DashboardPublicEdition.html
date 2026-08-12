@@ -19,7 +19,10 @@
   --good:#0ca30c; --warn:#fab219; --crit:#d03b3b;
   color-scheme: light;
 }
-@media (prefers-color-scheme: dark){
+/* SITE COPY ONLY: this dashboard is embedded on the portfolio's white paper column, whose content
+   palette stays light in both themes, so its own dark palette is disabled here. The never-matching
+   query keeps the block intact and fully reversible; the upstream master is unchanged. */
+@media (prefers-color-scheme: dark) and (min-width:100000px){
   :root{
     --plane:#0d0d0d; --surface:#1a1a19;
     --ink:#ffffff; --sec:#c3c2b7; --muted:#898781;

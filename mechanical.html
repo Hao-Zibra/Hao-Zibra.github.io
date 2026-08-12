@@ -24,11 +24,11 @@
   nav.top a.here{color:#fff;border-color:var(--teal)}
   .pagehead{background:linear-gradient(160deg,var(--navy),var(--navy2));color:#fff;padding:38px 0 30px}
   .pagehead h1{font-size:28px;margin-bottom:8px}
-  .pagehead p{color:#d6e2ec;max-width:80ch;font-size:15.5px}
+  .pagehead p{color:#d6e2ec;max-width:none;font-size:15.5px}
   section{padding:38px 0 8px}
   h2.sec{font-size:22px;color:var(--navy);margin-bottom:6px}
   h3.m{font-size:16.5px;color:var(--navy);margin:16px 0 6px}
-  p.sub{color:var(--mut);margin-bottom:18px;max-width:80ch;font-size:15px}
+  p.sub{color:var(--mut);margin-bottom:18px;max-width:none;font-size:15px}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
   .plot{width:100%;min-height:420px}
   .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
@@ -38,14 +38,16 @@
   th{background:var(--navy);color:#e7f0f6;text-align:left;padding:9px 12px;font-weight:600;font-size:13.5px}
   td{padding:9px 12px;border-top:1px solid var(--line);vertical-align:top}
   tr:hover td{background:#f2f7f9}
-  .gal{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:stretch}
+  .gal{display:grid;grid-template-columns:1fr;gap:20px;align-items:stretch}
+  /* engineering screenshots are detail-dense: give them the full content width */
   @media(max-width:900px){.gal{grid-template-columns:1fr}}
   .fig{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;position:relative;display:flex;flex-direction:column}
   /* uniform image box so rows stay aligned and nothing looks cut (contain = never crops) */
-  .fig img{width:100%;height:280px;object-fit:contain;border-radius:6px;border:1px solid var(--line);background:#f4f7fa}
+  .fig img{width:100%;height:auto;object-fit:contain;border-radius:6px;border:1px solid var(--line);background:#fff}
   .fig .cap{margin-top:10px}
   /* §1 hero figure row — larger, equal-height images */
-  .figrow .fig img{height:360px}
+  .figrow{grid-template-columns:1fr 1fr}
+  @media(max-width:900px){.figrow{grid-template-columns:1fr}}
   .render-badge{position:absolute;top:20px;right:20px;background:rgba(15,39,64,.82);color:#e7f0f6;font-size:11px;font-weight:700;letter-spacing:.7px;padding:3px 9px;border-radius:6px;z-index:2}
   .note{background:var(--amber-lt);border:1px solid #ecd9b0;border-radius:8px;padding:14px 18px;font-size:14px;color:#6b5312;margin:14px 0}
   code{background:#eef2f6;border:1px solid var(--line);border-radius:4px;padding:1px 6px;font-size:13px;color:var(--navy)}
@@ -55,27 +57,18 @@
   .kpi .l{font-size:12.5px;color:var(--mut);letter-spacing:.4px;margin-top:4px}
   footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
 
-/* ==== two-theme layer (appended 2026-08-09): light values equal the original design; dark swaps variables only ==== */
+/* ==== theme layer v2 (2026-08-11) — dark mode = dark frame + WHITE PAPER column.
+   Content palette stays light in both themes (black-on-white), so figures sit seamlessly
+   on the page instead of floating as white rectangles. Only the outer frame goes dark. ==== */
 :root{color-scheme:light;
-  --head:#0f2740;
-  --code-bg:#eef2f6;
-  --hover:#f2f7f9;
-  --amber-fg:#6b5312;
-  --amber-bd:#ecd9b0;
-  --amber-deep:#7a5510;
-  --banner-bg:#fbf1dc;
-  --banner-fg:#5c4410;
-  --teal-bd:#bfe0df;
-  --xlink-fg:#0f2740;
-  --concl-bg:#eef4f4;
-  --concl-bd:#bfe0df;
-  --concl-fg:#0f2740;
-  --hl-bg:#fdf7ec;
-  --btn-bg:#ffffff;
-  --jump-bg:rgba(247,249,251,.95);
-  --apH-bg:#fbe4e0;
-  --apH-bd:#f0c3bb;
-  --apH-fg:#c0392b;
+  --head:#0f2740; --code-bg:#eef2f6; --hover:#f2f7f9;
+  --amber-fg:#6b5312; --amber-bd:#ecd9b0; --amber-deep:#7a5510;
+  --banner-bg:#fbf1dc; --banner-fg:#5c4410;
+  --teal-bd:#bfe0df; --xlink-fg:#0f2740;
+  --concl-bg:#eef4f4; --concl-bd:#bfe0df; --concl-fg:#0f2740;
+  --hl-bg:#fdf7ec; --btn-bg:#ffffff; --jump-bg:rgba(247,249,251,.95);
+  --apH-bg:#fbe4e0; --apH-bd:#f0c3bb; --apH-fg:#c0392b;
+  --frame:#f7f9fb; --paper:#f7f9fb;
 }
 h2.sec,h3.m,.big,.kpi .big,.card h3,.sk h3,.c h4,.pub b,.mcard .mname,.ctl .val,.fl h4,.step h4{color:var(--head)}
 code{background:var(--code-bg);color:var(--head)}
@@ -83,11 +76,12 @@ tr:hover td{background:var(--hover)}
 .note{color:var(--amber-fg);border-color:var(--amber-bd)}
 .proxy,.honest,.synth{color:var(--amber-fg);border-color:var(--amber-bd)}
 .ap.M{color:var(--amber-fg);border-color:var(--amber-bd)}
-.ap.L{border-color:var(--teal-bd)}
-.ap.H{background:var(--apH-bg);border-color:var(--apH-bd)}
-.real,.data,.sim{border-color:var(--teal-bd)}
+.ap.L{border-color:var(--teal-bd);background:var(--teal-lt)}
+.ap.H{background:var(--apH-bg);border-color:var(--apH-bd);color:var(--apH-fg)}
+.real,.data,.sim{border-color:var(--teal-bd);color:#0d6f6e}
+.ap.L{color:#0d6f6e}
 .h1banner,.h1box,.odbanner,.mdemo{background:var(--banner-bg);color:var(--banner-fg)}
-.h1banner b,.h1box b,.odbanner b,.mdemo b{color:var(--amber-deep)}
+.h1banner b,.h1box b,.odbanner b,.mdemo b,.note b{color:var(--amber-deep)}
 .xlink{border-color:var(--teal-bd);color:var(--xlink-fg)}
 .note.concl{background:var(--concl-bg);border-color:var(--concl-bd);color:var(--concl-fg)}
 .note.concl b{color:var(--concl-fg)}
@@ -95,90 +89,35 @@ tr.hl{background:var(--hl-bg)}
 .btns button{background:var(--btn-bg);color:var(--head)}
 .jumpbar{background:var(--jump-bg)}
 .jumpbar a.jl{background:var(--btn-bg);color:var(--head)}
-
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){color-scheme:dark;
-  --navy:#0b1a2b;
-  --navy2:#12283d;
-  --teal:#3fb5b0;
-  --teal-lt:#12312f;
-  --ink:#e6edf3;
-  --mut:#9fb2c4;
-  --line:#25384b;
-  --bg:#0d1620;
-  --card:#131f2c;
-  --amber:#e0a643;
-  --amber-lt:#2c2312;
-  --head:#e6edf3;
-  --code-bg:#1b2a3a;
-  --hover:#1a2836;
-  --amber-fg:#e8d9b8;
-  --amber-bd:#6b5312;
-  --amber-deep:#e0a643;
-  --banner-bg:#2c2312;
-  --banner-fg:#e8d9b8;
-  --teal-bd:#2a6360;
-  --xlink-fg:#cfe6e5;
-  --concl-bg:#12312f;
-  --concl-bd:#2a6360;
-  --concl-fg:#dbe9e8;
-  --hl-bg:#34290f;
-  --btn-bg:#131f2c;
-  --jump-bg:rgba(13,22,32,.92);
-  --apH-bg:#3a1512;
-  --apH-bd:#7a3b33;
-  --apH-fg:#e8887b;
-  }
-  :root:not([data-theme="light"]) .fig img,  :root:not([data-theme="light"]) .full img,  :root:not([data-theme="light"]) .mcard img{background:#fff}
-  :root:not([data-theme="light"]) .herofig .frame{background:#fff}
-  :root:not([data-theme="light"]) .hero{background:linear-gradient(160deg,var(--navy),var(--navy2))}
-  :root:not([data-theme="light"]) .card:hover,  :root:not([data-theme="light"]) .fl:hover{box-shadow:0 6px 22px rgba(0,0,0,.5)}
-}
-:root[data-theme="dark"]{color-scheme:dark;
-  --navy:#0b1a2b;
-  --navy2:#12283d;
-  --teal:#3fb5b0;
-  --teal-lt:#12312f;
-  --ink:#e6edf3;
-  --mut:#9fb2c4;
-  --line:#25384b;
-  --bg:#0d1620;
-  --card:#131f2c;
-  --amber:#e0a643;
-  --amber-lt:#2c2312;
-  --head:#e6edf3;
-  --code-bg:#1b2a3a;
-  --hover:#1a2836;
-  --amber-fg:#e8d9b8;
-  --amber-bd:#6b5312;
-  --amber-deep:#e0a643;
-  --banner-bg:#2c2312;
-  --banner-fg:#e8d9b8;
-  --teal-bd:#2a6360;
-  --xlink-fg:#cfe6e5;
-  --concl-bg:#12312f;
-  --concl-bd:#2a6360;
-  --concl-fg:#dbe9e8;
-  --hl-bg:#34290f;
-  --btn-bg:#131f2c;
-  --jump-bg:rgba(13,22,32,.92);
-  --apH-bg:#3a1512;
-  --apH-bd:#7a3b33;
-  --apH-fg:#e8887b;
-}
-:root[data-theme="dark"] .fig img,:root[data-theme="dark"] .full img,:root[data-theme="dark"] .mcard img{background:#fff}
-:root[data-theme="dark"] .herofig .frame{background:#fff}
-:root[data-theme="dark"] .hero{background:linear-gradient(160deg,var(--navy),var(--navy2))}
-:root[data-theme="dark"] .card:hover,:root[data-theme="dark"] .fl:hover{box-shadow:0 6px 22px rgba(0,0,0,.5)}
-
-/* theme fixups (2026-08-09): solid chips keep light-mode solids in dark; AP badges readable both themes */
-.ap.L{background:var(--teal-lt)}
-.ap.H{color:var(--apH-fg)}
+.pub .prep{color:var(--amber-fg)}
 .dl,.mcard .dl,.btn,.btns button.on,.fl .n,.step .n{background:#0e7c7b}
 .btns button.on{color:#fff}
-.mdemo .lab,.h1banner .lab,.h1box .lab,.odbanner .lab{background:#b7791f}
-.pub .prep{color:var(--amber-fg)}
-#fixture3d{background:#fff;border-radius:6px}
+.mdemo .lab,.h1banner .lab,.h1box .lab,.odbanner .lab{background:var(--amber-deep)}
+/* figures always sit on white, whatever the theme */
+.fig img,.full img,.mcard img,.stn img,.frame,#fixture3d{background:#fff}
+
+/* ---- readable width: body copy runs as wide as the figures and tables under it ---- */
+p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
+
+/* ---- dark mode: only the frame darkens; the content column stays white paper ---- */
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){--frame:#0d1620}
+  :root:not([data-theme="light"]) body{
+    min-height:100vh;
+    background-color:var(--frame);
+    background-image:linear-gradient(var(--paper),var(--paper));
+    background-repeat:no-repeat;background-position:top center;
+    background-size:min(1080px,100%) 100%;
+  }
+}
+:root[data-theme="dark"]{--frame:#0d1620}
+:root[data-theme="dark"] body{
+  min-height:100vh;
+  background-color:var(--frame);
+  background-image:linear-gradient(var(--paper),var(--paper));
+  background-repeat:no-repeat;background-position:top center;
+  background-size:min(1080px,100%) 100%;
+}
 </style>
 </head>
 <body>
@@ -452,9 +391,38 @@ tr.hl{background:var(--hl-bg)}
 const TICK={size:12};
 const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#1c2733"};
 
+/* Legend placement is viewport-dependent. The in-plot top-right box has a fixed
+   pixel width (265px on #cmp, 310px on #mesh); below ~600px the plot area is
+   narrower than the box, so it covered the tallest bar's value label and, on
+   #mesh, ran off the canvas. Inside only when there is room; below the plot
+   otherwise. Registered charts are relayed out when the breakpoint is crossed. */
+const LEGEND_IN={font:{size:11.5},orientation:"v",x:0.985,xanchor:"right",y:0.98,yanchor:"top",bgcolor:"rgba(255,255,255,.92)",bordercolor:"#dde5ec",borderwidth:1};
+/* stacked, not inline: a horizontal legend is as wide as the sum of its labels and
+   still ran ~10px past the canvas on the narrowest figure column. Vertical stacks. */
+const LEGEND_OUT={font:{size:10},orientation:"v",x:0,xanchor:"left",y:-0.16,yanchor:"top",bgcolor:"rgba(255,255,255,.92)",bordercolor:"#dde5ec",borderwidth:1};
+/* Decide from the CHART's own width, not the window: the legend has to fit the
+   plot, and a container can be narrow on a wide page (two-column galleries). A
+   width of 0 (hidden container, print) falls through to the safe outside layout. */
+const legendWide=id=>{const el=document.getElementById(id); return !!el && el.clientWidth>=560;};
+const legendNow=id=>legendWide(id)?LEGEND_IN:LEGEND_OUT;
+const RESPONSIVE_LEGEND_IDS=[];
+(function(){
+  const state={};
+  const sync=()=>RESPONSIVE_LEGEND_IDS.forEach(function(id){
+    const el=document.getElementById(id); if(!el||!el.data) return;
+    const wide=legendWide(id);
+    if(state[id]===wide) return;
+    state[id]=wide;
+    Plotly.relayout(el,{legend:wide?LEGEND_IN:LEGEND_OUT});
+  });
+  window.addEventListener("resize",sync);
+  window.addEventListener("load",()=>setTimeout(sync,0));
+})();
+
 /* Contact pressure comparison */
 (function(){
   const cats=["First pass<br>(rigid, steel-proxy cell)","Case A<br>(rigid platen)","Case B<br>(+0.75 mm Grafoil)"];
+  RESPONSIVE_LEGEND_IDS.push("cmp");
   Plotly.newPlot("cmp",[
     {x:cats, y:[14.973, 11.202, 5.99], type:"bar", name:"LLZO-face peak",
      marker:{color:["#8fa8bd","#c0392b","#0e7c7b"]},
@@ -463,17 +431,18 @@ const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#
     {x:cats, y:[5.0,5.0,5.0], type:"scatter", mode:"lines", name:"design mean 5.0 MPa (633 N / 126.7 mm²)",
      line:{color:"#1c2733", width:2, dash:"dash"}}
   ],{
-    font:FONT, margin:{l:70,r:20,t:60,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
+    font:FONT, margin:{l:76,r:26,t:66,b:64}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
     title:{text:"Contact pressure on the LLZO face: peak vs design mean", font:{size:15}},
     yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", range:[0,17.5]},
     xaxis:{tickfont:TICK},
-    legend:{font:{size:12}, orientation:"h", y:-0.22}
+    legend:legendNow("cmp")
   },{responsive:true, displaylogo:false});
 })();
 
 /* Mesh convergence */
 (function(){
   const x=["default (7,032 tets)","5 mm abs (6,488 tets)","2.5 mm abs (21,683 tets)"];
+  RESPONSIVE_LEGEND_IDS.push("mesh");
   Plotly.newPlot("mesh",[
     {x, y:[5.99,6.085,5.372], mode:"lines+markers+text", name:"Fusion Case B face peak (wanders — singular edge)",
      line:{color:"#0e7c7b",width:3}, marker:{size:9},
@@ -481,11 +450,11 @@ const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#
     {x, y:[5.0,5.0,5.0], mode:"lines", name:"design mean 5.0 MPa",
      line:{color:"#1c2733",width:1.5,dash:"dot"}}
   ],{
-    font:FONT, margin:{l:70,r:20,t:56,b:70}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
-    title:{text:"Case B mesh series — the rim peak wanders (non-convergent); the design quantities are the convergent ones in §6", font:{size:15}},
+    font:FONT, margin:{l:76,r:26,t:66,b:64}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
+    title:{text:"Case B mesh series — the rim peak wanders (non-convergent)<br><span style='font-size:12px'>the design quantities are the convergent ones in §6</span>", font:{size:15}},
     yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", range:[0,10.6]},
     xaxis:{tickfont:TICK},
-    legend:{font:{size:12}, orientation:"h", y:-0.24}
+    legend:legendNow("mesh")
   },{responsive:true, displaylogo:false});
 })();
 
@@ -571,7 +540,7 @@ const FONT={family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#
     Plotly.react(gd, build(), {
       font:{family:"-apple-system, Segoe UI, Roboto, Helvetica, Arial", color:"#1c2733"},
       margin:{l:0,r:0,t:6,b:0}, scene:Object.assign({},SCENE,{camera:cam}),
-      showlegend:true, legend:{font:{size:12},orientation:"h",y:0.02,x:0.5,xanchor:"center"},
+      showlegend:true, legend:{font:{size:11.5},orientation:"v",x:0.985,xanchor:"right",y:0.88,yanchor:"top",bgcolor:"rgba(255,255,255,.92)",bordercolor:"#dde5ec",borderwidth:1},
       paper_bgcolor:"rgba(0,0,0,0)"
     },{responsive:true,displaylogo:false});
     document.getElementById("stepNote").innerHTML =

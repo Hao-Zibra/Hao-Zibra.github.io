@@ -200,8 +200,8 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <p class="sub">A DFMEA and a PFMEA are not two lists: they are the same failure network cut at two levels,
     and the OCAP is the monitoring layer that catches what escapes. Two method choices carry the weight:
     <b>Action Priority (AP)</b> replaces the discredited multiplicative RPN: severity is weighed first, so a
-    severity-9 safety mode with modest occurrence is never buried under a high-RPN efficiency mode. And the
-    DFMEA is built on a <b>physics simulation</b>, which makes the FMEA's weakest column, Occurrence,
+    severity-9 safety mode with modest occurrence is never buried under a high-RPN efficiency mode. And I built
+    the DFMEA on a <b>physics simulation</b>, which makes the FMEA's weakest column, Occurrence,
     auditable: every failure mode's rate is observable in the simulated trajectories, and mechanism-ablation
     configs play the role of prevention-control experiments.</p>
     <div class="flow">
@@ -235,7 +235,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <i>lower</i> than DM-02. Full register runs DM-01…DM-05.</p>
 
     <div class="xlink">
-      <b>Mechanistic cross-link →</b> Every Occurrence and Detection rating above is read from the same
+      <b>Mechanistic cross-link →</b> I read every Occurrence and Detection rating above from the same
       open PyBaMM aging simulation documented on the <a href="pybamm-modeling.html">Physics Modeling page</a>.
       The capacity knee (DM-02), its R<sub>pol</sub> twin (DM-05), and the mechanism decomposition (DM-01/04)
       are that page's figures, here re-used as FMEA evidence.
@@ -369,7 +369,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section id="tableau">
   <div class="wrap">
     <h2 class="sec">5 · Live Tableau dashboard: the fleet on one screen</h2>
-    <p class="sub"><span class="data">PUBLIC DATA</span> The same 124-cell fleet, rebuilt as a live
+    <p class="sub"><span class="data">PUBLIC DATA</span> I rebuilt the same 124-cell fleet as a live
     <b>reliability data dashboard</b> in <b>Tableau</b>: a <b>Weibull</b> probability plot fitted by
     median-rank regression (Bernard approximation), capacity-fade trajectories against the 80% end-of-life
     line, life-by-family distributions, and fleet KPIs on one screen. Built on the public Severson 2019
@@ -401,8 +401,8 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <h2 class="sec">Conclusion: why it matters</h2>
     <div class="note concl">
       <p style="margin:0 0 8px"><b>So what?</b> The reliability toolkit only earns trust when its weakest
-      column is made auditable and its documents actually connect. Here Occurrence is read from physics, not
-      guessed; Action Priority puts the severity-9 safety mode where it belongs; and DFMEA → PFMEA → OCAP form
+      column is made auditable and its documents actually connect. Here I read Occurrence from physics, not
+      guesswork; Action Priority puts the severity-9 safety mode where it belongs; and DFMEA → PFMEA → OCAP form
       one traceable chain from a design mechanism, to the process step that enables it, to the control-chart
       response that catches it on a real fleet. That is the difference between an FMEA as a compliance artifact
       and an FMEA as an engineering instrument.</p>
@@ -410,8 +410,8 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       Occurrence ratings so the risk model updates itself as field evidence arrives.</p>
     </div>
     <div class="note"><b>Honest limitations &amp; provenance.</b> The DFMEA article is a liquid-electrolyte
-    NMC811‖graphite <i>simulation</i>, not a solid-state cell; the knee accelerant is a literature device chosen
-    for run survival, not fitted to data; S/O/D values are illustrative rating logic, not a calibrated
+    NMC811‖graphite <i>simulation</i>, not a solid-state cell; the knee accelerant is a literature device I chose
+    for run survival and did not fit to data; S/O/D values are illustrative rating logic, not a calibrated
     production analysis. The Severson OCAP signals are real but retrospective, so containment/release stages
     describe what the signals <i>would</i> trigger on a live line, and Case A's diagnosis is shown to its honest
     end state (unresolved-assignable, re-baseline) rather than a fabricated root cause. Method: AIAG-VDA FMEA

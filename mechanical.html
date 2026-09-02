@@ -45,7 +45,7 @@
   /* uniform image box so rows stay aligned and nothing looks cut (contain = never crops) */
   .fig img{width:100%;height:auto;object-fit:contain;border-radius:6px;border:1px solid var(--line);background:#fff}
   .fig .cap{margin-top:10px}
-  /* §1 hero figure row — larger, equal-height images */
+  /* §1 hero figure row: larger, equal-height images */
   .figrow{grid-template-columns:1fr 1fr}
   @media(max-width:900px){.figrow{grid-template-columns:1fr}}
   .render-badge{position:absolute;top:20px;right:20px;background:rgba(15,39,64,.82);color:#e7f0f6;font-size:11px;font-weight:700;letter-spacing:.7px;padding:3px 9px;border-radius:6px;z-index:2}
@@ -57,7 +57,7 @@
   .kpi .l{font-size:12.5px;color:var(--mut);letter-spacing:.4px;margin-top:4px}
   footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
 
-/* ==== theme layer v3 (2026-08-12) — ONE light surface, no dark mode, no side frame.
+/* ==== theme layer v3 (2026-08-12): ONE light surface, no dark mode, no side frame.
    v2 kept a dark gutter around a light column; it banded the page and gained nothing.
    The palette below is the whole design: light ground, white cards, figures seamless. ==== */
 :root{color-scheme:light;
@@ -101,7 +101,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 /* ---- one background, edge to edge ----
    The dark side frame is gone (Hao 2026-08-12): a dark gutter around a light
-   column produced a banded page — wide blue header, black margins, then a white
+   column produced a banded page: wide blue header, black margins, then a white
    strip at the jump bar. One light surface at every viewport ratio instead. ---- */
 </style>
 </head>
@@ -127,14 +127,14 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <div class="pagehead">
   <div class="wrap">
-    <h1>Stack-pressure fixture — parametric CAD, GD&amp;T, and a documented FEA campaign</h1>
+    <h1>Stack-pressure fixture: parametric CAD, GD&amp;T, and a documented FEA campaign</h1>
     <p>A spring-loaded fixture that applies 5&nbsp;MPa of uniform stack pressure to a Ø12.7&nbsp;mm
-    solid-state cell — the same production-relevant operating point as the anode-free
+    solid-state cell, the same production-relevant operating point as the anode-free
     solid-state Li-metal platform I work on (manuscript in preparation).
     Designed end-to-end in Fusion 360 (parametric, script-driven), detailed with a
     GD&amp;T drawing, and analyzed with a load-documented, mesh-converged FEA study that answers a real
     reliability question: <b>does a rigid platen put the brittle LLZO at risk, and does a compliant
-    interposer fix it?</b> Toolchain: <b>Fusion 360 parametric modeling + GD&amp;T + FEA — skills
+    interposer fix it?</b> Toolchain: <b>Fusion 360 parametric modeling + GD&amp;T + FEA, skills
     transferable to CATIA</b>.</p>
   </div>
 </div>
@@ -144,7 +144,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <h2 class="sec">1 · The fixture</h2>
     <p class="sub">Every dimension is a named user parameter (plate size 50&nbsp;mm, corner inset 8&nbsp;mm,
     hole Ø5.5&nbsp;mm…), so the fixture rescales with the cell. Parts were generated as Fusion&nbsp;360
-    Python API scripts — one component per part, assembled by parameter-driven transforms.</p>
+    Python API scripts: one component per part, assembled by parameter-driven transforms.</p>
     <div class="gal figrow">
       <div class="fig">
         <span class="render-badge">STATIC RENDER</span>
@@ -157,7 +157,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       </div>
       <div class="fig">
         <img src="assets/cad/BasePlate_GDT.png" alt="Base plate GD&T drawing">
-        <div class="cap"><b>GD&amp;T detail drawing — base plate</b> (A3, ISO, first angle, 2:1;
+        <div class="cap"><b>GD&amp;T detail drawing: base plate</b> (A3, ISO, first angle, 2:1;
         <a href="assets/cad/BasePlate_GDT.pdf">PDF</a>). Datum system A/B/C (seating face + two sides);
         position tolerance ⌖&nbsp;Ø0.2&nbsp;|&nbsp;A|B|C on the 4× M5×0.8-6H tapped holes; section A-A
         through the Ø12.9 cell pocket; full dimensioning (50/50, 34 pitch, 12 thick).</div>
@@ -173,10 +173,10 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <section>
   <div class="wrap">
-    <h2 class="sec">2 · The build process — script by script, interactive</h2>
+    <h2 class="sec">2 · The build process: script by script, interactive</h2>
     <p class="sub">The fixture was built the way production tooling should be: one parametric script per
     part, then a transform-based assembly script that computes every position live from the shared
-    parameter table. Click a build step to see that part (or the assembly) in 3D — <b>drag to rotate</b>,
+    parameter table. Click a build step to see that part (or the assembly) in 3D: <b>drag to rotate</b>,
     scroll to zoom, use the slider to explode the assembly.</p>
     <div class="panel">
       <div id="steps" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px"></div>
@@ -189,7 +189,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <div id="fixture3d" style="width:100%;height:520px"></div>
       <div class="cap"><b>Parametric 3D schematic</b> built from the fixture's real parameter values
       (plate 50×50 mm, hole pitch 34 mm, rods Ø5×63 mm, springs OD10×25 free length, cell Ø12.7 mm,
-      base pocket Ø12.9×12 mm plate) — simplified geometry, true dimensions and positions. The Fusion
+      base pocket Ø12.9×12 mm plate): simplified geometry, true dimensions and positions. The Fusion
       scripts that generate the real parts follow the same order.</div>
     </div>
   </div>
@@ -197,21 +197,21 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <section>
   <div class="wrap">
-    <h2 class="sec">3 · FEA setup — loads, BCs, materials (fully documented)</h2>
+    <h2 class="sec">3 · FEA setup: loads, BCs, materials (fully documented)</h2>
     <p class="sub">Static stress studies in Fusion 360 Simulation, solved locally. Simulation model =
-    platen + LLZO + Li + base plate (sub-µm foils suppressed — they only add mesh pathology, not load
+    platen + LLZO + Li + base plate (sub-µm foils suppressed: they only add mesh pathology, not load
     path). All geometry changes for the study live in simulation-model copies; the design was never modified.</p>
 
     <h3 class="m">Boundary conditions &amp; loads</h3>
     <table>
       <tr><th style="width:200px">Item</th><th>Specification</th></tr>
-      <tr><td><b>Fixed constraint</b></td><td>Base-plate bottom face (2444.6 mm²) — fixture sits on a rigid bench.</td></tr>
-      <tr><td><b>Applied load</b></td><td>4 × 158.25 N on the platen spring-seat annular faces (72.97 mm² each), direction −Z (pressing down). Total 633 N = 5 MPa on the cell footprint. <i>Fusion's default face-normal pointed +Z — flipped explicitly; a classic setup trap worth documenting.</i></td></tr>
+      <tr><td><b>Fixed constraint</b></td><td>Base-plate bottom face (2444.6 mm²): fixture sits on a rigid bench.</td></tr>
+      <tr><td><b>Applied load</b></td><td>4 × 158.25 N on the platen spring-seat annular faces (72.97 mm² each), direction −Z (pressing down). Total 633 N = 5 MPa on the cell footprint. <i>Fusion's default face-normal pointed +Z. Flipped explicitly; a classic setup trap worth documenting.</i></td></tr>
       <tr><td><b>Contacts</b></td><td>Automatic contact detection, 0.10 mm tolerance (bonded).</td></tr>
       <tr><td><b>Solver</b></td><td>Local solve (all studies), status Complete.</td></tr>
     </table>
 
-    <h3 class="m">Materials — declared honestly</h3>
+    <h3 class="m">Materials: declared honestly</h3>
     <table>
       <tr><th>Body</th><th>Target properties</th><th>Assigned in study</th><th>Why</th></tr>
       <tr><td>Plates (endplate/platen/base)</td><td>Al 6061</td><td><span class="real">AS-IS</span> Aluminum</td><td>Standard library material.</td></tr>
@@ -221,10 +221,10 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     </table>
 
     <div class="gal" style="margin-top:14px">
-      <div class="fig"><img src="assets/fea/caseA_loads.png" alt="Case A loads"><div class="cap"><b>Case A loads</b> — 4 × 158 N arrows on the spring-seat rings.</div></div>
-      <div class="fig"><img src="assets/fea/caseA_bc_setup.png" alt="Case A BCs"><div class="cap"><b>Case A constraint</b> — fixed base bottom face (bodies shown transparent).</div></div>
-      <div class="fig"><img src="assets/fea/caseB_loads.png" alt="Case B loads"><div class="cap"><b>Case B loads</b> — identical load set; Grafoil pad inserted between platen and cell.</div></div>
-      <div class="fig"><img src="assets/fea/caseB_bc_setup.png" alt="Case B BCs"><div class="cap"><b>Case B constraint</b> — same fixed face; simulation-model copy carries the pad.</div></div>
+      <div class="fig"><img src="assets/fea/caseA_loads.png" alt="Case A loads"><div class="cap"><b>Case A loads</b>: 4 × 158 N arrows on the spring-seat rings.</div></div>
+      <div class="fig"><img src="assets/fea/caseA_bc_setup.png" alt="Case A BCs"><div class="cap"><b>Case A constraint</b>: fixed base bottom face (bodies shown transparent).</div></div>
+      <div class="fig"><img src="assets/fea/caseB_loads.png" alt="Case B loads"><div class="cap"><b>Case B loads</b>: identical load set; Grafoil pad inserted between platen and cell.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_bc_setup.png" alt="Case B BCs"><div class="cap"><b>Case B constraint</b>: same fixed face; simulation-model copy carries the pad.</div></div>
     </div>
   </div>
 </section>
@@ -232,7 +232,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section>
   <div class="wrap">
     <h2 class="sec">4 · The reliability question: rigid platen vs compliant interposer</h2>
-    <p class="sub">A rigid flat platen delivers stack pressure to the cell <b>edge-first</b> — a classic
+    <p class="sub">A rigid flat platen delivers stack pressure to the cell <b>edge-first</b>: a classic
     edge-of-contact concentration, and a crack-initiation risk for brittle LLZO. The study quantifies the
     concentration and tests the mitigation every battery-test lab actually uses: a thin compliant pad.</p>
 
@@ -241,96 +241,96 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <div class="cap"><span class="real">STUDY RESULT</span> Contact-pressure values probed on the
       LLZO top face (statics check: 633&nbsp;N / 126.7&nbsp;mm² = 5.0&nbsp;MPa mean, recovered by the
       model). First-pass bar uses the initial all-steel-proxy cell of the screening study; Case A/B use
-      the refined proxies above — materials differ, so compare trends, not decimals. The rigid-platen "peak" is <b>edge-singular</b> —
-      a mesh sample, not a convergent number (two-engine cross-validation, §6) — while the Grafoil case
+      the refined proxies above. Materials differ, so compare trends, not decimals. The rigid-platen "peak" is <b>edge-singular</b>,
+      a mesh sample, not a convergent number (two-engine cross-validation, §6), while the Grafoil case
       converges: Fusion probe 5.99&nbsp;MPa (≈1.20×) vs the independent COMSOL benchmark 6.74&nbsp;MPa
       (1.35×), engines within 13%.</div>
     </div>
 
     <div class="kpis">
-      <div class="kpi"><div class="big">Rim-riding</div><div class="l">Case A (rigid platen) under contact physics: nearly all 633 N rides a sub-mm ring at the pellet rim — the rim "peak" is edge-singular, not a convergent number (§6)</div></div>
+      <div class="kpi"><div class="big">Rim-riding</div><div class="l">Case A (rigid platen) under contact physics: nearly all 633 N rides a sub-mm ring at the pellet rim. The rim "peak" is edge-singular, not a convergent number (§6)</div></div>
       <div class="kpi"><div class="big">~94%</div><div class="l">of the excess rim concentration removed by the 0.75 mm Grafoil pad under contact physics (peak/mean 35.32× → 3.07×, Model C, §6)</div></div>
       <div class="kpi"><div class="big">12.5</div><div class="l">min safety factor, Case A structure (Al plates barely notice 633 N)</div></div>
     </div>
 
     <div class="gal">
-      <div class="fig"><img src="assets/fea/caseA_vonmises.png" alt="Case A von Mises"><div class="cap"><b>Case A von Mises</b> (max 10.718 MPa) — note the stress ring at the LLZO rim under the rigid platen.</div></div>
-      <div class="fig"><img src="assets/fea/caseB_vonmises.png" alt="Case B von Mises"><div class="cap"><b>Case B von Mises</b> — the Grafoil pad spreads the contact; the LLZO face goes uniform (Model C contact physics: von Mises max 32.7 MPa with the pad vs 216.1 MPa rigid — §6).</div></div>
-      <div class="fig"><img src="assets/fea/caseA_safetyfactor.png" alt="Case A safety factor"><div class="cap"><b>Case A safety factor</b> — min 12.507; the fixture is structurally overbuilt by design (stiffness, not strength, drives it).</div></div>
-      <div class="fig"><img src="assets/fea/caseB_principal3.png" alt="Case B third principal stress"><div class="cap"><b>Case B 3rd principal stress</b> — compression-dominated as intended; tensile excursions stay small, which is what matters for a brittle ceramic (edge maxima are singular-field samples; the design conclusion rests on the convergent quantities — centre pressure, statics, displacement — with singular peaks shown only to compare magnitudes — §6).</div></div>
+      <div class="fig"><img src="assets/fea/caseA_vonmises.png" alt="Case A von Mises"><div class="cap"><b>Case A von Mises</b> (max 10.718 MPa): note the stress ring at the LLZO rim under the rigid platen.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_vonmises.png" alt="Case B von Mises"><div class="cap"><b>Case B von Mises</b>: the Grafoil pad spreads the contact; the LLZO face goes uniform (Model C contact physics: von Mises max 32.7 MPa with the pad vs 216.1 MPa rigid, §6).</div></div>
+      <div class="fig"><img src="assets/fea/caseA_safetyfactor.png" alt="Case A safety factor"><div class="cap"><b>Case A safety factor</b>: min 12.507; the fixture is structurally overbuilt by design (stiffness, not strength, drives it).</div></div>
+      <div class="fig"><img src="assets/fea/caseB_principal3.png" alt="Case B third principal stress"><div class="cap"><b>Case B 3rd principal stress</b>: compression-dominated as intended; tensile excursions stay small, which is what matters for a brittle ceramic (edge maxima are singular-field samples; the design conclusion rests on the convergent quantities: centre pressure, statics, displacement, with singular peaks shown only to compare magnitudes, §6).</div></div>
     </div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2 class="sec">5 · Mesh convergence — trust, but verify</h2>
+    <h2 class="sec">5 · Mesh convergence: trust, but verify</h2>
     <p class="sub">Case B re-solved at two absolute mesh sizes (5&nbsp;mm, 2.5&nbsp;mm) on cloned studies.
-    Under refinement neither the LLZO-face peak nor the global maximum settles — both sit on the singular
-    contact / bi-material edge — so the conclusion rests instead on the quantities that do converge (§6) and
+    Under refinement neither the LLZO-face peak nor the global maximum settles. Both sit on the singular
+    contact / bi-material edge, so the conclusion rests instead on the quantities that do converge (§6) and
     on the Grafoil trend both engines agree on. Saying that plainly matters.</p>
     <div class="panel">
       <div id="mesh" class="plot"></div>
-      <div class="cap"><span class="real">STUDY RESULT</span> Fusion's own Case B face peak does not settle under refinement either —
-      it wanders 5.99 → 6.09 → 5.37&nbsp;MPa, the finest mesh landing below the coarsest — just as COMSOL's
+      <div class="cap"><span class="real">STUDY RESULT</span> Fusion's own Case B face peak does not settle under refinement either:
+      it wanders 5.99 → 6.09 → 5.37&nbsp;MPa, the finest mesh landing below the coarsest, just as COMSOL's
       benchmark peak/mean wanders 4.61×–5.65×: non-convergence on both sides, because the rigid rim is a
-      singular edge. What <i>is</i> engine-robust is the Grafoil trend — with the pad the concentration drops
+      singular edge. What <i>is</i> engine-robust is the Grafoil trend: with the pad the concentration drops
       to peak/mean ≈1.20× (Fusion, 5.99&nbsp;MPa) and 1.35× (COMSOL benchmark, 6.74&nbsp;MPa), the two engines
       agreeing to 13% because the pad de-singularizes the edge. The design conclusion rests on that trend and
       on the convergent quantities of §6 (centre pressure, statics, displacement), not on any single rim
       maximum (§6).
       The global max (at the bonded Li/base bi-material edge, z=11.5&nbsp;mm) sits on a known singular edge
-      of bonded dissimilar materials — a numerical artifact, not a physical failure prediction. Model C demonstrates the
+      of bonded dissimilar materials: a numerical artifact, not a physical failure prediction. Model C demonstrates the
       singularity directly: across a five-step rim refinement (3.0 → 0.6&nbsp;mm) the benchmark peak/mean
-      never settles — it wanders between 4.61× and 5.65× with no monotonic trend — so edge maxima are mesh
+      never settles: it wanders between 4.61× and 5.65× with no monotonic trend, so edge maxima are mesh
       samples, not quoted as converged numbers. Only the finest-mesh
       value (6.92&nbsp;MPa) is report-verified. It is reported, not used.</div>
     </div>
     <table>
       <tr><th>Study</th><th>Mesh</th><th>Elements</th><th>LLZO-face peak (MPa)</th><th>Global max (MPa)</th><th>Notes</th></tr>
-      <tr><td>Case B</td><td>default (model-based)</td><td>7,032</td><td>5.99</td><td>—</td><td>edge maxima are singular-field samples, not converged numbers (Model C, §6)</td></tr>
-      <tr><td>Case B fine</td><td>5 mm absolute</td><td>6,488</td><td>6.085</td><td>—</td><td>absolute sizing redistributes elements (plates finer, cell coarser); edge maxima are singular-field samples, not converged numbers (Model C, §6)</td></tr>
+      <tr><td>Case B</td><td>default (model-based)</td><td>7,032</td><td>5.99</td><td>–</td><td>edge maxima are singular-field samples, not converged numbers (Model C, §6)</td></tr>
+      <tr><td>Case B fine</td><td>5 mm absolute</td><td>6,488</td><td>6.085</td><td>–</td><td>absolute sizing redistributes elements (plates finer, cell coarser); edge maxima are singular-field samples, not converged numbers (Model C, §6)</td></tr>
       <tr><td>Case B finer</td><td>2.5 mm absolute</td><td>21,683</td><td>5.372</td><td>6.917</td><td>von Mises max 12.307; max displacement 0.013 mm</td></tr>
     </table>
 
     <div class="gal" style="margin-top:14px">
-      <div class="fig"><img src="assets/fea/caseB_mesh25_vonmises.png" alt="Finest mesh von Mises"><div class="cap"><b>Finest mesh (21,683 tets) von Mises</b> — the contact ring resolves smoothly; no new hot spots appear with refinement.</div></div>
-      <div class="fig"><img src="assets/fea/caseB_mesh25_displacement.png" alt="Finest mesh displacement"><div class="cap"><b>Finest mesh displacement</b> — max 0.013 mm; the stack barely moves at 633 N, consistent with the stiffness-driven design.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_mesh25_vonmises.png" alt="Finest mesh von Mises"><div class="cap"><b>Finest mesh (21,683 tets) von Mises</b>: the contact ring resolves smoothly; no new hot spots appear with refinement.</div></div>
+      <div class="fig"><img src="assets/fea/caseB_mesh25_displacement.png" alt="Finest mesh displacement"><div class="cap"><b>Finest mesh displacement</b>: max 0.013 mm; the stack barely moves at 633 N, consistent with the stiffness-driven design.</div></div>
     </div>
 
     <div class="note"><b>Scope statement.</b> This is a portfolio-grade linear-static study with declared
     material proxies: good for load-path understanding, contact-pressure distribution trends, and the
     rigid-vs-compliant comparison; <b>not</b> a fracture prediction for LLZO (no strength statistics, no
-    Weibull, no creep). The published battery work on this site is where measured conclusions live —
-    this page demonstrates mechanical-analysis discipline: parametrize, document loads/BCs, declare
+    Weibull, no creep). The published battery work on this site is where measured conclusions live.
+    This page demonstrates mechanical-analysis discipline: parametrize, document loads/BCs, declare
     materials, converge the mesh, and separate physical results from numerical artifacts.</div>
   </div>
 </section>
 
 <section>
   <div class="wrap">
-    <h2 class="sec" id="xeng">6 · Two-engine cross-validation — and the rim-riding discovery</h2>
+    <h2 class="sec" id="xeng">6 · Two-engine cross-validation, and the rim-riding discovery</h2>
     <p class="sub">To make the conclusion tool-independent, the whole fixture-stress study was rebuilt in a
-    second, independent engine (COMSOL — "Model C"): first a <b>benchmark-match</b> variant (same idealization
+    second, independent engine (COMSOL, "Model C"): first a <b>benchmark-match</b> variant (same idealization
     and proxy materials as the Fusion studies), then a <b>physics-correct</b> variant (intended materials and
-    unilateral frictionless contact at the platen|cell interface — nothing in the real stack is glued). On
+    unilateral frictionless contact at the platen|cell interface: nothing in the real stack is glued). On
     every convergent quantity, the engines agree.</p>
     <table>
       <tr><th>Convergent quantity (benchmark-match)</th><th>COMSOL (Model C)</th><th>Fusion (solver report)</th><th>Agreement</th></tr>
       <tr><td>Reaction force (statics)</td><td>633.0 N</td><td>633 N applied</td><td>exact</td></tr>
       <tr><td>Case A max displacement</td><td>0.0097 mm</td><td>0.011 mm</td><td>−12%</td></tr>
       <tr><td>Case B pellet-face peak</td><td>6.74 MPa</td><td>5.99 MPa (probe)</td><td>+13%</td></tr>
-      <tr><td>Case B peak / mean</td><td>1.35×</td><td>≈1.20×</td><td>+13% — the pad de-singularizes the edge</td></tr>
+      <tr><td>Case B peak / mean</td><td>1.35×</td><td>≈1.20×</td><td>+13%: the pad de-singularizes the edge</td></tr>
     </table>
     <p class="cap">The rigid-platen "peak" is deliberately absent from this table: the mesh sweep shows it is
     <b>edge-singular</b>: across a five-step rim refinement (3.0 → 2 → 1.5 → 1 → 0.6&nbsp;mm) the benchmark
-    peak/mean never settles — it wanders between 4.61× and 5.65× with no monotonic trend — so any single
+    peak/mean never settles: it wanders between 4.61× and 5.65× with no monotonic trend, so any single
     "max" there is a mesh-resolution sample, not a physical number. Fusion's own refinement series does not
     settle either, and drifts the other way: that is non-convergence on both sides, not a shared trend. The
-    design-meaningful quantities are the convergent ones above — and the pellet-<i>centre</i> pressure, stable
+    design-meaningful quantities are the convergent ones above, and the pellet-<i>centre</i> pressure, stable
     to about 1.5% across that same refinement series, is quoted for exactly that reason.</p>
 
-    <h3 class="m">What true contact physics reveals — the load rides the rim</h3>
+    <h3 class="m">What true contact physics reveals: the load rides the rim</h3>
     <p class="sub">Refining the model toward real contact physics makes the design conclusion <b>stronger</b>,
     not weaker. With unilateral contact and intended materials, the corner-loaded platen bends concave-up, the
     pellet centre nearly unloads, and essentially the whole 633&nbsp;N rides a sub-millimetre ring at the
@@ -345,30 +345,30 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       concentrated at the rim. With the 0.75&nbsp;mm Grafoil pad (amber dashed): near-uniform at the
       5&nbsp;MPa design mean. Statics is audited per run on the reaction force at the fixed face (exact to
       0.01&nbsp;N); the two contact profiles also close on their own surface integral (+1.5%), while the
-      <i>bonded</i> case-A profile reaches only 563.5&nbsp;N (−11%) — on a tied interface the singular rim ring
+      <i>bonded</i> case-A profile reaches only 563.5&nbsp;N (−11%): on a tied interface the singular rim ring
       carries load the mesh cannot resolve, one more reason the bonded edge value is not quoted as a converged number.</div>
     </div>
     <div class="kpis">
-      <div class="kpi"><div class="big">35.32× → 3.07×</div><div class="l">pellet-face peak/mean under contact physics, rigid vs +Grafoil — ~94% of the excess concentration removed (Model C)</div></div>
+      <div class="kpi"><div class="big">35.32× → 3.07×</div><div class="l">pellet-face peak/mean under contact physics, rigid vs +Grafoil: ~94% of the excess concentration removed (Model C)</div></div>
       <div class="kpi"><div class="big">216.1 → 32.7 MPa</div><div class="l">von Mises max under contact physics, rigid vs +Grafoil; in the linear-elastic contact model the rigid case exceeds the ~120 MPa LLZO strength scale at any plausible sampling, a screening indication rather than a fracture prediction</div></div>
-      <div class="kpi"><div class="big">1.60 → 5.23 MPa</div><div class="l">median pellet-centre pressure (r &lt; 1 mm) under contact physics, rigid vs +Grafoil — the rigid platen leaves the centre at about a third of the 5.0 MPa design mean and the pad restores it (raw nodal maxima over the same region, 16.31 / 10.09 MPa, include local stress-recovery spikes)</div></div>
+      <div class="kpi"><div class="big">1.60 → 5.23 MPa</div><div class="l">median pellet-centre pressure (r &lt; 1 mm) under contact physics, rigid vs +Grafoil: the rigid platen leaves the centre at about a third of the 5.0 MPa design mean and the pad restores it (raw nodal maxima over the same region, 16.31 / 10.09 MPa, include local stress-recovery spikes)</div></div>
     </div>
-    <div class="note"><b>Design conclusion — stronger than the bonded story.</b> Under contact physics the
+    <div class="note"><b>Design conclusion: stronger than the bonded story.</b> Under contact physics the
     Grafoil pad is not a modest improvement; it is the difference between rim-only loading and near-uniform
-    loading of a brittle ceramic. The recommendation — <b>always fixture ceramic pellets through a compliant
-    interlayer</b> — survives every modelling choice tested: engine (Fusion vs COMSOL), proxy vs intended
+    loading of a brittle ceramic. The recommendation, <b>always fixture ceramic pellets through a compliant
+    interlayer</b>, survives every modelling choice tested: engine (Fusion vs COMSOL), proxy vs intended
     materials, bonded vs contact.</div>
-    <p class="sub" style="margin-top:14px"><b>Where this goes next — void unit cell × stack pressure.</b>
+    <p class="sub" style="margin-top:14px"><b>Where this goes next: void unit cell × stack pressure.</b>
     The same 5&nbsp;MPa load was carried into a degrading interface: as voids open, the surviving contact
     annulus carries the full force over less area. That extension lives on the
     <a href="models.html#void-stack">COMSOL model library</a>, together with every model file behind this
-    page — and it answers the reliability question this study raises, namely whether the electrochemical
+    page, and it answers the reliability question this study raises, namely whether the electrochemical
     alarm fires before the ceramic is at risk.</p>
   </div>
 </section>
 
 <footer>
-  <div class="wrap">Fusion 360 parametric + GD&amp;T + FEA — transferable to CATIA. · <a style="color:#cfe3e3" href="index.html">Back to overview</a></div>
+  <div class="wrap">Fusion 360 parametric + GD&amp;T + FEA, transferable to CATIA. · <a style="color:#cfe3e3" href="index.html">Back to overview</a></div>
 </footer>
 
 <script>
@@ -429,14 +429,14 @@ const RESPONSIVE_LEGEND_IDS=[];
   const x=["default (7,032 tets)","5 mm abs (6,488 tets)","2.5 mm abs (21,683 tets)"];
   RESPONSIVE_LEGEND_IDS.push("mesh");
   Plotly.newPlot("mesh",[
-    {x, y:[5.99,6.085,5.372], mode:"lines+markers+text", name:"Fusion Case B face peak (wanders — singular edge)",
+    {x, y:[5.99,6.085,5.372], mode:"lines+markers+text", name:"Fusion Case B face peak (wanders: singular edge)",
      line:{color:"#0e7c7b",width:3}, marker:{size:9},
      text:["5.99","6.09","5.37"], textposition:"top center", textfont:{size:12}},
     {x, y:[5.0,5.0,5.0], mode:"lines", name:"design mean 5.0 MPa",
      line:{color:"#1c2733",width:1.5,dash:"dot"}}
   ],{
     font:FONT, margin:{l:76,r:26,t:66,b:64}, paper_bgcolor:"#fff", plot_bgcolor:"#fff",
-    title:{text:"Case B mesh series — the rim peak wanders (non-convergent)<br><span style='font-size:12px'>the design quantities are the convergent ones in §6</span>", font:{size:15}},
+    title:{text:"Case B mesh series: the rim peak wanders (non-convergent)<br><span style='font-size:12px'>the design quantities are the convergent ones in §6</span>", font:{size:15}},
     yaxis:{title:{text:"contact pressure / MPa",font:{size:13}}, tickfont:TICK, gridcolor:"#eef2f6", range:[0,10.6]},
     xaxis:{tickfont:TICK},
     legend:legendNow("mesh")
@@ -478,12 +478,12 @@ const RESPONSIVE_LEGEND_IDS=[];
   }
   const CORNERS=[[-PITCH2,-PITCH2],[PITCH2,-PITCH2],[PITCH2,PITCH2],[-PITCH2,PITCH2]];
   const STEPS=[
-    {n:"1 · Endplate", s:"Endplate.py", note:"square endplate, 4× M5 clearance holes at ±17 mm — tightening the nuts loads the springs", parts:["end"]},
+    {n:"1 · Endplate", s:"Endplate.py", note:"square endplate, 4× M5 clearance holes at ±17 mm. Tightening the nuts loads the springs", parts:["end"]},
     {n:"2 · Platen + cell", s:"Platen.py", note:"floating platen with spring seats; 5-layer cell schematic hangs below the contact face", parts:["platen","cell"]},
-    {n:"3 · Base plate", s:"BasePlate.py", note:"fixed base: 4× M5 tapped holes, Ø12.9 cell pocket — the GD&T sheet details this part", parts:["base"]},
-    {n:"4 · Rods & springs", s:"RodAndSpring.py", note:"M5 rod Ø5×63; die spring OD10 × 25 free (k≈55 N/mm) — FEA replaces coils with forces", parts:["rods","springs"]},
+    {n:"3 · Base plate", s:"BasePlate.py", note:"fixed base: 4× M5 tapped holes, Ø12.9 cell pocket. The GD&T sheet details this part", parts:["base"]},
+    {n:"4 · Rods & springs", s:"RodAndSpring.py", note:"M5 rod Ø5×63; die spring OD10 × 25 free (k≈55 N/mm). FEA replaces coils with forces", parts:["rods","springs"]},
     {n:"5 · Assembly", s:"Assemble.py", note:"transform-based assembly, every position computed live from the parameter table (free-length / 0 MPa state)", parts:["base","cell","platen","springs","end","rods"]},
-    {n:"6 · Threads", s:"AddThreads.py", note:"cosmetic M5×0.8 threads (6H holes / 6g rod, darker tint here) — visible in drawings, FEA stays meshable", parts:["base","cell","platen","springs","end","rods"], threads:true}
+    {n:"6 · Threads", s:"AddThreads.py", note:"cosmetic M5×0.8 threads (6H holes / 6g rod, darker tint here). Visible in drawings, FEA stays meshable", parts:["base","cell","platen","springs","end","rods"], threads:true}
   ];
   let cur=4, gd=document.getElementById("fixture3d");
   function build(){
@@ -513,7 +513,7 @@ const RESPONSIVE_LEGEND_IDS=[];
     if(has("rods")){
       const z0 = solo? 0 : zRod;
       const col = st.threads? COLS.rodThread : COLS.rod;
-      const nm = st.threads? "M5 rod Ø5×63 — threaded M5×0.8-6g (4×)" : "Tie rod Ø5×63 (4×)";
+      const nm = st.threads? "M5 rod Ø5×63, threaded M5×0.8-6g (4×)" : "Tie rod Ø5×63 (4×)";
       CORNERS.forEach(([cx,cy],k)=>T.push(mesh(cylPts(cx,cy,z0,z0+ROD_LEN,ROD_R,24),col,nm,{group:"rods",legend:k===0})));
     }
     return T;
@@ -529,7 +529,7 @@ const RESPONSIVE_LEGEND_IDS=[];
       paper_bgcolor:"rgba(0,0,0,0)"
     },{responsive:true,displaylogo:false});
     document.getElementById("stepNote").innerHTML =
-      "<code style='font-size:12px'>"+STEPS[cur].s+"</code> — "+STEPS[cur].note;
+      "<code style='font-size:12px'>"+STEPS[cur].s+"</code>: "+STEPS[cur].note;
   }
   const stepsBox=document.getElementById("steps");
   STEPS.forEach((st,k)=>{

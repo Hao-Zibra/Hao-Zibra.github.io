@@ -62,7 +62,7 @@
   #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
   #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 
-/* ==== theme layer v3 (2026-08-12) — ONE light surface, no dark mode, no side frame.
+/* ==== theme layer v3 (2026-08-12): ONE light surface, no dark mode, no side frame.
    v2 kept a dark gutter around a light column; it banded the page and gained nothing.
    The palette below is the whole design: light ground, white cards, figures seamless. ==== */
 :root{color-scheme:light;
@@ -106,7 +106,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 /* ---- one background, edge to edge ----
    The dark side frame is gone (Hao 2026-08-12): a dark gutter around a light
-   column produced a banded page — wide blue header, black margins, then a white
+   column produced a banded page: wide blue header, black margins, then a white
    strip at the jump bar. One light surface at every viewport ratio instead. ---- */
 </style>
 </head>
@@ -133,8 +133,8 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <div class="pagehead">
   <div class="wrap">
     <h1>Reliability-lens cycle-life prediction on 124 LFP cells</h1>
-    <p>Early-cycle (≤100) life prediction on the public Severson et&nbsp;al. 2019 fleet — 124 commercial
-    LFP/graphite cells across three build batches — read through a reliability engineer's lens: the paper's
+    <p>Early-cycle (≤100) life prediction on the public Severson et&nbsp;al. 2019 fleet, 124 commercial
+    LFP/graphite cells across three build batches, read through a reliability engineer's lens: the paper's
     exact held-out split reproduced, then right-censored Weibull B-lives, observation-horizon censoring
     experiments, Weibull AFT, and SPC/EWMA drift monitoring the original paper never ran. The famous
     "secondary-test is harder" result turns out to be ordinary build drift visible on a control chart.</p>
@@ -151,14 +151,14 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section>
   <div class="wrap">
     <p class="sub" style="margin-top:2px"><span class="data">PUBLIC DATA</span> Every figure and number on this
-    page is computed on the openly licensed Severson&nbsp;2019 dataset — none of it is my own laboratory data.
+    page is computed on the openly licensed Severson&nbsp;2019 dataset. None of it is my own laboratory data.
     The prediction reproductions were validated by matching the paper's published table exactly before any
     extension was built on top.</p>
     <div class="kpis">
       <div class="kpi"><div class="big">161 cyc</div><div class="l">discharge-model secondary-test RMSE (MAPE 8.5%); reproduces the paper's pipeline</div></div>
       <div class="kpi"><div class="big">B10 = 331 cyc</div><div class="l">fleet 10%-failure life, censored Weibull [275, 389]; true wear-out (exponential rejected, ΔAICc +126)</div></div>
       <div class="kpi"><div class="big">459 cyc</div><div class="l">median lead time of the within-cell EWMA drift alarm before end-of-life</div></div>
-      <div class="kpi"><div class="big">+3.1σ / −2.5σ</div><div class="l">batch-2 / batch-3 build drift vs batch-1 SPC limits — what the ML models trip over</div></div>
+      <div class="kpi"><div class="big">+3.1σ / −2.5σ</div><div class="l">batch-2 / batch-3 build drift vs batch-1 SPC limits: what the ML models trip over</div></div>
     </div>
   </div>
 </section>
@@ -173,7 +173,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <div class="full">
       <img src="assets/severson/fig1_fleet_fade_w2200px.png" alt="124-cell fleet capacity fade colored by cycle life" loading="lazy">
       <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet capacity fade.</b> Discharge capacity
-      vs cycle for all 124 cells, colored by eventual cycle life — the wide spread of lives (a ~15× range) is
+      vs cycle for all 124 cells, colored by eventual cycle life. The wide spread of lives (a ~15× range) is
       exactly what makes early-cycle prediction both hard and valuable.</div>
     </div>
   </div>
@@ -181,10 +181,10 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <section>
   <div class="wrap">
-    <h2 class="sec">2 · Early-cycle prediction — reproduced, then hardened</h2>
+    <h2 class="sec">2 · Early-cycle prediction: reproduced, then hardened</h2>
     <p class="sub">Inputs are the first 100 cycles only, on the paper's exact held-out split (41 train / 43
-    primary / 40 secondary test). Charge-time and policy features are excluded on purpose — they encode the
-    label — so the numbers are honest predictions, not leakage.</p>
+    primary / 40 secondary test). Charge-time and policy features are excluded on purpose, they encode the
+    label, so the numbers are honest predictions, not leakage.</p>
     <div class="full">
       <img src="assets/severson/fig2_predicted_vs_actual_w3125px.png" alt="Predicted vs actual cycle life; reproduction and champion model" loading="lazy">
       <div class="cap"><span class="data">PUBLIC DATA</span> <b>Predicted vs actual cycle life.</b> Left:
@@ -193,14 +193,14 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     </div>
     <table>
       <tr><th>Model</th><th class="n">Train RMSE</th><th class="n">Primary test</th><th class="n">Secondary test</th><th>Note</th></tr>
-      <tr><td>Variance model (reproduction)</td><td class="n">104</td><td class="n">138</td><td class="n">196</td><td>matches Severson Table 1 <b>exactly</b> — validates data, split, features</td></tr>
-      <tr><td>Discharge model (reproduction)</td><td class="n">—</td><td class="n">149 (130 excl)</td><td class="n"><b>161</b></td><td>MAPE avg 8.7% vs the paper's 9.1% headline</td></tr>
-      <tr><td><b>Champion (blend, LOBO-selected)</b></td><td class="n">—</td><td class="n">133 (107 excl)</td><td class="n">174</td><td>90% conformal coverage 90.7% / 87.5% — the batch-3 shortfall is the drift story below</td></tr>
+      <tr><td>Variance model (reproduction)</td><td class="n">104</td><td class="n">138</td><td class="n">196</td><td>matches Severson Table 1 <b>exactly</b>: validates data, split, features</td></tr>
+      <tr><td>Discharge model (reproduction)</td><td class="n">–</td><td class="n">149 (130 excl)</td><td class="n"><b>161</b></td><td>MAPE avg 8.7% vs the paper's 9.1% headline</td></tr>
+      <tr><td><b>Champion (blend, LOBO-selected)</b></td><td class="n">–</td><td class="n">133 (107 excl)</td><td class="n">174</td><td>90% conformal coverage 90.7% / 87.5%: the batch-3 shortfall is the drift story below</td></tr>
     </table>
     <p class="cap">"excl" = excluding the published rapid-fail outlier b2c1. Champion selected by
     leave-one-batch-out CV strictly inside the 41 training cells, then frozen. RMSE in cycles.</p>
     <div class="note"><b>Why charge-time and policy features are excluded.</b> They are near-deterministic
-    functions of the label (Geslin et&nbsp;al. 2023, <i>Joule</i>) — including them inflates accuracy
+    functions of the label (Geslin et&nbsp;al. 2023, <i>Joule</i>). Including them inflates accuracy
     without predictive validity. They are kept in the pipeline but hard-prefixed <code>FORBIDDEN_</code> so
     they can never enter a model by accident. This is a data-integrity choice, and it is the difference
     between an honest number and a leaky one.</div>
@@ -211,8 +211,8 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
   <div class="wrap">
     <h2 class="sec">3 · Fleet reliability: censored Weibull B-lives on the 124-cell fleet</h2>
     <p class="sub">The same 124 lives, read as reliability data: a right-censored Weibull fit (here with 0
-    censored — every cell reached end-of-life) with B-lives and profile-likelihood intervals. The shape
-    parameter settles a real question — is this random failure or genuine wear-out?</p>
+    censored: every cell reached end-of-life) with B-lives and profile-likelihood intervals. The shape
+    parameter settles a real question: is this random failure or genuine wear-out?</p>
     <div class="full">
       <img src="assets/severson/fig3_weibull_fleet_w3125px.png" alt="Weibull probability plot and fleet CDF for 124 cells" loading="lazy">
       <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet Weibull &amp; CDF.</b> Median-rank
@@ -225,7 +225,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <tr><td>B10</td><td class="n">331 [275, 389] cycles</td><td>10% of the fleet has failed by here</td></tr>
       <tr><td>B50</td><td class="n">770 [700, 842] cycles</td><td>median life</td></tr>
     </table>
-    <p class="cap">Exponential rejected at ΔAICc +126 — a decisive verdict for wear-out. Lognormal /
+    <p class="cap">Exponential rejected at ΔAICc +126, a decisive verdict for wear-out. Lognormal /
     loglogistic fit marginally better by AICc (a heavy right tail), but the B10 across all two-parameter
     models stays inside the CI. 124 failures, 0 censored.</p>
   </div>
@@ -247,7 +247,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <div class="fig">
         <iframe class="frame" src="assets/severson/fleet_reliability_animation.html" title="Fleet reliability fit tightening with observation horizon" loading="lazy"></iframe>
         <div class="cap"><span class="data">PUBLIC DATA</span> <b>Interactive:</b> the Weibull fit tightening
-        as the fleet ages and more failures accrue — the confidence band narrows toward the full-data line.</div>
+        as the fleet ages and more failures accrue. The confidence band narrows toward the full-data line.</div>
       </div>
     </div>
   </div>
@@ -258,7 +258,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <h2 class="sec">5 · SPC: the drift the ML models trip over</h2>
     <p class="sub">The dataset's notorious "secondary test is harder" result has a mundane cause. Put the
     early-cycle features on a control chart with batch-1 as the Phase-I baseline, and the batches have simply
-    drifted — the ML models were extrapolating across a process shift, not failing at prediction.</p>
+    drifted: the ML models were extrapolating across a process shift, not failing at prediction.</p>
     <div class="gal">
       <div class="fig">
         <img src="assets/severson/fig5_spc_build_stability_w3125px.png" alt="Build stability control chart across three batches" loading="lazy">
@@ -269,14 +269,14 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <div class="fig">
         <img src="assets/severson/fig6_fleet_ewma_drift_w2200px.png" alt="Fleet EWMA drift versus batch-1 baseline" loading="lazy">
         <div class="cap"><span class="data">PUBLIC DATA</span> <b>Fleet EWMA drift.</b> An EWMA (λ=0.2) of
-        cycle-2 IR walks well outside the batch-1 limits at both batch boundaries — the epoch shift is a
+        cycle-2 IR walks well outside the batch-1 limits at both batch boundaries: the epoch shift is a
         control-chart signal, not a modeling mystery.</div>
       </div>
     </div>
     <table>
       <tr><th>Feature</th><th class="n">Batch 2</th><th class="n">Batch 3</th><th>Reading</th></tr>
       <tr><td>log variance of ΔQ (the key life predictor)</td><td class="n">+3.1σ</td><td class="n">−1.7σ</td><td>the predictor feature itself has shifted between builds</td></tr>
-      <tr><td>internal resistance at cycle 2</td><td class="n">—</td><td class="n">−2.5σ</td><td>batch-3 cells are physically different at the electrode level</td></tr>
+      <tr><td>internal resistance at cycle 2</td><td class="n">–</td><td class="n">−2.5σ</td><td>batch-3 cells are physically different at the electrode level</td></tr>
     </table>
     <p class="cap">SPC diagnoses in one chart what the ML models express as a mysterious accuracy drop:
     the secondary-test difficulty <i>is</i> build drift.</p>
@@ -288,7 +288,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <h2 class="sec">6 · Within-cell early warning &amp; degradation onset</h2>
     <p class="sub">Beyond fleet statistics, each cell carries its own early-warning signal. A within-cell
     EWMA on capacity flags drift long before end-of-life, and a change-point detector locates the
-    degradation "knee" that precedes failure — both wrapped back into censored Weibull statistics.</p>
+    degradation "knee" that precedes failure, both wrapped back into censored Weibull statistics.</p>
     <div class="gal">
       <div class="fig">
         <img src="assets/severson/fig7_ewma_alarms_w3125px.png" alt="Within-cell EWMA alarm and alarm-cycle vs eventual life" loading="lazy">
@@ -299,7 +299,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <div class="fig">
         <img src="assets/severson/fig8_onset_weibull_w3125px.png" alt="Degradation onset precedes EOL; censored Weibull on onset" loading="lazy">
         <div class="cap"><span class="data">PUBLIC DATA</span> <b>Degradation onset.</b> Left: a Bacon–Watts
-        capacity-knee detector — onset sits below the failure line for every cell. Right: a censored Weibull
+        capacity-knee detector. Onset sits below the failure line for every cell. Right: a censored Weibull
         on onset (β 2.28, B10 263).</div>
       </div>
     </div>
@@ -319,30 +319,30 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <b>how</b>. Using nothing but the discharge curves already in the public Severson fleet, I compute
     IC(V)&nbsp;=&nbsp;|dQ/dV| (Savitzky–Golay smoothing, window 21, order 3) and track the LFP two-phase plateau
     peak near 3.15&nbsp;V. As a cell ages the peak <b>shifts down in voltage</b> (rising polarization) and
-    <b>shrinks in height</b> (loss of active material and cyclable lithium) — the degradation <i>mode</i>, not
+    <b>shrinks in height</b> (loss of active material and cyclable lithium): the degradation <i>mode</i>, not
     just its rate.</p>
     <div class="full">
       <img src="assets/severson/ica_fig1_dqdv_evolution_w2200px.png" alt="dQ/dV evolution for one cell per archetype, colored by cycle" loading="lazy">
-      <div class="cap"><span class="data">PUBLIC DATA</span> <b>dQ/dV evolution</b> — IC(V) for one
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>dQ/dV evolution</b>: IC(V) for one
       representative cell per archetype, colored by cycle (dark → light = early → late). The plateau peak
       shifts left and collapses with aging; the effect is most violent for the early-death cell.</div>
     </div>
     <div class="full">
       <img src="assets/severson/ica_fig2_peak_tracking_w2200px.png" alt="Plateau peak voltage and normalized height vs fraction of life" loading="lazy">
-      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Peak tracking</b> — plateau peak voltage
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Peak tracking</b>: plateau peak voltage
       (left) and height-normalized-to-initial (right) vs fraction of cycle life, six cells by archetype.
       Early-death cells (red) drift down and decay fastest; normal/long cells stay high until late life
       (early-death lose up to −0.06&nbsp;V and retain ~52% of peak height; long-lived drift ~−0.02&nbsp;V, hold ~66%).</div>
     </div>
     <div class="full">
       <img src="assets/severson/ica_fig3_group_band_w2200px.png" alt="Group-mean dQ/dV with 1-sigma error bands at cycle 100" loading="lazy">
-      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Group band (with error bands)</b> — group-mean
+      <div class="cap"><span class="data">PUBLIC DATA</span> <b>Group band (with error bands)</b>: group-mean
       IC(V) ± 1 std at cycle 100 for the three archetype life-bands (the error-band figure). Peaks are ordered
       by eventual life; bands overlap, quantifying why the early signal is real but subtle.</div>
     </div>
     <div class="note"><b>Honest caveat.</b> Averaged across the fleet at cycle 100, peak height and position
     are monotonically ordered by eventual life (early-death lowest and leftmost, long-life highest and
-    rightmost) — but <b>the ±1σ bands still overlap (~1.5σ separation)</b>. So cycle-100 dQ/dV <i>orders</i> the
+    rightmost), but <b>the ±1σ bands still overlap (~1.5σ separation)</b>. So cycle-100 dQ/dV <i>orders</i> the
     archetypes but does not cleanly <i>separate</i> them, which is precisely why very-early cycle-life
     prediction on this fleet is genuinely hard: the mechanism signal is real, not yet cleanly separated at 100
     cycles. This dQ/dV layer answers "by what mechanism," complementing the censored-Weibull "how reliable" and
@@ -352,10 +352,10 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <section>
   <div class="wrap">
-    <h2 class="sec">Conclusion — why it matters</h2>
+    <h2 class="sec">Conclusion: why it matters</h2>
     <div class="note concl">
-      <p style="margin:0 0 8px"><b>So what?</b> Using only signals a production line already logs — voltage,
-      capacity, internal resistance from the first 100 cycles — this reproduces the benchmark exactly, then
+      <p style="margin:0 0 8px"><b>So what?</b> Using only signals a production line already logs, voltage,
+      capacity, internal resistance from the first 100 cycles, this reproduces the benchmark exactly, then
       adds the reliability read the original paper did not include: a censored Weibull B10 with confidence intervals, and an SPC read that
       re-explains the infamous "hard" test batch as ordinary manufacturing drift. The within-cell drift alarm
       fires a median 459 cycles before end-of-life and its timing predicts eventual life, so a line could
@@ -374,7 +374,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <a class="btn" href="assets/severson/dashboard.html" target="_blank" rel="noopener">Open the fleet dashboard →</a>
       <div class="cap" style="text-align:left"><span class="data">PUBLIC DATA</span> Prediction KPIs, the fleet
       reliability panel, and the SPC drift story in one self-contained page (opens in a new tab).
-      Reproduction-and-extension on a public dataset. Data CC BY 4.0 — Severson et&nbsp;al.,
+      Reproduction-and-extension on a public dataset. Data CC BY 4.0: Severson et&nbsp;al.,
       <i>Nat. Energy</i> 4, 383–391 (2019), data.matr.io.</div>
     </div>
   </div>

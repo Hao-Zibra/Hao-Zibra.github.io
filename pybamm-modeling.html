@@ -34,7 +34,7 @@
   .panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px;margin-bottom:14px}
   .cap{font-size:13px;color:var(--mut);margin-top:10px;line-height:1.55}
   .sim{display:inline-block;background:var(--teal-lt);border:1px solid #bfe0df;color:var(--teal);font-size:11.5px;font-weight:700;letter-spacing:.6px;padding:2px 8px;border-radius:99px;margin-right:6px;vertical-align:1px}
-  /* H1 chemistry-honesty disclaimer — deliberately loud */
+  /* H1 chemistry-honesty disclaimer: deliberately loud */
   .h1banner{background:#fbf1dc;border:1.5px solid var(--amber);border-radius:10px;padding:16px 20px;margin:20px 0 0;color:#5c4410}
   .h1banner .lab{display:inline-block;background:var(--amber);color:#fff;font-size:11.5px;font-weight:800;letter-spacing:.8px;padding:3px 10px;border-radius:6px;margin-right:8px;vertical-align:2px}
   .h1banner b{color:#7a5510}
@@ -64,7 +64,7 @@
   #lb{position:fixed;inset:0;background:rgba(8,18,30,.92);display:none;align-items:center;justify-content:center;z-index:100;padding:24px;cursor:zoom-out}
   #lb img{max-width:96vw;max-height:94vh;border-radius:6px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
 
-/* ==== theme layer v3 (2026-08-12) — ONE light surface, no dark mode, no side frame.
+/* ==== theme layer v3 (2026-08-12): ONE light surface, no dark mode, no side frame.
    v2 kept a dark gutter around a light column; it banded the page and gained nothing.
    The palette below is the whole design: light ground, white cards, figures seamless. ==== */
 :root{color-scheme:light;
@@ -108,7 +108,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 /* ---- one background, edge to edge ----
    The dark side frame is gone (Hao 2026-08-12): a dark gutter around a light
-   column produced a banded page — wide blue header, black margins, then a white
+   column produced a banded page: wide blue header, black margins, then a white
    strip at the jump bar. One light surface at every viewport ratio instead. ---- */
 </style>
 </head>
@@ -135,10 +135,10 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <div class="pagehead">
   <div class="wrap">
     <h1>Physics-based battery aging simulation with PyBaMM</h1>
-    <p>An open-source PyBaMM Doyle–Fuller–Newman (DFN) pipeline that injects coupled aging — SEI growth,
-    lithium-inventory loss, active-material loss, and particle cracking — then simulates 1000-cycle capacity
+    <p>An open-source PyBaMM Doyle–Fuller–Newman (DFN) pipeline that injects coupled aging, SEI growth,
+    lithium-inventory loss, active-material loss, and particle cracking, then simulates 1000-cycle capacity
     fade and the evolution of impedance and DRT features. It reproduces a capacity <b>knee</b> and a matching
-    <b>polarization-resistance acceleration</b>, and shows — at the pattern level — that the DRT
+    <b>polarization-resistance acceleration</b>, and shows, at the pattern level, that the DRT
     polarization-resistance growth is a degradation signature shared with two measured public datasets.</p>
     <div class="src">
       <span class="chip"><b>Model:</b> PyBaMM DFN · BSD-3</span>
@@ -164,7 +164,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section>
   <div class="wrap">
     <p class="sub" style="margin-top:2px"><span class="sim">NMC PUBLIC-PARAM SIM</span> Everything here is
-    computed from open inputs only — the public PyBaMM parameter sets and two already-public datasets. No
+    computed from open inputs only: the public PyBaMM parameter sets and two already-public datasets. No
     laboratory data is read. The pipeline source is not published (it imports a private shared analysis
     engine); this page shows the figures and plain conclusions.</p>
     <div class="kpis">
@@ -179,12 +179,12 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section style="padding-top:8px">
   <div class="wrap">
     <h2 class="sec">1 · The model and its baseline</h2>
-    <p class="sub">The workhorse is the DFN electrochemical model — it resolves solid-phase diffusion and the
+    <p class="sub">The workhorse is the DFN electrochemical model. It resolves solid-phase diffusion and the
     deep-DOD behavior where fade physics lives. A baseline check confirms the model choice before any aging is
     layered on: the reduced-order SPMe model diverges from DFN by up to ~320&nbsp;mV over the 75–99% DOD
     window, so the full DFN carries all the cycling here.</p>
     <div class="kpis">
-      <div class="kpi"><div class="big">4.938 Ah</div><div class="l">DFN 1C discharge on Chen 2020 — within 0.012 Ah of the ~5 Ah reference</div></div>
+      <div class="kpi"><div class="big">4.938 Ah</div><div class="l">DFN 1C discharge on Chen 2020: within 0.012 Ah of the ~5 Ah reference</div></div>
       <div class="kpi"><div class="big">~320 mV</div><div class="l">peak SPMe–DFN divergence over 75–99% DOD → DFN required for fade fidelity</div></div>
       <div class="kpi"><div class="big">0.0</div><div class="l">relative difference between two independent solves (deterministic, no RNG)</div></div>
     </div>
@@ -209,7 +209,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
         <img src="assets/pybamm/fig_pub_mechanism_decomposition_w2200px.png" alt="Degradation mechanism decomposition, LLI and LAM vs cycle" loading="lazy">
         <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM</span> <b>Mechanism decomposition.</b>
         Loss split into lithium-inventory (LLI) and negative active-material (LAM) loss. In the knee config
-        (dashed) the knee is accelerating LLI — LAM is disabled in this ablation, isolating the mechanism.</div>
+        (dashed) the knee is accelerating LLI. LAM is disabled in this ablation, isolating the mechanism.</div>
       </div>
     </div>
     <p class="cap">All gates pass: monotonicity, closure, knee detection, and control drift (control stays
@@ -223,14 +223,14 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <p class="sub">At every ~100 cycles the aged cell is probed with a linearized EIS sweep (10&nbsp;kHz–1&nbsp;mHz)
     and deconvolved with the canonical distribution-of-relaxation-times engine. The knee that shows up in
     capacity has an impedance twin: the polarization resistance R_pol accelerates in exactly the config that
-    knees. This cell's aging impedance is an ohmic shift plus polarization/diffusion growth — not a
-    charge-transfer semicircle — so R_pol (total polarization) is the tracked interfacial quantity.</p>
+    knees. This cell's aging impedance is an ohmic shift plus polarization/diffusion growth, not a
+    charge-transfer semicircle, so R_pol (total polarization) is the tracked interfacial quantity.</p>
     <div class="gal">
       <div class="fig">
         <img src="assets/pybamm/fig_pub_rpol_evolution_w2200px.png" alt="Polarization resistance R_pol vs cycle" loading="lazy">
         <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM</span> <b>Polarization-resistance
         evolution.</b> R_pol vs cycle. The knee config accelerates (7.6 → 17.1 mΩ, 2.25×) while the base
-        config stays gentle and the control is flat — the impedance analogue of the capacity knee.</div>
+        config stays gentle and the control is flat: the impedance analogue of the capacity knee.</div>
       </div>
       <div class="fig">
         <img src="assets/pybamm/fig_pub_nyquist_knee_evolution_w2200px.png" alt="Nyquist spectra evolving with aging" loading="lazy">
@@ -244,7 +244,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <tr><th>Check</th><th>Result</th><th>Reading</th></tr>
       <tr><td>Linearized EIS (pybammeis) vs brute-force time-domain EIS</td><td class="n">≤ 0.6% over ≤1 Hz</td><td>the fast linearized solver agrees with the direct method; high-frequency residual is discretization-limited, not solver error</td></tr>
       <tr><td>DRT reconstruction residual</td><td class="n">max 0.301%</td><td>the deconvolution faithfully represents the spectra</td></tr>
-      <tr><td>Deterministic re-solve</td><td class="n">0.0 relative</td><td>pinned versions, no RNG — bit-stable reproduction</td></tr>
+      <tr><td>Deterministic re-solve</td><td class="n">0.0 relative</td><td>pinned versions, no RNG: bit-stable reproduction</td></tr>
     </table>
   </div>
 </section>
@@ -254,7 +254,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <h2 class="sec">4 · Pattern-level comparison with public measured data</h2>
     <p class="sub">The same DRT engine is run on the simulated cell and on two measured public datasets, so the
     R_pol-growth signature is computed identically on both sides. The question is deliberately modest: does the
-    <i>type</i> of degradation signature transfer across chemistries? The answer is a qualified yes — read
+    <i>type</i> of degradation signature transfer across chemistries? The answer is a qualified yes: read
     strictly at the pattern level.</p>
 
     <div class="full">
@@ -272,7 +272,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <img src="assets/pybamm/fig_pub_knee_onset_severson_w2200px.png" alt="Knee onset life fraction, sim vs Severson, pattern-level" loading="lazy">
       <div class="cap"><span class="sim">NMC PUBLIC-PARAM SIM + PUBLIC DATA</span> <b>Knee position: sim vs
       measured Severson (LFP).</b> The simulated knee sits at ≈0.66 of the observed window, at the lower edge
-      of the Severson distribution of knee-onset fractions (123 LFP cells, peaking ~0.77) — both place the
+      of the Severson distribution of knee-onset fractions (123 LFP cells, peaking ~0.77). Both place the
       knee in the latter part of life.</div>
       <div class="h1box"><span class="lab">SCOPE</span> Liquid NMC811 simulation vs LFP fast-charge measurement,
       and a <b>different knee mechanism</b> (sim: SEI-on-cracks lithium-inventory loss; Severson: lithium
@@ -291,21 +291,21 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <section>
   <div class="wrap">
-    <h2 class="sec">5 · Calibration — parameter estimation as model calibration</h2>
+    <h2 class="sec">5 · Calibration: parameter estimation as model calibration</h2>
     <p class="sub"><span class="sim">NMC-FREE · ALL-PUBLIC LANE</span> A separate, deliberately broken case:
     the PyBaMM DFN with the public <b>Prada2013</b> A123-LFP parameter set (26650), area-scaled so current
-    density is preserved, against a real measured curve — Severson 2019 cell <code>b1c0</code>, cycle 2, 4C
+    density is preserved, against a real measured curve: Severson 2019 cell <code>b1c0</code>, cycle 2, 4C
     discharge (A123 18650, same manufacturer and chemistry family; public dataset). Out of the box the model
     is badly wrong at rate: it delivers <b>0.52 of 1.05&nbsp;Ah</b> at 4C with a full-range voltage residual
-    of <b>RMSE 729&nbsp;mV</b> — the parameter set's genuine rate limitation, not a scaling artifact.</p>
+    of <b>RMSE 729&nbsp;mV</b>: the parameter set's genuine rate limitation, not a scaling artifact.</p>
 
     <div class="full">
       <img src="assets/pybamm/fig_pub_calib_vq_w2200px.png" alt="Measured, baseline and calibrated discharge curves at 4C">
       <div class="cap"><span class="sim">PUBLIC-PARAM SIM + PUBLIC DATA</span> <b>Measured vs baseline vs
       calibrated.</b> The bounded one-parameter recalibration moves the model from 0.52 to
       <b>1.01&nbsp;Ah delivered</b> and <b>RMSE 729 → 154&nbsp;mV</b> (green): the top-ranked capacity
-      parameter saturates its ≈0.70 packing bound and cannot fix the cliff alone, so the next-ranked lever —
-      the anode particle radius, scanned in-bounds to ×0.25 — takes over. That escalation, parameter hits its
+      parameter saturates its ≈0.70 packing bound and cannot fix the cliff alone, so the next-ranked lever,
+      the anode particle radius, scanned in-bounds to ×0.25, takes over. That escalation, parameter hits its
       physical bound → move to the next-ranked lever, is the constrained-calibration loop in action.</div>
     </div>
 
@@ -314,17 +314,17 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
         <div class="cap"><b>Residual diagnosis.</b> Three orthogonal residual channels: a
         <b>capacity-cliff</b> signature points at transport/kinetics parameters that starve the cell at rate;
         a <b>vertical-offset</b> signature points at ohmic/exchange-current terms; <b>shape</b> signatures
-        bend the mid-curve. The attribution is the measured Δ per channel — not intuition.</div></div>
+        bend the mid-curve. The attribution is the measured Δ per channel, not intuition.</div></div>
       <div class="fig"><img src="assets/pybamm/fig_pub_calib_sensitivity_w2200px.png" alt="Numerically ranked parameter sensitivity from plus-minus ten percent perturbations">
         <div class="cap"><b>Sensitivity ranking.</b> Ten physical parameters perturbed ±10% and scored per
         channel. Top three by |ΔRMSE|: anode active-material fraction (69&nbsp;mV, capacity cliff), anode
-        particle radius (55&nbsp;mV, capacity cliff), anode solid diffusivity (25&nbsp;mV, capacity cliff) —
-        the diagnosis and the winning lever agree: anode diffusion time τ&nbsp;=&nbsp;r²/D&nbsp;≈&nbsp;2.3&nbsp;h
+        particle radius (55&nbsp;mV, capacity cliff), anode solid diffusivity (25&nbsp;mV, capacity cliff).
+        The diagnosis and the winning lever agree: anode diffusion time τ&nbsp;=&nbsp;r²/D&nbsp;≈&nbsp;2.3&nbsp;h
         far exceeds the 900-s 4C discharge, so the anode surface starves.</div></div>
     </div>
 
-    <div class="note concl"><b>The TCAD line.</b> This loop — measured characteristic vs physics simulation →
-    residual-shape diagnosis → numerically-ranked parameter sensitivity → targeted recalibration — is
+    <div class="note concl"><b>The TCAD line.</b> This loop, measured characteristic vs physics simulation →
+    residual-shape diagnosis → numerically-ranked parameter sensitivity → targeted recalibration, is
     workflow-isomorphic to semiconductor TCAD model calibration (I–V/C–V residuals → process &amp; transport
     parameter attribution → re-fit).</div>
 
@@ -337,14 +337,14 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <section>
   <div class="wrap">
-    <h2 class="sec">Conclusion — why it matters</h2>
+    <h2 class="sec">Conclusion: why it matters</h2>
     <div class="note concl">
       <b>Why it matters.</b> A physics model that reproduces a capacity knee <i>and</i> its impedance twin
       from first principles is a controlled bench for degradation diagnostics: you can impose a mechanism and
-      test whether a signature — here, DRT polarization-resistance growth — actually tracks it before trusting
+      test whether a signature, here, DRT polarization-resistance growth, actually tracks it before trusting
       that signature on real cells. That makes it a bridge between the data-driven pages on this site and the
-      mechanisms underneath them. This is a public-parameter methods demonstration on a liquid-NMC model —
-      every cross-dataset link stays pattern-level, and nothing here represents or is validated against a
+      mechanisms underneath them. This is a public-parameter methods demonstration on a liquid-NMC model.
+      Every cross-dataset link stays pattern-level, and nothing here represents or is validated against a
       solid-state cell.
     </div>
   </div>
@@ -366,7 +366,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     </div>
     <div class="note concl"><b>Scope.</b> This page
     displays figures and plain conclusions from a public-input methods pipeline. The pipeline source is not
-    released here — it imports a private shared DRT/figure engine — so a public code release would go through
+    released here, it imports a private shared DRT/figure engine, so a public code release would go through
     a separately sanitized package, not this repository. What this page demonstrates is physics-based-modeling
     discipline: pick the right-fidelity model, inject coupled degradation, validate the numerics, and compare
     to measured data only as far as the chemistry honestly allows.</div>

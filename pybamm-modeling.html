@@ -224,7 +224,10 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     and deconvolved with the canonical distribution-of-relaxation-times engine. The knee that shows up in
     capacity has an impedance twin: the polarization resistance R_pol accelerates in exactly the config that
     knees. This cell's aging impedance is an ohmic shift plus polarization/diffusion growth, not a
-    charge-transfer semicircle, so R_pol (total polarization) is the tracked interfacial quantity.</p>
+    charge-transfer semicircle, so R_pol (total polarization) is the tracked interfacial quantity. In a test plan,
+    I would use the simulated R_pol trajectory to set the checkpoint-EIS cadence: sparse sweeps while the
+    trajectory is flat, denser sweeps once it begins to accelerate, so measurement effort concentrates where
+    the impedance is changing.</p>
     <div class="gal">
       <div class="fig">
         <img src="assets/pybamm/fig_pub_rpol_evolution_w2200px.png" alt="Polarization resistance R_pol vs cycle" loading="lazy">
@@ -323,10 +326,9 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
         far exceeds the 900-s 4C discharge, so the anode surface starves.</div></div>
     </div>
 
-    <div class="note concl"><b>The TCAD line.</b> This loop, measured characteristic vs physics simulation →
-    residual-shape diagnosis → numerically-ranked parameter sensitivity → targeted recalibration, is
-    workflow-isomorphic to semiconductor TCAD model calibration (I–V/C–V residuals → process &amp; transport
-    parameter attribution → re-fit).</div>
+    <p class="sub"><b>Aside, the TCAD line:</b> this loop (measured characteristic vs physics simulation, residual-shape
+    diagnosis, ranked parameter sensitivity, targeted recalibration) is the same workflow as semiconductor TCAD
+    model calibration against I–V/C–V residuals.</p>
 
     <div class="h1box"><span class="lab">SCOPE</span> Public parameter set vs public dataset; the 26650 set is
     area-scaled to an 18650 capacity (current density preserved) — a pedagogical calibration demo,

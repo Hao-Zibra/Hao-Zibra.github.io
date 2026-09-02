@@ -280,9 +280,9 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
   <div class="wrap">
     <h2 class="sec">5 · What shortens life: Weibull AFT on physics covariates</h2>
     <p class="sub">A censored accelerated-failure-time model asks which measurable covariates move the whole
-    life distribution. Putting DRT band-resistance rates inside a survival model is — to my knowledge — the
-    first use of DRT features in a censored life model for batteries, and it points at a mechanism, not just
-    a correlation.</p>
+    life distribution. I have not found a published censored life model on this dataset that uses DRT band
+    resistances as covariates. The value is not novelty: each covariate maps to a mechanism a failure-analysis
+    team can act on, so the model points at a cause, not just a correlation.</p>
     <div class="full">
       <img src="assets/zhang/f6_aft_acceleration_w2200px.png" alt="Weibull AFT acceleration-factor forest plot" loading="lazy">
       <div class="cap"><span class="data">PUBLIC DATA</span> <b>AFT acceleration factors</b> (per +1 SD,
@@ -313,7 +313,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <h2 class="sec">Conclusion — why it matters</h2>
     <div class="note concl">
       <p style="margin:0 0 8px"><b>So what?</b> Physics-named DRT features are on par with the best published
-      results under leakage-free protocols — and then do what no prior work on this dataset did: enter a censored
+      results under leakage-free protocols, and then go one step further than the source paper: enter a censored
       survival model to give a fleet B10 with confidence intervals. That is the gap between a number and a
       decision — every feature maps to a mechanism a failure-analysis team can act on, and the one place the
       paper's result would not reproduce is stated openly, not buried. It shows the method survives the move

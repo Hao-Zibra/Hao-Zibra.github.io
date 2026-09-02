@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Reliability engineering — FMEA &amp; OCAP (demo) · Hao Zheng</title>
+<title>Reliability engineering: DFMEA, PFMEA, OCAP · Hao Zheng</title>
 <style>
   :root{
     --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
@@ -171,13 +171,13 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section style="padding-bottom:0">
   <div class="wrap">
     <div class="mdemo">
-      <span class="lab">METHODOLOGY DEMO</span>
-      This is a <b>methodology demonstration on public simulation and open data — not the author's laboratory
-      program</b>. DFMEA ratings come from an open-source PyBaMM pipeline or cited literature; the PFMEA is the
-      generic, textbook Li-ion manufacturing sequence with <b>no proprietary or lab-specific process content</b>;
-      the OCAP signals are real, computed on the public Severson 2019 dataset. S/O/D ratings are illustrative
-      calibrations that demonstrate the rating logic — a production analysis would calibrate them in a
-      cross-functional review.
+      <span class="lab">SCOPE</span>
+      Built entirely on <b>public inputs</b>, so that every rating can be checked: Occurrence and Detection are
+      read from an open PyBaMM aging simulation or cited literature; the PFMEA covers a generic stacked-pouch
+      line with <b>no proprietary or lab-specific process content</b>; the OCAP alarms are real SPC signals on
+      the public Severson 2019 fleet. S/O/D values are illustrative rating logic, not a calibrated production
+      analysis. On a production line I would calibrate S/O/D in a cross-functional review, attach a control
+      plan to each M and H row, and close each OCAP disposition through an 8D with a verified corrective action.
     </div>
   </div>
 </section>

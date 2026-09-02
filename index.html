@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Hao Zheng — Battery Reliability &amp; Failure Analysis Portfolio</title>
+<title>Hao Zheng · Battery Reliability &amp; Failure Analysis Portfolio</title>
 <style>
   :root{
     --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
@@ -82,7 +82,7 @@
   footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:20px}
   footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
 
-/* ==== theme layer v3 (2026-08-12) — ONE light surface, no dark mode, no side frame.
+/* ==== theme layer v3 (2026-08-12): ONE light surface, no dark mode, no side frame.
    v2 kept a dark gutter around a light column; it banded the page and gained nothing.
    The palette below is the whole design: light ground, white cards, figures seamless. ==== */
 :root{color-scheme:light;
@@ -126,8 +126,8 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 /* ---- one background, edge to edge ----
    The dark side frame is gone (Hao 2026-08-12): a dark gutter around a light
-   column produced a banded page — wide blue header, black margins, then a white
-   strip at the jump bar. One light surface at every viewport ratio instead. ---- */
+   column produced a banded page (wide blue header, black margins, then a white
+   strip at the jump bar). One light surface at every viewport ratio instead. ---- */
 </style>
 </head>
 <body>
@@ -153,21 +153,23 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <div class="hero">
   <div class="wrap">
     <div class="lead-wrap">
-      <h1>Battery reliability &amp; failure analysis — from operando signal to root cause</h1>
+      <h1>Battery reliability &amp; failure analysis: from operando signal to root cause</h1>
       <p class="lead">MS Mechanical Engineering @ UCSB (June 2026) · BS Materials Science @ Cornell.
-      I turn operando electrochemical signals into root-cause and life statistics. My graduate research is
+      I turn operando electrochemical signals into root cause and life statistics. My graduate research is
       an anode-free solid-state Li-metal reliability program in the Sakamoto group
       (<i>manuscript in preparation</i>); because that work is unpublished, this public portfolio
-      demonstrates the <b>same methods</b> — DRT deconvolution, censored Weibull, SPC, and ML prognosis —
-      on openly licensed battery datasets, alongside the mechanical design that makes measurements trustworthy.</p>
+      demonstrates the <b>same methods</b> on openly licensed battery datasets: DRT deconvolution, censored
+      Weibull, SPC with an out-of-control action plan, FMEA to the AIAG-VDA standard, and ML prognosis,
+      alongside the test-fixture design that makes measurements trustworthy.</p>
       <div class="contact">
         <a href="mailto:edwinz7368@gmail.com"><b>✉</b> edwinz7368@gmail.com</a>
         <a href="https://www.linkedin.com/in/hao-zheng-0268ba1bb/" target="_blank" rel="noopener"><b>in</b> LinkedIn</a>
         <a href="https://github.com/Hao-Zibra" target="_blank" rel="noopener"><b>⌥</b> GitHub</a>
-        <span><b>📍</b> Southern California — open to onsite roles</span>
+        <span><b>📍</b> Southern California · open to onsite roles and relocation</span>
       </div>
       <div class="tags">
         <span class="tag">Censored Weibull · B10 · SPC · AFT</span>
+        <span class="tag">FMEA (AIAG-VDA) · OCAP · Tableau fleet dashboard</span>
         <span class="tag">Operando EIS · DRT · equivalent circuits</span>
         <span class="tag">ML prognosis · leakage-free protocols</span>
         <span class="tag">Fusion 360 parametric + GD&amp;T + FEA · transferable to CATIA</span>
@@ -194,7 +196,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
             <g font-family="-apple-system,Segoe UI,Roboto,Arial" font-size="10.5" fill="#1c2733">
               <text x="176" y="54">Cu current collector</text>
               <text x="176" y="67">Ag interlayer</text>
-              <text x="176" y="83" fill="#0e7c7b" font-weight="700">Li — in situ (anode-free)</text>
+              <text x="176" y="83" fill="#0e7c7b" font-weight="700">Li, formed in situ (anode-free)</text>
               <text x="176" y="123" font-weight="700">LLZO solid electrolyte</text>
               <text x="176" y="157">Li metal source</text>
               <text x="176" y="177">Ni current collector</text>
@@ -202,7 +204,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
           </svg>
         </div>
         <div class="k2">Core domain</div>
-        <div class="cap"><b>Anode-free solid-state Li-metal cell</b> — the rare domain I work in.</div>
+        <div class="cap"><b>Anode-free solid-state Li-metal cell</b>: the rare domain I work in.</div>
       </div>
 
       <div class="herofig">
@@ -214,7 +216,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <div class="herofig">
         <div class="frame"><img src="assets/cad/BasePlate_GDT.png" alt="Base-plate GD&T detail drawing"></div>
         <div class="k2">Manufacturing</div>
-        <div class="cap"><b>GD&amp;T drawing</b> — I build the hardware, not just analyze it.</div>
+        <div class="cap"><b>GD&amp;T drawing</b>: I build the hardware, not just analyze it.</div>
       </div>
     </div>
   </div>
@@ -223,25 +225,27 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section>
   <div class="wrap">
     <h2 class="sec">The work</h2>
-    <p class="sub">Five self-contained projects, each readable on its own. <b>Data provenance is stated on
+    <p class="sub">Six self-contained projects, each readable on its own. <b>Data provenance is stated on
     every figure.</b></p>
     <div class="tree">
-      <div class="root">Five projects &mdash; what each one is</div>
+      <div class="root">Six projects: what each one is</div>
       <ul>
         <li><span class="cnt">Two</span> <b>reliability-and-ML studies on public, openly licensed battery
-        datasets</b> &mdash; every number on those pages is reproducible from the cited source.</li>
-        <li><span class="cnt">One</span> <b>mechanical-design campaign</b> &mdash; CAD, GD&amp;T and a
-        load-documented, cross-validated FEA study.</li>
-        <li><span class="cnt">One</span> <b>physics-modelling study on public parameter sets</b> &mdash;
+        datasets</b>: every number on those pages is reproducible from the cited source.</li>
+        <li><span class="cnt">One</span> <b>reliability-engineering document set</b>: a design FMEA, a process
+        FMEA and an out-of-control action plan on public data, plus a live Tableau fleet dashboard.</li>
+        <li><span class="cnt">One</span> <b>mechanical-design campaign</b>: CAD, GD&amp;T and a
+        load-documented, cross-validated FEA study of the stack-pressure test fixture.</li>
+        <li><span class="cnt">One</span> <b>physics-modelling study on public parameter sets</b>:
         coupled degradation simulated, then calibrated against a measured public curve.</li>
-        <li><span class="cnt">One</span> <b>analysis code, packaged</b> &mdash; the methods above released as
+        <li><span class="cnt">One</span> <b>analysis code, packaged</b>: the methods above released as
         an open-source toolkit.</li>
       </ul>
     </div>
     <div class="cards">
       <div class="card">
         <div class="k">Reliability + ML · public data</div>
-        <h3>EIS × ML — physics-informed RUL</h3>
+        <h3>EIS × ML: physics-informed RUL</h3>
         <p>DRT deconvolution turns impedance into named physical features; gradient-boosted SOH/RUL under
         leakage-free cell-held-out splits; then a censored-Weibull + AFT reliability wrapper no published
         work on this dataset provides. Reproduction gaps stated plainly.</p>
@@ -250,28 +254,37 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       </div>
       <div class="card">
         <div class="k">Reliability + ML · public data</div>
-        <h3>Capacity × ML — 124-cell cycle life</h3>
+        <h3>Capacity × ML: 124-cell cycle life</h3>
         <p>The paper's early-cycle prediction reproduced (variance model matches its table exactly), cleaned
-        of label leakage — then B-lives, observation-horizon censoring, and SPC/EWMA drift that re-explains
+        of label leakage, then B-lives, observation-horizon censoring, and SPC/EWMA drift that re-explains
         the "hard secondary test" as ordinary build drift.</p>
         <div class="src">Severson et al., <i>Nat. Energy</i> 2019 · data.matr.io · CC BY 4.0</div>
         <a class="go" href="severson-capacity-ml.html">Open →</a>
+      </div>
+      <div class="card">
+        <div class="k">Quality · reliability documents</div>
+        <h3>FMEA · OCAP · Tableau fleet dashboard</h3>
+        <p>A design FMEA and a process FMEA worked to the AIAG-VDA standard (Action Priority, not RPN), an
+        out-of-control action plan driven by real SPC alarms on a public 124-cell fleet, and a live Tableau
+        reliability dashboard: Weibull probability plot, capacity-fade trajectories and fleet KPIs on one screen.</p>
+        <div class="src">AIAG-VDA FMEA Handbook (2019) · PyBaMM sim · Severson 2019 · Tableau Public</div>
+        <div style="display:flex;gap:16px;flex-wrap:wrap"><a class="go" href="reliability-engineering.html">Open →</a><a class="go" href="https://public.tableau.com/app/profile/hao.zheng2066/viz/BatteryFleetReliabilityDashboardWeibullLifeAnalysisof124Li-ionCells/Dashboard1" target="_blank" rel="noopener">Live dashboard ↗</a></div>
       </div>
       <div class="card">
         <div class="k">Mechanical · own work</div>
         <h3>Fixture CAD · GD&amp;T · FEA</h3>
         <p>A parametric Fusion 360 stack-pressure fixture at a 5&nbsp;MPa operating point, a GD&amp;T
         base-plate drawing, and a load-documented, mesh-converged FEA study of rigid vs compliant loading on
-        brittle LLZO — with an interactive 3D build stepper.</p>
+        brittle LLZO, with an interactive 3D build stepper.</p>
         <div class="src">Own design · Fusion 360 · transferable to CATIA</div>
         <a class="go" href="mechanical.html">Open →</a>
       </div>
       <div class="card">
         <div class="k">Physics modeling · public parameters</div>
-        <h3>Physics-based aging — PyBaMM</h3>
+        <h3>Physics-based aging: PyBaMM</h3>
         <p>An open-source PyBaMM DFN pipeline injects coupled degradation and reproduces a capacity knee with
         a matching polarization-resistance acceleration; the DRT signature is compared, strictly at the
-        pattern level, to two measured public datasets. A liquid-NMC methods demonstration — not a solid-state
+        pattern level, to two measured public datasets. A liquid-NMC methods demonstration, not a solid-state
         model.</p>
         <div class="src">PyBaMM DFN · Chen 2020 / O'Kane 2022 · public data</div>
         <a class="go" href="pybamm-modeling.html">Open →</a>
@@ -280,7 +293,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
         <div class="k">Software · methods package</div>
         <h3>operando-eis-toolkit</h3>
         <p>The analysis primitives behind these studies, packaged: EIS segmentation and circuit/DRT fitting,
-        right-censored reliability MLE, SPC charts, and spec-enforced figures — with cross-checked
+        right-censored reliability MLE, SPC charts, and spec-enforced figures, with cross-checked
         statistics and synthetic-only examples.</p>
         <div class="src">MIT · methods + synthetic data only · <b>published on GitHub</b></div>
         <div style="display:flex;gap:16px;flex-wrap:wrap"><a class="go" href="toolkit.html">Open →</a><a class="go" href="https://github.com/Hao-Zibra/operando-eis-toolkit" target="_blank" rel="noopener">GitHub ↗</a></div>
@@ -296,7 +309,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     laboratory results are not reproduced on this public site.</p>
     <div class="pub">
       <b>Anode-free LLZO solid-state cells under operando GEIS-AA</b>
-      <span class="role prep">lead author — manuscript in preparation</span>
+      <span class="role prep">lead author · manuscript in preparation</span>
       <p>UCSB, Sakamoto group. An operando-diagnostics and censored-reliability program on an anode-free
       solid-state Li-metal platform. Unpublished; described qualitatively here. The public pages on this
       site demonstrate the same analysis methods on openly licensed datasets.</p>
@@ -306,7 +319,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <span class="role">co-first author</span>
       <p><i>ACS Electrochemistry</i>, 2026. A single-frequency impedance signal reaches its detection
       threshold at lower stripped capacity than cell polarization, on both oxyhalide and garnet cells;
-      mechanism supported by a 3D equivalent-circuit void model (simulation run by collaborators — I prepared
+      mechanism supported by a 3D equivalent-circuit void model (simulation run by collaborators; I prepared
       the cells and validated predictions against the operando measurements).</p>
     </div>
     <div class="pub">
@@ -322,7 +335,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <span class="role">sole author (BS senior thesis)</span>
       <p>Cornell, Zhong group. A synthesis DOE converging on optimal precursor concentrations; ~25&nbsp;nm
       film thickness by AFM and purity by Raman; analysis of collaborator-collected GIWAXS (CHESS synchrotron)
-      and FTIR — pore size and imine-bond confirmation (data collection not mine); 6-inch wafer-scale MoS₂ transfer.</p>
+      and FTIR for pore size and imine-bond confirmation (data collection not mine); 6-inch wafer-scale MoS₂ transfer.</p>
     </div>
   </div>
 </section>
@@ -331,18 +344,20 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
   <div class="wrap">
     <h2 class="sec">Skills, as evidenced</h2>
     <p class="sub">Grouped the way a reliability team uses them. Every line traces to a figure or artifact on
-    this site — the reliability and diagnostics methods are demonstrated on the public-dataset pages;
+    this site: the reliability and diagnostics methods are demonstrated on the public-dataset pages;
     the mechanical work on the CAD · FEA page.</p>
     <div class="skills">
       <div class="sk"><h3>Reliability statistics &amp; quality</h3><ul>
-        <li>Censored Weibull MLE — B10/B50 with profile-likelihood CIs; Kaplan–Meier cross-check</li>
+        <li>Censored Weibull MLE: B10/B50 with profile-likelihood CIs; Kaplan–Meier cross-check</li>
         <li>Three independent MLE engines agreeing to &lt;1% (custom / lifelines / reliability-pkg)</li>
         <li>SPC (I-MR, EWMA, Nelson rules) and observation-horizon censoring experiments</li>
+        <li>DFMEA / PFMEA to AIAG-VDA (Action Priority) and an OCAP tied to real control-chart alarms</li>
         <li>Weibull AFT survival modeling on physics covariates; AICc model selection</li>
+        <li>Tableau reliability dashboard (Weibull probability plot, fleet KPIs), published on Tableau Public</li>
       </ul></div>
       <div class="sk"><h3>Electrochemical diagnostics</h3><ul>
         <li>DRT deconvolution (Tikhonov–NNLS, L-curve λ); R-CPE equivalent-circuit fitting</li>
-        <li>Operando EIS/GEIS protocol design; single-frequency void monitoring — published</li>
+        <li>Operando EIS/GEIS protocol design; single-frequency void monitoring (published)</li>
         <li>Sweep segmentation, IR correction, linear-time-invariance residual screening</li>
         <li>CCCV cycling, coulombic-efficiency tracking, variable-temperature EIS</li>
       </ul></div>
@@ -353,7 +368,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
         <li>Python (NumPy/Pandas/Plotly) analysis pipelines; MATLAB; Mathematica</li>
       </ul></div>
       <div class="sk"><h3>Mechanical &amp; characterization</h3><ul>
-        <li>Fusion 360 parametric CAD + GD&amp;T drawings + static FEA — <b>transferable to CATIA</b></li>
+        <li>Fusion 360 parametric CAD + GD&amp;T drawings + static FEA, <b>transferable to CATIA</b></li>
         <li>Load/BC-documented, mesh-converged studies; artifact-vs-result discipline</li>
         <li>Cryo-stage plasma FIB-SEM cross-sections (co-built the cryo-stage workflow); EDX; XPS</li>
         <li>XRD (Rietveld), AFM, Raman, confocal laser scanning</li>
@@ -365,7 +380,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 <section style="padding:10px 0 26px">
   <div class="wrap">
     <div class="note concl" style="margin:0"><b>Evidence policy.</b> Every number on this site traces to a
-    public dataset, a published paper, or my own instrument — and every page marks what is hands-on, what is
+    public dataset, a published paper, or my own instrument, and every page marks what is hands-on, what is
     analysis of collaborator-acquired data, and what is a methodology demo. Unpublished work is described
     qualitatively and labeled.</div>
   </div>

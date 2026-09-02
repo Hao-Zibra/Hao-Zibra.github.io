@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Thin-film process engineering: substrate to SPC · Hao Zheng</title>
+<title>Thin-film process engineering — substrate to SPC · Hao Zheng</title>
 <style>
   :root{
     --navy:#0f2740; --navy2:#16344f; --teal:#0e7c7b; --teal-lt:#e6f4f4;
@@ -60,7 +60,7 @@
   .note b{color:var(--amber)}
   footer{background:var(--navy);color:#9fb4c4;font-size:13.5px;padding:26px 0;margin-top:36px}
   footer .wrap{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
-/* ==== theme layer v3 (2026-08-12): ONE light surface, no dark mode, no side frame.
+/* ==== theme layer v3 (2026-08-12) — ONE light surface, no dark mode, no side frame.
    v2 kept a dark gutter around a light column; it banded the page and gained nothing.
    The palette below is the whole design: light ground, white cards, figures seamless. ==== */
 :root{color-scheme:light;
@@ -104,7 +104,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 /* ---- one background, edge to edge ----
    The dark side frame is gone (Hao 2026-08-12): a dark gutter around a light
-   column produced a banded page: wide blue header, black margins, then a white
+   column produced a banded page — wide blue header, black margins, then a white
    strip at the jump bar. One light surface at every viewport ratio instead. ---- */
 </style>
 </head>
@@ -130,11 +130,11 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
 
 <div class="pagehead">
   <div class="wrap">
-    <h1>A thin-film process, end to end: substrate, deposition, anneal, metrology, validation, control</h1>
+    <h1>A thin-film process, end to end — substrate, deposition, anneal, metrology, validation, control</h1>
     <p>The rest of this site is organised by technique. This page is organised the way a process engineer
     actually works: one flow, six stations, each with the failure mode that station owns and the evidence
     that closes it out. My own line is a sputtered metal interlayer on a ceramic electrolyte, annealed to a
-    controlled morphology, then measured and cycled: the same substrate&nbsp;→&nbsp;deposition&nbsp;→
+    controlled morphology, then measured and cycled — the same substrate&nbsp;→&nbsp;deposition&nbsp;→
     &nbsp;anneal&nbsp;→&nbsp;metrology&nbsp;→&nbsp;electrical&nbsp;→&nbsp;SPC loop that a fab runs on wafers.</p>
     <div class="src">
       <span class="chip"><b>Read this if:</b> you hire for process, integration or yield</span>
@@ -150,7 +150,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     show, so every station below says exactly what backs it.
     <span class="ev pub">PUBLIC DATA</span> means an openly licensed dataset re-analysed here;
     <span class="ev own">OWN WORK</span> means my own design or simulation, published on this site;
-    <span class="ev none">NO PUBLIC FIGURE</span> means the step belongs to unpublished research, described
+    <span class="ev none">NO PUBLIC FIGURE</span> means the step belongs to unpublished research — described
     qualitatively, with no figure and no numbers, until the manuscript is out. Nothing on this page is a
     stand-in for something I cannot show.</div>
     <div class="flow">
@@ -172,7 +172,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <div class="stn" id="s1">
       <h3><span class="n">Station 1</span> Substrate preparation and fixturing <span class="ev own">OWN WORK</span></h3>
       <p class="lead">Everything downstream inherits the surface. A ceramic pellet is lapped and polished
-      flat, then held in a fixture that must load it evenly, because a substrate that is clamped unevenly
+      flat, then held in a fixture that must load it evenly — because a substrate that is clamped unevenly
       is, from the film's point of view, not flat at all.</p>
       <div class="risk"><b>Failure mode this station owns:</b> non-uniform contact. Load that rides the rim
       instead of the face changes local stress by an order of magnitude, and a brittle substrate has no
@@ -197,14 +197,14 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <div class="stn" id="s2">
       <h3><span class="n">Station 2</span> PVD deposition of the interlayer <span class="ev none">NO PUBLIC FIGURE</span></h3>
       <p class="lead">A thin metal interlayer is sputtered onto the polished ceramic. The knobs are the
-      familiar ones, base pressure, working gas pressure, power, throw distance, substrate condition, and
+      familiar ones — base pressure, working gas pressure, power, throw distance, substrate condition — and
       they set thickness uniformity, adhesion and the film's starting microstructure.</p>
       <div class="risk"><b>Failure mode this station owns:</b> a film that is nominally correct and
-      practically useless: right average thickness, wrong uniformity or adhesion, so the defect appears
+      practically useless — right average thickness, wrong uniformity or adhesion, so the defect appears
       three stations later as a scattered electrical result rather than as a deposition alarm.</div>
       <div class="nofig"><b>Deliberately no figure here.</b> The deposition work belongs to my anode-free
       solid-state programme in the Sakamoto group, which is <i>manuscript in preparation</i>. Rather than
-      substitute a stock image or a lookalike from someone else's paper, this station stays qualitative:
+      substitute a stock image or a lookalike from someone else's paper, this station stays qualitative —
       process reasoning without unpublished process data. What the site <i>can</i> show is the discipline
       applied to the steps that are publishable, on either side of this one.</div>
     </div>
@@ -216,19 +216,19 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       morphology that the device actually needs. Temperature, dwell and atmosphere are the recipe; the
       morphology is the response.</p>
       <div class="risk"><b>Failure mode this station owns:</b> a thermal budget that is right for one goal
-      and wrong for the other: enough to clean the interface but too much for the morphology, or the
+      and wrong for the other — enough to clean the interface but too much for the morphology, or the
       reverse. This is a classic process trade-off: the two objectives share one knob.</div>
-      <div class="nofig"><b>Deliberately no figure here</b>, same reason as Station 2: <i>manuscript in
+      <div class="nofig"><b>Deliberately no figure here</b>, same reason as Station 2 — <i>manuscript in
       preparation</i>. The recipe window and the resulting morphology are unpublished, so no micrographs and
       no numbers appear on this page.</div>
     </div>
 
     <div class="stn" id="s4">
-      <h3><span class="n">Station 4</span> Metrology: turning images into numbers <span class="ev pub">PUBLIC DATA</span></h3>
+      <h3><span class="n">Station 4</span> Metrology — turning images into numbers <span class="ev pub">PUBLIC DATA</span></h3>
       <p class="lead">A micrograph is an opinion until someone defines the segmentation. This station is
       where imaging becomes measurement: denoise, segment, then extract distributions and transport
       descriptors with the choice of threshold written down rather than tuned until the answer looks right.
-      The worked example below is X-ray micro-computed tomography on published open data, not
+      The worked example below is X-ray micro-computed tomography on published open data — not
       SEM, AFM or XPS, which are the tools this flow would use for a thin film, and which are not shown
       because I have no openly licensed example of my own to show.</p>
       <div class="risk"><b>Failure mode this station owns:</b> a measurement that moves when the operator
@@ -237,13 +237,13 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <div class="two">
         <div>
           <img src="assets/ct/F2_segmentation_EIL014.png" alt="Segmentation of a micro-CT volume into phases">
-          <div class="cap">Segmentation with a stated, reproducible criterion: the step that decides
+          <div class="cap">Segmentation with a stated, reproducible criterion — the step that decides
           whether the numbers that follow mean anything.</div>
         </div>
         <div>
           <img src="assets/ct/F7_denoise_pair.png" alt="Denoising comparison on a micro-CT slice">
           <div class="cap">Denoise before threshold, judged on a paired comparison rather than on
-          appearance: the imaging equivalent of a gauge study.</div>
+          appearance — the imaging equivalent of a gauge study.</div>
         </div>
       </div>
       <a class="go" href="micro-ct.html">▸ The full imaging-to-numbers pipeline, on open data</a>
@@ -253,7 +253,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       <h3><span class="n">Station 5</span> Electrochemical validation <span class="ev pub">PUBLIC DATA</span> <span class="ev none">OWN WORK UNPUBLISHED</span></h3>
       <p class="lead">A film that looks right still has to work. Impedance spectroscopy separates the
       interface from the bulk, so a change in the process shows up as a change in a specific arc rather than
-      as a vague shift in cell performance, which is what makes it useful as a process response rather than
+      as a vague shift in cell performance — which is what makes it useful as a process response rather than
       just a characterisation result. On my own cells this is run operando, while the cell is cycling; that
       work is <i>manuscript in preparation</i>, so no results from it appear here. The public example below
       is the same method on an openly licensed dataset.</p>
@@ -276,7 +276,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     </div>
 
     <div class="stn" id="s6">
-      <h3><span class="n">Station 6</span> SPC and reliability: is the process in control? <span class="ev pub">PUBLIC DATA</span></h3>
+      <h3><span class="n">Station 6</span> SPC and reliability — is the process in control? <span class="ev pub">PUBLIC DATA</span></h3>
       <p class="lead">One good part proves nothing. The last station asks whether the line is stable and what
       it will do over life: control charts on a build-to-build feature, drift detection on the population,
       and a censored life model that turns cycling into an early-life risk statement instead of a single
@@ -292,7 +292,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
         <div>
           <img src="assets/severson/fig7_ewma_alarms_w3125px.png" alt="EWMA drift alarms on individual units">
           <div class="cap">Drift detection on individual units, with the alarm timing checked against what
-          actually happened later. An alarm nobody can act on early enough is not an alarm.</div>
+          actually happened later — an alarm nobody can act on early enough is not an alarm.</div>
         </div>
       </div>
       <a class="go" href="reliability-engineering.html">▸ FMEA, control plan and out-of-control action plan</a>
@@ -310,7 +310,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
       a fab runs: specify the incoming surface, control the deposition, spend the thermal budget where it
       buys the most, pin the metrology before trusting it, validate with a measurement that can attribute a
       failure, and then hold the whole thing with control charts. What travels between industries is not the
-      tool set. It is the habit of asking, at every station, which failure mode this step owns and what
+      tool set — it is the habit of asking, at every station, which failure mode this step owns and what
       evidence would close it out.</p>
     </div>
   </div>

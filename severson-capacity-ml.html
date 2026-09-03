@@ -241,9 +241,12 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     <div class="gal">
       <div class="fig">
         <img src="assets/severson/fig4_b10_vs_horizon_w2200px.png" alt="Fleet B10 estimate vs observation horizon" loading="lazy">
-        <div class="cap"><span class="data">PUBLIC DATA</span> <b>B10 vs observation horizon.</b> The
-        censored estimate is usable from H≈500 cycles (B10 445 [327, 634], only ~33 failures observed) and
-        converges to the full-data answer of 331 by H≈2000. Point labels show failures observed at each horizon.</div>
+        <div class="cap"><span class="data">PUBLIC DATA</span> <b>B10 vs observation horizon.</b> At H≈500 only
+        33 of 124 cells have failed, and the censored fit reads B10 445 cycles with a 95% profile interval of
+        [418, 466]: precise, but biased high, because that interval does not contain the full-data answer of 331.
+        The estimate walks down as the horizon extends and lands on 331 by H≈2000. Point labels show failures
+        observed at each horizon. The planning lesson: a tight interval is not the same as a correct one, so a
+        warranty number called at H≈500 would have been confidently wrong.</div>
       </div>
       <div class="fig">
         <iframe class="frame" src="assets/severson/fleet_reliability_animation.html" title="Fleet reliability fit tightening with observation horizon" loading="lazy"></iframe>

@@ -231,8 +231,11 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     </table>
     </div>
     <p class="cap"><span class="data">PUBLIC SIM</span> The one <b>H</b> row (DM-03) is the headline AP is built
-    to surface: severity-9 with a protocol-dependent occurrence. Under multiplicative RPN it would score
-    <i>lower</i> than DM-02. Full register runs DM-01…DM-05.</p>
+    to surface: severity 9 with a protocol-dependent occurrence. On these ratings its RPN is 144 against
+    DM-02's 126, so here the two methods happen to agree. That agreement is the coincidence, not the rule:
+    reassess occurrence one step down, from 4 to 2, and DM-03 falls to 72, below DM-01 at 96 and DM-02 at 126,
+    which buries the only safety-relevant mode in the register. Action Priority weighs severity first, so it
+    does not move on that reassessment. Full register runs DM-01…DM-05.</p>
 
     <div class="xlink">
       <b>Mechanistic cross-link →</b> I read every Occurrence and Detection rating above from the same
@@ -346,7 +349,7 @@ p.sub,.pagehead p,.hero .lead-wrap,.stn .lead,.hero p.lead{max-width:none}
     </div>
 
     <h3 class="m">Case A: cross-build drift of the predictive feature (batch 2: +3.1σ)</h3>
-    <div class="full"><img src="assets/severson/fig5_spc_build_stability_w3125px.png" alt="Build stability control chart" loading="lazy"><div class="cap"><span class="data">PUBLIC DATA</span> <b>Build-stability chart.</b> The life-prediction model's key input feature (log-variance ΔQ) sits +3.1σ in batch 2 and −1.7σ in batch 3 vs batch-1 limits, with corroborating shifts on independent metrics.</div></div>
+    <div class="full"><img src="assets/severson/fig5_spc_build_stability_w3125px.png" alt="Build stability control chart" loading="lazy"><div class="cap"><span class="data">PUBLIC DATA</span> <b>Build-stability chart.</b> What is plotted: capacity at cycle 2 (top) and internal resistance at cycle 2 (bottom), one point per cell in build order, against batch-1 Phase-I limits. Batch 2 runs low on capacity (−0.9σ) and high on resistance (+1.8σ); batch 3 is lower on both (−1.9σ and −2.5σ). Red crosses mark points outside the limits. The model's key input feature, the log variance of ΔQ, is not drawn in this figure: computed against the same batch-1 reference it shifts +3.1σ in batch 2 and −1.7σ in batch 3, so the drift reaches the model's own input and not only the raw metrics.</div></div>
     <p class="cap">Because the drifting quantity is the <b>model's input feature</b>, the pre-agreed containment is
     to freeze naive reuse of the batch-1 model on later builds: the documented reason published models degrade
     on batch 3. Disposition: re-baseline limits per batch, add batch as a covariate, never silently pool
